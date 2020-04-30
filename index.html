@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>互联网斜杠青年</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="高并发,队列,秒杀架构，消息队列，Spring Boot">
+<meta property="og:type" content="website">
+<meta property="og:title" content="互联网斜杠青年">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="互联网斜杠青年">
+<meta property="og:description" content="高并发,队列,秒杀架构，消息队列，Spring Boot">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="罗平">
+<meta property="article:tag" content="高并发">
+<meta property="article:tag" content="队列">
+<meta property="article:tag" content="秒杀架构，消息队列，Spring Boot">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="互联网斜杠青年" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">互联网斜杠青年</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">斜杠青年</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-volatile" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/30/volatile/" class="article-date">
+  <time datetime="2020-04-30T14:05:59.498Z" itemprop="datePublished">2020-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/30/volatile/">volatile</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/30/volatile/" data-id="ck9mxlud20000sgvpf80v2cx6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-limit" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/30/limit/" class="article-date">
+  <time datetime="2020-04-30T14:05:59.486Z" itemprop="datePublished">2020-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/30/limit/">限流</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用信号量实现并发量限制</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class Test&#123;</span><br><span class="line">public static void main(int argc,String[] argv)&#123;</span><br><span class="line">    Semaphore semaphore = new Semaphore(10,<span class="literal">true</span>);</span><br><span class="line">    semaphore.acquire();</span><br><span class="line">    //<span class="keyword">do</span> business</span><br><span class="line">    semaphore.realease();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>速率限制<br>使用Google的Guava实现速率限制</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void class Test&#123;</span><br><span class="line">    public static void main(int argc,String [] argv)&#123;</span><br><span class="line">        ReteLimiter limiter = ReteLimiter.create(10.0);</span><br><span class="line">        limiter.acquire();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/30/limit/" data-id="ck9mxluem0007sgvpas7p2a6o" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Golang" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/30/Golang/" class="article-date">
+  <time datetime="2020-04-30T14:05:59.479Z" itemprop="datePublished">2020-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/30/Golang/">限流</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>循环</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>是Go中唯一可用的循环</span><br></pre></td></tr></table></figure>
+
+<p>1-10</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for i:&#x3D; 0;i &lt; 10; i++ &#123;</span><br><span class="line">  fmt.Println(&quot;%d&quot;,i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>break</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for i :&#x3D; 0 ;i &lt; 10 ;i++&#123;</span><br><span class="line">  if i &gt; 5 &#x3D;0 &#123;</span><br><span class="line">  		break</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.PrintLn(&quot;%d&quot;,i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>continue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for i :&#x3D; 0 ;i &lt; 10 ;i++&#123;</span><br><span class="line">  if i % 2 &#x3D;0 &#123;</span><br><span class="line">  		continue</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.PrintLn(&quot;%d&quot;,i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>for for</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">n :&#x3D; 5</span><br><span class="line">for i :&#x3D; 0 ;i &lt; n; i++ &#123;</span><br><span class="line">  for j:&#x3D; 1; j &lt; i; j++ &#123;</span><br><span class="line">  	fmt.Print(&quot;*&quot;)</span><br><span class="line">  &#125;</span><br><span class="line">  fmt.Println()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>标签</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/30/Golang/" data-id="ck9mxluee0003sgvp767g08lf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-系统架构/消息队列架构设计" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="article-date">
+  <time datetime="2020-04-30T14:05:59.471Z" itemprop="datePublished">2020-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">系统架构/消息队列架构设计</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" data-id="ck9mxluf1000csgvp81dx8kfn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/30/hello-world/" class="article-date">
+  <time datetime="2020-04-30T14:05:18.716Z" itemprop="datePublished">2020-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/30/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/30/hello-world/" data-id="ck9mxluei0005sgvp2r1cd5yb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Java线程池" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/18/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="article-date">
+  <time datetime="2018-11-18T02:19:43.000Z" itemprop="datePublished">2018-11-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/18/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/">Java线程池</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/18/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/" data-id="ck9mxluec0002sgvpfmgoh8el" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-mysql性能分析工具" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/" class="article-date">
+  <time datetime="2018-11-17T13:27:37.000Z" itemprop="datePublished">2018-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">mysql性能分析工具</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>show profile;<br>mysqlsla;<br>mysqldumpslow;<br>explain;<br>show slow log;<br>show processlist;<br>show query_response_time(percona)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/" data-id="ck9mxlueo0008sgvpdlpx2bii" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-mysql性能定位与问题排查" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%AE%9A%E4%BD%8D%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="article-date">
+  <time datetime="2018-11-17T13:27:37.000Z" itemprop="datePublished">2018-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%AE%9A%E4%BD%8D%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">mysql性能定位与问题排查</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="1-线程相关计数，"><a href="#1-线程相关计数，" class="headerlink" title="1.线程相关计数，"></a>1.线程相关计数，</h5><p>MySQL是单进程多线程的数据库，每一个用户连接，是由一个对应的线程来服务的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show global status like &#39;thread%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>当thread_created不断增加，表明存在短链接访问DB，</p>
+<p>处理方式：</p>
+<ul>
+<li>增大thread_cache_size</li>
+</ul>
+<ul>
+<li>改短链为长链接</li>
+</ul>
+<h5 id="2-table-cache"><a href="#2-table-cache" class="headerlink" title="2. table cache"></a>2. table cache</h5><p>在访问表之前，首先需要打开表，在代码实现上，就是获得这个表的TABLE对象，</p>
+<p>打开表就是获取table对象，MySQL 5.7默认有16个table cache 实例 (表缓存池实例)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show global status like &#39;%table%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>表缓存没有命中Table_open_cache_misses的数量。如果该值很大，你可能需要增加table_cache的数值</p>
+<p>处理方式：</p>
+<ul>
+<li>增大    table_open_cache    </li>
+</ul>
+<p>mysql连接数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;Threads_connected&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>多少线程正在跑</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;Threads_running&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>异常中断连接数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;Aborted_clients&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>看下慢查询个数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;Slow_queries&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>客户端连接进程数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show processlist;</span><br></pre></td></tr></table></figure>
+
+<p>innodb状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show innodb status;</span><br></pre></td></tr></table></figure>
+
+<p>key Buffer命中率</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">key_buffer_read_hits &#x3D; (1-key_reads &#x2F; key_read_requests) * 100%</span><br><span class="line">key_buffer_write_hits &#x3D; (1-key_writes &#x2F; key_write_requests) * 100%</span><br><span class="line">show status like &#39;Key%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>InnoDB Buffer命中率</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Innodb_buffer_read_hits &#x3D; (1 - innodb_buffer_pool_reads &#x2F; innodb_buffer_pool_read_requests) * 100%</span><br><span class="line">show status like &#39;innodb_buffer_pool_read%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>Query Cache命中率</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Query_cache_hits &#x3D; (Qcahce_hits &#x2F; (Qcache_hits + Qcache_inserts )) * 100%;</span><br><span class="line">show status like &#39;Qcache%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>Table Cache状态量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;open%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>Thread Cache命中率</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Thread_cache_hits &#x3D; (1 - Threads_created &#x2F; connections ) * 100%</span><br><span class="line">show status like &#39;Thread%&#39;;</span><br><span class="line">show status like &#39;Connections&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>锁状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;%lock%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>复制延时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show slave status</span><br></pre></td></tr></table></figure>
+
+<p>临时表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;Create_tmp%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>binlog cache</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;Binlog_cache%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>Innodb_log_waits量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;innodb_log_waits&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>数据库QPS:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Questions &#x3D; SHOW GLOBAL STATUS LIKE &#39;Questions&#39;;</span><br><span class="line">Uptime &#x3D; SHOW GLOBAL STATUS LIKE &#39;Uptime&#39;;</span><br><span class="line">QPS&#x3D;Questions&#x2F;Uptime</span><br></pre></td></tr></table></figure>
+
+<p>数据库TPS:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Com_commit &#x3D; SHOW GLOBAL STATUS LIKE &#39;Com_commit&#39;;</span><br><span class="line">Com_rollback &#x3D; SHOW GLOBAL STATUS LIKE &#39;Com_rollback&#39;;</span><br><span class="line">Uptime &#x3D; SHOW GLOBAL STATUS LIKE &#39;Uptime&#39;;</span><br><span class="line">TPS&#x3D;(Com_commit + Com_rollback)&#x2F;Uptime</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%AE%9A%E4%BD%8D%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" data-id="ck9mxluep0009sgvpgtt65wzt" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-消息队列架构设计" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/11/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="article-date">
+  <time datetime="2018-11-11T12:28:13.000Z" itemprop="datePublished">2018-11-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/11/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">消息队列架构设计总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>特点是：</p>
+<p>持久化—两次RPC调用，生产消费者模式</p>
+<p>场景：解耦，异步，削峰，广播</p>
+<p>业务对消息的诉求有：</p>
+<p>到达率，消息有效期，业务ACK，延迟消息，离线消息删除</p>
+<p><img src="http://pic.huodongjia.com/ganhuodocs/2017-05-16/1494916918.61-6.png" alt="58å°å®¶æå¤©æ¨ââ58å°å®¶çµåä¸å¡åºæ¯ä¸çæ¶æ¯éåæ¶æè®¾è®¡"></p>
+<p><img src="http://pic.huodongjia.com/ganhuodocs/2017-05-16/1494916918.61-7.png" alt="58å°å®¶æå¤©æ¨ââ58å°å®¶çµåä¸å¡åºæ¯ä¸çæ¶æ¯éåæ¶æè®¾è®¡"></p>
+<p><img src="http://pic.huodongjia.com/ganhuodocs/2017-05-16/1494916918.61-8.png" alt="消息到达100%"></p>
+<p><img src="http://pic.huodongjia.com/ganhuodocs/2017-05-16/1494916918.61-10.png" alt="58å°å®¶æå¤©æ¨ââ58å°å®¶çµåä¸å¡åºæ¯ä¸çæ¶æ¯éåæ¶æè®¾è®¡"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/11/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" data-id="ck9mxlues000bsgvp3pnp1fd2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-多线程核心知识点" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/05/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/" class="article-date">
+  <time datetime="2018-11-05T13:21:08.000Z" itemprop="datePublished">2018-11-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/05/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">多线程核心知识点</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/05/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/" data-id="ck9mxlueq000asgvp5n9x48yq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/30/volatile/">volatile</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/30/limit/">限流</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/30/Golang/">限流</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">系统架构/消息队列架构设计</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/30/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 罗平<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
