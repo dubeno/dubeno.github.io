@@ -5,22 +5,26 @@
   
 
   
-  <title>互联网斜杠青年</title>
+  <title>增长黑客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="高并发,队列,秒杀架构，消息队列，Spring Boot">
+  <meta name="description" content="graphql,prisma,增长黑客,growing hacker，高并发,队列,秒杀架构，消息队列，Spring Boot">
 <meta property="og:type" content="website">
-<meta property="og:title" content="互联网斜杠青年">
+<meta property="og:title" content="增长黑客">
 <meta property="og:url" content="http://yoursite.com/page/2/index.html">
-<meta property="og:site_name" content="互联网斜杠青年">
-<meta property="og:description" content="高并发,队列,秒杀架构，消息队列，Spring Boot">
+<meta property="og:site_name" content="增长黑客">
+<meta property="og:description" content="graphql,prisma,增长黑客,growing hacker，高并发,队列,秒杀架构，消息队列，Spring Boot">
 <meta property="og:locale" content="en_US">
-<meta property="article:author" content="罗平">
+<meta property="article:author" content="robin">
+<meta property="article:tag" content="graphql">
+<meta property="article:tag" content="prisma">
+<meta property="article:tag" content="增长黑客">
+<meta property="article:tag" content="growing hacker">
 <meta property="article:tag" content="高并发">
 <meta property="article:tag" content="队列">
 <meta property="article:tag" content="秒杀架构，消息队列，Spring Boot">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="互联网斜杠青年" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="增长黑客" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -41,11 +45,11 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">互联网斜杠青年</a>
+        <a href="/" id="logo">增长黑客</a>
       </h1>
       
         <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">斜杠青年</a>
+          <a href="/" id="subtitle">Prisma</a>
         </h2>
       
     </div>
@@ -72,46 +76,6 @@
 </header>
       <div class="outer">
         <section id="main">
-  
-    <article id="post-LinkedBlockingQueue" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/05/LinkedBlockingQueue/" class="article-date">
-  <time datetime="2018-11-05T12:45:52.000Z" itemprop="datePublished">2018-11-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/05/LinkedBlockingQueue/">LinkedBlockingQueue</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>LinkedBlockingQueue类也实现了BlockingQueue接口，可阅读之前发表的文章进行查看。</p>
-<p>LinkedBlockingQueue内部元素是一个链式结构，一个个链接起来的节点，这个链式接口可以指定一个上界，也就是最多能有多少个节点或者元素，如果没有指定的那上界就是Integer.MAX_VALUE。</p>
-<p>LinkedBlocking内存存储元素遵循FIFO的顺序，队列head是在队列里待的时间最长的元素，队列tail是在队列里待的时间最短的元素。</p>
-<p>下面看看如何初始化和使用LinkedBlockingQueue</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BlockingQueue unbounded &#x3D; new BlockingQueue&lt;String&gt;();</span><br><span class="line">BlockingQueue bounded &#x3D; new BlockingQueue&lt;String&gt;(1024);</span><br><span class="line">bounded.put(&quot;Value&quot;);</span><br><span class="line">String value &#x3D; bounded.take();</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/LinkedBlockingQueue/" data-id="ck9mxluek0006sgvp4x0rgvpm" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
   
     <article id="post-BlockingQueue" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -322,10 +286,6 @@
       <ul>
         
           <li>
-            <a href="/2020/04/30/volatile/">volatile</a>
-          </li>
-        
-          <li>
             <a href="/2020/04/30/limit/">限流</a>
           </li>
         
@@ -341,6 +301,10 @@
             <a href="/2020/04/30/hello-world/">Hello World</a>
           </li>
         
+          <li>
+            <a href="/2018/11/18/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/">Java线程池</a>
+          </li>
+        
       </ul>
     </div>
   </div>
@@ -353,7 +317,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 罗平<br>
+      &copy; 2020 robin<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
