@@ -103,7 +103,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/" data-id="ckajmtwgh000azovpa8ryegj8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/05/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/" data-id="ckajmub92000c54vphu5rhulv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -143,58 +143,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/LinkedBlockingQueue/" data-id="ckajmtwga0004zovpc44cd99x" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-DelayQueue" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/05/DelayQueue/" class="article-date">
-  <time datetime="2018-11-05T12:28:13.000Z" itemprop="datePublished">2018-11-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/05/DelayQueue/">DelayQueue</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>DelayQueue实现了BlockingQueue接口，更多信息可以阅读我之前的文章。</p>
-<p>DelayQueue将会阻塞元素直到某个延迟过期，而这个元素必须实现java.util.concurrent.Delayed接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Delayed extends Comparable&lt;Delayed&lt; &#123;</span><br><span class="line"> public long getDelay(TimeUnit timeUnit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>getDelay()返回的是到过期的剩余时间，如果是0或者负数，那么就认为过期了，这个元素将被释放，使用take()就能够从DelayQueue中获得这个元素。</p>
-<p>TimeUnit是时间单位，告诉getDelay()延迟应该以什么单位进行返回，TimeUnit是一个Enum.</p>
-<p>可以取以下值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DAYS</span><br><span class="line">HOURS</span><br><span class="line">MINUTES</span><br><span class="line">SECONDS</span><br><span class="line">MILLISECONDS</span><br><span class="line">MICROSECONDS</span><br><span class="line">NANOSECONDS</span><br></pre></td></tr></table></figure>
-
-<p>Delayed接口也继承了Java.lang.Comparable接口，意味着Delayed对象能相互比较，因此在DelayQueue内部用来进行元素排序。根据过期时间进行排序。</p>
-<p>下面是一个例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class DelayQueueExample &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        DelayQueue queue &#x3D; new DelayQueue();</span><br><span class="line">        Delayed element1 &#x3D; new DelayedElement();</span><br><span class="line">        queue.put(element1);</span><br><span class="line">        Delayed element2 &#x3D; queue.take();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>DelayElement是一个实现Delayed接口的实现类，这根据你需要，创建不同的实现。</p>
-<p>用途：在异步通知时，用作间隔重发场景，比如订单回调失败后，1分钟，5分钟，10分钟..重发。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/DelayQueue/" data-id="ckajmtwg00000zovp2nj98pvt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/05/LinkedBlockingQueue/" data-id="ckajmub8r000254vpexmzg2dr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -316,7 +265,58 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/BlockingQueue/" data-id="ckajmtwg50001zovp6i3m2obt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/05/BlockingQueue/" data-id="ckajmub8k000054vpc2gy03ij" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-DelayQueue" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/05/DelayQueue/" class="article-date">
+  <time datetime="2018-11-05T12:28:13.000Z" itemprop="datePublished">2018-11-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/05/DelayQueue/">DelayQueue</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>DelayQueue实现了BlockingQueue接口，更多信息可以阅读我之前的文章。</p>
+<p>DelayQueue将会阻塞元素直到某个延迟过期，而这个元素必须实现java.util.concurrent.Delayed接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Delayed extends Comparable&lt;Delayed&lt; &#123;</span><br><span class="line"> public long getDelay(TimeUnit timeUnit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>getDelay()返回的是到过期的剩余时间，如果是0或者负数，那么就认为过期了，这个元素将被释放，使用take()就能够从DelayQueue中获得这个元素。</p>
+<p>TimeUnit是时间单位，告诉getDelay()延迟应该以什么单位进行返回，TimeUnit是一个Enum.</p>
+<p>可以取以下值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DAYS</span><br><span class="line">HOURS</span><br><span class="line">MINUTES</span><br><span class="line">SECONDS</span><br><span class="line">MILLISECONDS</span><br><span class="line">MICROSECONDS</span><br><span class="line">NANOSECONDS</span><br></pre></td></tr></table></figure>
+
+<p>Delayed接口也继承了Java.lang.Comparable接口，意味着Delayed对象能相互比较，因此在DelayQueue内部用来进行元素排序。根据过期时间进行排序。</p>
+<p>下面是一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class DelayQueueExample &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        DelayQueue queue &#x3D; new DelayQueue();</span><br><span class="line">        Delayed element1 &#x3D; new DelayedElement();</span><br><span class="line">        queue.put(element1);</span><br><span class="line">        Delayed element2 &#x3D; queue.take();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>DelayElement是一个实现Delayed接口的实现类，这根据你需要，创建不同的实现。</p>
+<p>用途：在异步通知时，用作间隔重发场景，比如订单回调失败后，1分钟，5分钟，10分钟..重发。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/05/DelayQueue/" data-id="ckajmub8p000154vpceli216c" class="article-share-link">Share</a>
       
       
     </footer>
