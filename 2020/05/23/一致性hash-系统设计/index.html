@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-4.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-5.jpg">
 <meta property="article:published_time" content="2020-05-23T12:03:15.000Z">
-<meta property="article:modified_time" content="2020-05-23T13:14:53.610Z">
+<meta property="article:modified_time" content="2020-05-23T13:20:41.404Z">
 <meta property="article:author" content="robin">
 <meta property="article:tag" content="graphql">
 <meta property="article:tag" content="prisma">
@@ -113,7 +113,7 @@
 <p>假设我们有大量数据，我们首先要计算它的哈希值(比如使用md5)，这样做是为了使我们可以获得[0 – 2 ^（128）− 1]范围内的随机值。<br>现在，我们的哈希函数将类似于以下server_number = hash（key）％n，这将算出一个在[0-（n-1）]范围内的随机数，并且n是服务器数。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Example -&gt; number of servers, n &#x3D; 3 and we have 6 keys</span><br><span class="line">           keys          hash value     server_number(hashing)</span><br><span class="line">           key1            100                1</span><br><span class="line">           key2            577                1</span><br><span class="line">           key3            872                2</span><br><span class="line">           key4            376                0                  </span><br><span class="line">           key5            23                 2</span><br><span class="line">           key6            6798               0</span><br></pre></td></tr></table></figure>
 <p>下面这张图显示了key如何分配到3台机器上<br><span><div style="text-align: center;"></p>
-<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-4-1.png" class="" width="1">
+<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-4-1.png" class="" title="one">
 </div></span>
 
 
@@ -121,12 +121,12 @@
 <p>添加服务器时就会出现问题,现在将服务器数量变成4，可以看到此时需要重新计算所有的key的hash,key的分布将发生变化，这就是说，大量的key将进行数据迁移。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Example -&gt; number of servers, n &#x3D; 4 and we have 6 keys</span><br><span class="line">           keys          hash value     server_number(hashing)</span><br><span class="line">           key1            100                0</span><br><span class="line">           key2            577                1</span><br><span class="line">           key3            872                0</span><br><span class="line">           key4            376                0                  </span><br><span class="line">           key5            23                 3</span><br><span class="line">           key6            6798               2</span><br></pre></td></tr></table></figure>
 <p><span><div style="text-align: center;"></p>
-<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-5.jpg" class="" width="2">
+<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-5.jpg" class="" title="two">
 </div></span>
 新服务器3被添加，因此所有的key需要rehash。
 
 <p>我们将遇到的另一个问题是数据倾斜，即，过多的key将hash到同一个服务器上，而hash到其他服务器的则很少，或者key分布不均匀。<br><span><div style="text-align: center;"></p>
-<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-6.png" class="" width="3">
+<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-6.png" class="" title="three">
 </div></span>
 现在我们总结一下常规hash遇到的问题：
 
@@ -146,25 +146,25 @@
 <li>如果密钥哈希值与任何服务器都不匹配，则密钥将按顺时针方向映射到最近的服务器。</li>
 </ul>
 <p><span><div style="text-align: center;"></p>
-<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-1.png" class="" width="4">
+<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-1.png" class="" title="four">
 </div></span>
 
 <h1 id="向环添加新服务器"><a href="#向环添加新服务器" class="headerlink" title="向环添加新服务器"></a>向环添加新服务器</h1><p>假设我们要添加一个新服务器，并假设哈希值位于服务器0和服务器1之间。<br><span><div style="text-align: center;"></p>
-<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-2.png" class="" width="5">
+<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-2.png" class="" title="five">
 </div></span>
 
 <p>添加新服务器后，我们不必rehash所有键值，而只需rehash在服务器0和服务器1之间的keys。平均而言，如果我们有n个服务器和k个key，则平均而言，我们仅需要重新哈希k / n个密钥。这是对简单散列的重大改进。</p>
 <h1 id="从环上移除服务器"><a href="#从环上移除服务器" class="headerlink" title="从环上移除服务器"></a>从环上移除服务器</h1><p>万一服务器出现故障，那么我们只需要rehash存储在这台故障服务器中key，然后把这些key存储在其顺时针相邻服务器中。此处假设服务器2发生故障。<br><span><div style="text-align: center;"></p>
-<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-2.png" class="" width="6">
+<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-2.png" class="" title="six">
 </div></span>
 
 <h1 id="非均匀分布"><a href="#非均匀分布" class="headerlink" title="非均匀分布"></a>非均匀分布</h1><p>现在可能还会出现另一个问题。非均匀哈希问题，即，大多数密钥被哈希到某台机器上或就近的某个服务器。这是不理想的，因为这一台服务器存储了比其他所有其他服务器更多的key。<br><span><div style="text-align: center;"></p>
-<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-4.png" class="" width="7">
+<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-4.png" class="" title="serven">
 </div></span>
 为了克服这个问题，我们引入了每个服务器的更多副本，并且服务器的每个副本被散列为不同的值，这意味着有更多的机器被放置在环上的随机位置。随着这些副本数量的增加，分布将变得越来越均匀。
 
 <p><span><div style="text-align: center;"></p>
-<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-5.jpg" class="" width="8">
+<img src="/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Diagram-1-1-5.jpg" class="" title="eight">
 </div></span>
 
 
@@ -174,7 +174,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" data-id="ckajns4w5000b8svpf7u40h0i" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" data-id="ckajnvaoy000bv8vp4xp86dsa" class="article-share-link">Share</a>
       
       
     </footer>
