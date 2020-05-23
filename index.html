@@ -223,183 +223,6 @@
 
 
   
-    <article id="post-limit" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/30/limit/" class="article-date">
-  <time datetime="2020-04-30T14:05:59.486Z" itemprop="datePublished">2020-04-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/30/limit/">限流</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>使用信号量实现并发量限制</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class Test&#123;</span><br><span class="line">public static void main(int argc,String[] argv)&#123;</span><br><span class="line">    Semaphore semaphore = new Semaphore(10,<span class="literal">true</span>);</span><br><span class="line">    semaphore.acquire();</span><br><span class="line">    //<span class="keyword">do</span> business</span><br><span class="line">    semaphore.realease();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>速率限制<br>使用Google的Guava实现速率限制</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void class Test&#123;</span><br><span class="line">    public static void main(int argc,String [] argv)&#123;</span><br><span class="line">        ReteLimiter limiter = ReteLimiter.create(10.0);</span><br><span class="line">        limiter.acquire();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/30/limit/" data-id="ckajo64pp0006o4vp1i9z83tu" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Golang" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/30/Golang/" class="article-date">
-  <time datetime="2020-04-30T14:05:59.479Z" itemprop="datePublished">2020-04-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/30/Golang/">限流</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>循环</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>是Go中唯一可用的循环</span><br></pre></td></tr></table></figure>
-
-<p>1-10</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for i:&#x3D; 0;i &lt; 10; i++ &#123;</span><br><span class="line">  fmt.Println(&quot;%d&quot;,i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>break</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for i :&#x3D; 0 ;i &lt; 10 ;i++&#123;</span><br><span class="line">  if i &gt; 5 &#x3D;0 &#123;</span><br><span class="line">  		break</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.PrintLn(&quot;%d&quot;,i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>continue</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for i :&#x3D; 0 ;i &lt; 10 ;i++&#123;</span><br><span class="line">  if i % 2 &#x3D;0 &#123;</span><br><span class="line">  		continue</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.PrintLn(&quot;%d&quot;,i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>for for</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">n :&#x3D; 5</span><br><span class="line">for i :&#x3D; 0 ;i &lt; n; i++ &#123;</span><br><span class="line">  for j:&#x3D; 1; j &lt; i; j++ &#123;</span><br><span class="line">  	fmt.Print(&quot;*&quot;)</span><br><span class="line">  &#125;</span><br><span class="line">  fmt.Println()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>标签</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/30/Golang/" data-id="ckajo64ph0001o4vp95hk30ya" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/30/hello-world/" class="article-date">
-  <time datetime="2020-04-30T14:05:18.716Z" itemprop="datePublished">2020-04-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/30/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/04/30/hello-world/" data-id="ckajo64pn0005o4vp33jfarpu" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Java线程池" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/18/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="article-date">
-  <time datetime="2018-11-18T02:19:43.000Z" itemprop="datePublished">2018-11-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/18/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/">Java线程池</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/18/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/" data-id="ckajo64pl0003o4vp40w03xiz" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-mysql性能分析工具" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/" class="article-date">
@@ -721,12 +544,58 @@
 
 
   
-
-
-  <nav id="page-nav">
+    <article id="post-DelayQueue" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/05/DelayQueue/" class="article-date">
+  <time datetime="2018-11-05T12:28:13.000Z" itemprop="datePublished">2018-11-05</time>
+</a>
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
-  </nav>
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/05/DelayQueue/">DelayQueue</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>DelayQueue实现了BlockingQueue接口，更多信息可以阅读我之前的文章。</p>
+<p>DelayQueue将会阻塞元素直到某个延迟过期，而这个元素必须实现java.util.concurrent.Delayed接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Delayed extends Comparable&lt;Delayed&lt; &#123;</span><br><span class="line"> public long getDelay(TimeUnit timeUnit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>getDelay()返回的是到过期的剩余时间，如果是0或者负数，那么就认为过期了，这个元素将被释放，使用take()就能够从DelayQueue中获得这个元素。</p>
+<p>TimeUnit是时间单位，告诉getDelay()延迟应该以什么单位进行返回，TimeUnit是一个Enum.</p>
+<p>可以取以下值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DAYS</span><br><span class="line">HOURS</span><br><span class="line">MINUTES</span><br><span class="line">SECONDS</span><br><span class="line">MILLISECONDS</span><br><span class="line">MICROSECONDS</span><br><span class="line">NANOSECONDS</span><br></pre></td></tr></table></figure>
+
+<p>Delayed接口也继承了Java.lang.Comparable接口，意味着Delayed对象能相互比较，因此在DelayQueue内部用来进行元素排序。根据过期时间进行排序。</p>
+<p>下面是一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class DelayQueueExample &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        DelayQueue queue &#x3D; new DelayQueue();</span><br><span class="line">        Delayed element1 &#x3D; new DelayedElement();</span><br><span class="line">        queue.put(element1);</span><br><span class="line">        Delayed element2 &#x3D; queue.take();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>DelayElement是一个实现Delayed接口的实现类，这根据你需要，创建不同的实现。</p>
+<p>用途：在异步通知时，用作间隔重发场景，比如订单回调失败后，1分钟，5分钟，10分钟..重发。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/05/DelayQueue/" data-id="ckajo64pk0002o4vpfp4x0pxt" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
 
 </section>
         
@@ -744,7 +613,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
     </div>
   </div>
 
@@ -765,15 +634,15 @@
           </li>
         
           <li>
-            <a href="/2020/04/30/limit/">限流</a>
+            <a href="/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">mysql性能分析工具</a>
           </li>
         
           <li>
-            <a href="/2020/04/30/Golang/">限流</a>
+            <a href="/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%AE%9A%E4%BD%8D%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">mysql性能定位与问题排查</a>
           </li>
         
           <li>
-            <a href="/2020/04/30/hello-world/">Hello World</a>
+            <a href="/2018/11/05/LinkedBlockingQueue/">LinkedBlockingQueue</a>
           </li>
         
       </ul>
