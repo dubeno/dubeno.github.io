@@ -107,6 +107,10 @@
 <h2 id="静态代码块和静态变量哪究竟谁先初始化？，我来调整一下顺序"><a href="#静态代码块和静态变量哪究竟谁先初始化？，我来调整一下顺序" class="headerlink" title="静态代码块和静态变量哪究竟谁先初始化？，我来调整一下顺序"></a>静态代码块和静态变量哪究竟谁先初始化？，我来调整一下顺序</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class InitailOrder&#123;</span><br><span class="line">    static String a &#x3D; verify(&quot;静态变量初始化&quot;);</span><br><span class="line">    static &#123;</span><br><span class="line">        System.out.println(&quot;静态代码块&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    String nonStatic &#x3D; verify(&quot;成员变量初始化&quot;);</span><br><span class="line">    public InitailOrder() &#123;</span><br><span class="line">        System.out.println(&quot;构造函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static String verify(String s) &#123;</span><br><span class="line">        System.out.println(s);  return s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="输出："><a href="#输出：" class="headerlink" title="输出："></a>输出：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">静态变量初始化</span><br><span class="line">静态代码块</span><br><span class="line">子类静态变量初始化</span><br><span class="line">子类静态代码块</span><br><span class="line">成员变量初始化</span><br><span class="line">构造函数</span><br><span class="line">子类成员变量初始化</span><br><span class="line">子类构造函数执行</span><br></pre></td></tr></table></figure>
 <p>可以看到静态变量初始化先于静态代码块，所以这里与静态元素在代码中的先后顺序有关。</p>
+<h2 id="看一个高级点的例子，看一下main方法的代码执行时机"><a href="#看一个高级点的例子，看一下main方法的代码执行时机" class="headerlink" title="看一个高级点的例子，看一下main方法的代码执行时机"></a>看一个高级点的例子，看一下main方法的代码执行时机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package corejava;</span><br><span class="line">class Parent &#123;</span><br><span class="line">    String p &#x3D; verify(&quot;4  - Parent&#39;s non-static class variable p initialized.&quot;);</span><br><span class="line">    static String pstatic &#x3D; verify(&quot;1a - Parent&#39;s static class variable pstatic initialized.&quot;);</span><br><span class="line">    static &#123;</span><br><span class="line">        System.out.println(&quot;1b - Parent&#39;s static initialization block ran.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static String verify(String s) &#123;</span><br><span class="line">        System.out.println(s);  return s;</span><br><span class="line">    &#125;</span><br><span class="line">    Parent( ) &#123;</span><br><span class="line">        System.out.println(&quot;5  - Parent constructor ran.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class Child extends Parent &#123;</span><br><span class="line">    static &#123;</span><br><span class="line">        System.out.println(&quot;2a - Child&#39;s static initialization block ran.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    String c &#x3D; verify(&quot;6  - Child&#39;s non-static class variable c initialized.&quot;);</span><br><span class="line">    static String cstatic &#x3D; verify(&quot;2b - Child&#39;s static class variable cstatic initialized.&quot;);</span><br><span class="line">    Child( ) &#123;</span><br><span class="line">        super( );   &#x2F;&#x2F;providing super( ) won&#39;t change anything here</span><br><span class="line">        System.out.println (&quot;7  - Child constructor ran.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[ ] args) &#123;</span><br><span class="line">        System.out.println(&quot;3  - Child&#39;s main(..) method ran. Invoking Child with new.&quot;);</span><br><span class="line">        Child C &#x3D; new Child( );</span><br><span class="line">        System.out.println(&quot;8  - The rest of main(..) was run.&quot;);  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="输出：-1"><a href="#输出：-1" class="headerlink" title="输出："></a>输出：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1a - Parent&#39;s static class variable pstatic initialized.</span><br><span class="line">1b - Parent&#39;s static initialization block ran.</span><br><span class="line">2a - Child&#39;s static initialization block ran.</span><br><span class="line">2b - Child&#39;s static class variable cstatic initialized.</span><br><span class="line">3  - Child&#39;s main(..) method ran. Invoking Child with new.</span><br><span class="line">4  - Parent&#39;s non-static class variable p initialized.</span><br><span class="line">5  - Parent constructor ran.</span><br><span class="line">6  - Child&#39;s non-static class variable c initialized.</span><br><span class="line">7  - Child constructor ran.</span><br><span class="line">8  - The rest of main(..) was run.</span><br></pre></td></tr></table></figure>
+
+
 <h3 id="下面总结一下："><a href="#下面总结一下：" class="headerlink" title="下面总结一下："></a>下面总结一下：</h3><p>首先是父类的静态变量或者静态代码块先执行，然后是子类静态变量或者子类静态代码块，完了是父类成员变量初始化，父类构造函数，然后是子类成员变量初始化，子类构造函数执行。</p>
 <ul>
 <li>静态代码块</li>
@@ -123,7 +127,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/24/Java%E7%B1%BB%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/" data-id="ckakvg3xg0002rsvpfu8n8l1z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/24/Java%E7%B1%BB%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/" data-id="ckakvvanl0003wkvpct511xr0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -221,7 +225,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" data-id="ckakvg3xl0004rsvp9ypmfmuz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/23/%E4%B8%80%E8%87%B4%E6%80%A7hash-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" data-id="ckakvvans0007wkvpal2igoa3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -269,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/%E6%9C%80%E8%BF%91%E9%98%85%E8%AF%BB%E4%BC%98%E7%A7%80%E6%96%87%E7%AB%A0%E9%93%BE%E6%8E%A5/" data-id="ckakvg3xt0007rsvph4mx2xbh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/15/%E6%9C%80%E8%BF%91%E9%98%85%E8%AF%BB%E4%BC%98%E7%A7%80%E6%96%87%E7%AB%A0%E9%93%BE%E6%8E%A5/" data-id="ckakvvanq0006wkvp0gdghjsl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -306,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/" data-id="ckakvg3xj0003rsvp1xsf8msc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/" data-id="ckakvvanf0001wkvp2d57b06c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -426,7 +430,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%AE%9A%E4%BD%8D%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" data-id="ckakvg3xr0006rsvpen74hr4v" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/17/mysql%E6%80%A7%E8%83%BD%E5%AE%9A%E4%BD%8D%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" data-id="ckakvvanm0004wkvpho9d2n4m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -466,7 +470,58 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/LinkedBlockingQueue/" data-id="ckakvg3xo0005rsvpclu56lrf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/05/LinkedBlockingQueue/" data-id="ckakvvano0005wkvp45uj1scy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-DelayQueue" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/05/DelayQueue/" class="article-date">
+  <time datetime="2018-11-05T12:28:13.000Z" itemprop="datePublished">2018-11-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/05/DelayQueue/">DelayQueue</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>DelayQueue实现了BlockingQueue接口，更多信息可以阅读我之前的文章。</p>
+<p>DelayQueue将会阻塞元素直到某个延迟过期，而这个元素必须实现java.util.concurrent.Delayed接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Delayed extends Comparable&lt;Delayed&lt; &#123;</span><br><span class="line"> public long getDelay(TimeUnit timeUnit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>getDelay()返回的是到过期的剩余时间，如果是0或者负数，那么就认为过期了，这个元素将被释放，使用take()就能够从DelayQueue中获得这个元素。</p>
+<p>TimeUnit是时间单位，告诉getDelay()延迟应该以什么单位进行返回，TimeUnit是一个Enum.</p>
+<p>可以取以下值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DAYS</span><br><span class="line">HOURS</span><br><span class="line">MINUTES</span><br><span class="line">SECONDS</span><br><span class="line">MILLISECONDS</span><br><span class="line">MICROSECONDS</span><br><span class="line">NANOSECONDS</span><br></pre></td></tr></table></figure>
+
+<p>Delayed接口也继承了Java.lang.Comparable接口，意味着Delayed对象能相互比较，因此在DelayQueue内部用来进行元素排序。根据过期时间进行排序。</p>
+<p>下面是一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class DelayQueueExample &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        DelayQueue queue &#x3D; new DelayQueue();</span><br><span class="line">        Delayed element1 &#x3D; new DelayedElement();</span><br><span class="line">        queue.put(element1);</span><br><span class="line">        Delayed element2 &#x3D; queue.take();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>DelayElement是一个实现Delayed接口的实现类，这根据你需要，创建不同的实现。</p>
+<p>用途：在异步通知时，用作间隔重发场景，比如订单回调失败后，1分钟，5分钟，10分钟..重发。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/05/DelayQueue/" data-id="ckakvvan40000wkvp9whk26ii" class="article-share-link">Share</a>
       
       
     </footer>
@@ -590,58 +645,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/BlockingQueue/" data-id="ckakvg3wv0000rsvp7c995lr2" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-DelayQueue" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/05/DelayQueue/" class="article-date">
-  <time datetime="2018-11-05T12:28:13.000Z" itemprop="datePublished">2018-11-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/05/DelayQueue/">DelayQueue</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>DelayQueue实现了BlockingQueue接口，更多信息可以阅读我之前的文章。</p>
-<p>DelayQueue将会阻塞元素直到某个延迟过期，而这个元素必须实现java.util.concurrent.Delayed接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Delayed extends Comparable&lt;Delayed&lt; &#123;</span><br><span class="line"> public long getDelay(TimeUnit timeUnit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>getDelay()返回的是到过期的剩余时间，如果是0或者负数，那么就认为过期了，这个元素将被释放，使用take()就能够从DelayQueue中获得这个元素。</p>
-<p>TimeUnit是时间单位，告诉getDelay()延迟应该以什么单位进行返回，TimeUnit是一个Enum.</p>
-<p>可以取以下值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DAYS</span><br><span class="line">HOURS</span><br><span class="line">MINUTES</span><br><span class="line">SECONDS</span><br><span class="line">MILLISECONDS</span><br><span class="line">MICROSECONDS</span><br><span class="line">NANOSECONDS</span><br></pre></td></tr></table></figure>
-
-<p>Delayed接口也继承了Java.lang.Comparable接口，意味着Delayed对象能相互比较，因此在DelayQueue内部用来进行元素排序。根据过期时间进行排序。</p>
-<p>下面是一个例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class DelayQueueExample &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        DelayQueue queue &#x3D; new DelayQueue();</span><br><span class="line">        Delayed element1 &#x3D; new DelayedElement();</span><br><span class="line">        queue.put(element1);</span><br><span class="line">        Delayed element2 &#x3D; queue.take();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>DelayElement是一个实现Delayed接口的实现类，这根据你需要，创建不同的实现。</p>
-<p>用途：在异步通知时，用作间隔重发场景，比如订单回调失败后，1分钟，5分钟，10分钟..重发。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/05/DelayQueue/" data-id="ckakvg3xc0001rsvp20v7gfiq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/05/BlockingQueue/" data-id="ckakvvani0002wkvphpg20kyr" class="article-share-link">Share</a>
       
       
     </footer>
