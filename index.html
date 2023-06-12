@@ -153,7 +153,7 @@
 <li>ControlNet 是一种通过添加额外条件来控制扩散模型的神经网络结构。它提供了一种增强稳定扩散的方法，在文本到图像生成过程中使用条件输入，如涂鸦、边缘映射、分割映射、Pose 关键点等。可以让生成的图像将更接近输入图像，这比传统的图像到图像生成方法有了很大的改进。</li>
 </ul>
 <p>注：以下使用的图片来源于网络，配合实验做了对应的图片效果处理。所有的 Prompt 词和参数只是参考样例，可以对参数配置做不断地优化去提升图片输出效果。</p>
-<h2 id="1-实验环境准备"><a href="#1-实验环境准备" class="headerlink" title="1. 实验环境准备"></a>1. 实验环境准备</h2><h3 id="a-搭建-Stable-Diffusion-WebUI，由于相关版本和扩展更新比较快，直接去-Github-下载最新版本可以获得更多的功能支持能力"><a href="#a-搭建-Stable-Diffusion-WebUI，由于相关版本和扩展更新比较快，直接去-Github-下载最新版本可以获得更多的功能支持能力" class="headerlink" title="a. 搭建 Stable Diffusion WebUI，由于相关版本和扩展更新比较快，直接去 Github 下载最新版本可以获得更多的功能支持能力"></a>a. 搭建 Stable Diffusion WebUI，由于相关版本和扩展更新比较快，直接去 Github 下载最新版本可以获得更多的功能支持能力</h3><p>使用 GPU 实例构建单机版本的 WebUI 环境做日常的测试使用，推荐使用 G4dn 机型（NVIDIA T4 GPU，16 GiB 显存）或者 G5 机型（NVIDIA A10G GPU，24 GiB 显存）。<br><img src="/StableDiffusion%E5%9C%A8%E7%94%B5%E5%95%86%E5%9C%BA%E6%99%AF%E7%94%9F%E6%88%90%E6%A8%A1%E7%89%B9%E6%90%AD%E9%85%8D%E6%9C%8D%E8%A3%85%E6%96%B9%E6%A1%88/generating-ai-models-to-match-outfits-in-e-commerce-scenarios1.png"></p>
+<h2 id="1-实验环境准备"><a href="#1-实验环境准备" class="headerlink" title="1. 实验环境准备"></a>1. 实验环境准备</h2><h3 id="a-搭建-Stable-Diffusion-WebUI，由于相关版本和扩展更新比较快，直接去-Github-下载最新版本可以获得更多的功能支持能力"><a href="#a-搭建-Stable-Diffusion-WebUI，由于相关版本和扩展更新比较快，直接去-Github-下载最新版本可以获得更多的功能支持能力" class="headerlink" title="a. 搭建 Stable Diffusion WebUI，由于相关版本和扩展更新比较快，直接去 Github 下载最新版本可以获得更多的功能支持能力"></a>a. 搭建 Stable Diffusion WebUI，由于相关版本和扩展更新比较快，直接去 Github 下载最新版本可以获得更多的功能支持能力</h3><p>使用 GPU 实例构建单机版本的 WebUI 环境做日常的测试使用，推荐使用 G4dn 机型（NVIDIA T4 GPU，16 GiB 显存）或者 G5 机型（NVIDIA A10G GPU，24 GiB 显存）。<br><img src="/generating-ai-models-to-match-outfits-in-e-commerce-scenarios1.png"></p>
 <h3 id="b-下载-chilloutmix-模型：进入-stable-diffusion-webui-x2F-models-x2F-stable-diffusion-文件夹，通过如下命令行下载-chilloutmix-模型到本地"><a href="#b-下载-chilloutmix-模型：进入-stable-diffusion-webui-x2F-models-x2F-stable-diffusion-文件夹，通过如下命令行下载-chilloutmix-模型到本地" class="headerlink" title="b. 下载 chilloutmix 模型：进入 stable-diffusion-webui&#x2F;models&#x2F;stable-diffusion 文件夹，通过如下命令行下载 chilloutmix 模型到本地"></a>b. 下载 chilloutmix 模型：进入 stable-diffusion-webui&#x2F;models&#x2F;stable-diffusion 文件夹，通过如下命令行下载 chilloutmix 模型到本地</h3><h3 id="c-LoRA-扩展安装，最新版本的-WebUI-已经内置了-LoRA，只需要单独安装-Additional-Network-这个扩展即可，在-WebUI-界面的-Extensions-页面，使用-Install-from-URL-安装。链接：sd-webui-additional-networks"><a href="#c-LoRA-扩展安装，最新版本的-WebUI-已经内置了-LoRA，只需要单独安装-Additional-Network-这个扩展即可，在-WebUI-界面的-Extensions-页面，使用-Install-from-URL-安装。链接：sd-webui-additional-networks" class="headerlink" title="c. LoRA 扩展安装，最新版本的 WebUI 已经内置了 LoRA，只需要单独安装 Additional Network 这个扩展即可，在 WebUI 界面的 Extensions 页面，使用 Install from URL 安装。链接：sd-webui-additional-networks"></a>c. LoRA 扩展安装，最新版本的 WebUI 已经内置了 LoRA，只需要单独安装 Additional Network 这个扩展即可，在 WebUI 界面的 Extensions 页面，使用 Install from URL 安装。链接：<a target="_blank" rel="noopener" href="https://github.com/kohya-ss/sd-webui-additional-networks.git">sd-webui-additional-networks</a></h3><p><img src="/StableDiffusion%E5%9C%A8%E7%94%B5%E5%95%86%E5%9C%BA%E6%99%AF%E7%94%9F%E6%88%90%E6%A8%A1%E7%89%B9%E6%90%AD%E9%85%8D%E6%9C%8D%E8%A3%85%E6%96%B9%E6%A1%88/generating-ai-models-to-match-outfits-in-e-commerce-scenarios2.png"></p>
 <h4 id="风格模型下载："><a href="#风格模型下载：" class="headerlink" title="风格模型下载："></a>风格模型下载：</h4><ul>
 <li>FashionGirl：<a target="_blank" rel="noopener" href="https://civitai.com/models/8217?modelVersionId=28342">https://civitai.com/models/8217?modelVersionId=28342</a></li>
@@ -260,7 +260,7 @@
       </div>
       
       <div class="col-3">
-        <article id="post-kuaisuchengzhang" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <article id="post-shijianguanli" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   
   <div class="article-inner">
@@ -270,7 +270,7 @@
       
   
     <h5 class="article-title" itemprop="name">
-      <a href="/2023/06/11/kuaisuchengzhang/">快速成长诀窍</a>
+      <a href="/2023/06/11/shijianguanli/">如何管理时间，持续进步？</a>
     </h5>
   
 
@@ -285,17 +285,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       <ol>
-<li>自我成长的责任：成长是一件很私人的事情，对自己的成长负责，自己是自己成长的主要责任</li>
-<li>公司优秀时的机遇：利用公司提供的平台、资源和流程实现快速成长</li>
-<li>公司不完善时的机遇：在问题中找到成长的机会，推动体系建设</li>
-<li>整合时间、精力和资源：有效地管理时间和精力，并充分利用公司资源，超出期望的表现：通过努力使工作成果超出他人的期望</li>
-<li>将问题转化为机会：善于解决问题，并将其视为个人成长的机会</li>
-<li>主动性强，主动承担更多，更大的任务，获得更多成长</li>
-<li>不要给给自己设限，划定边界，设置障碍，不要定义自己，明白程序只是解决问题的工具</li>
-<li>重视deadline和owner意识</li>
-<li>寻求资深人士帮助，所谓遇到贵人</li>
+<li><p>商业洞察：明确商业目标和战略，确保你所做的事与公司的核心价值相关。集中精力在具有最大商业影响力的任务上，避免分散注意力。</p>
+</li>
+<li><p>知识体系建设和扩展：建立一个系统化的知识体系，不断学习和深化领域知识。阅读书籍、参加培训课程、参与行业会议等方式扩展知识，并将学到的知识应用到实际工作中。</p>
+</li>
+<li><p>项目管理方法：采用有效的项目管理方法，如制定明确的目标和里程碑，制定详细的计划和时间表，分解任务，设定优先级，及时跟进进度并调整计划。使用项目管理工具和技术帮助提高效率和组织能力。</p>
+</li>
+<li><p>极致做事方法：注重细节，追求卓越。确保每个任务都精益求精，准确无误地完成。细心审查工作成果，检查错误并进行修正。持续反思并改进自己的工作方法和流程，以提高效率和质量。</p>
+</li>
+<li><p>家庭、生活和放松时间：平衡工作与个人生活，确保拥有足够的时间放松和休息。设定明确的工作时间和个人时间，优化时间利用，避免过度工作。培养兴趣爱好、锻炼身体和与家人朋友交流，以保持身心健康和持续进步。</p>
+</li>
 </ol>
-<hr>
 
     </div>
     <footer class="article-footer">
@@ -405,7 +405,7 @@
       </div>
       
       <div class="col-3">
-        <article id="post-shijianguanli" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <article id="post-kuaisuchengzhang" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   
   <div class="article-inner">
@@ -415,7 +415,7 @@
       
   
     <h5 class="article-title" itemprop="name">
-      <a href="/2023/06/11/shijianguanli/">如何管理时间，持续进步？</a>
+      <a href="/2023/06/11/kuaisuchengzhang/">快速成长诀窍</a>
     </h5>
   
 
@@ -430,17 +430,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       <ol>
-<li><p>商业洞察：明确商业目标和战略，确保你所做的事与公司的核心价值相关。集中精力在具有最大商业影响力的任务上，避免分散注意力。</p>
-</li>
-<li><p>知识体系建设和扩展：建立一个系统化的知识体系，不断学习和深化领域知识。阅读书籍、参加培训课程、参与行业会议等方式扩展知识，并将学到的知识应用到实际工作中。</p>
-</li>
-<li><p>项目管理方法：采用有效的项目管理方法，如制定明确的目标和里程碑，制定详细的计划和时间表，分解任务，设定优先级，及时跟进进度并调整计划。使用项目管理工具和技术帮助提高效率和组织能力。</p>
-</li>
-<li><p>极致做事方法：注重细节，追求卓越。确保每个任务都精益求精，准确无误地完成。细心审查工作成果，检查错误并进行修正。持续反思并改进自己的工作方法和流程，以提高效率和质量。</p>
-</li>
-<li><p>家庭、生活和放松时间：平衡工作与个人生活，确保拥有足够的时间放松和休息。设定明确的工作时间和个人时间，优化时间利用，避免过度工作。培养兴趣爱好、锻炼身体和与家人朋友交流，以保持身心健康和持续进步。</p>
-</li>
+<li>自我成长的责任：成长是一件很私人的事情，对自己的成长负责，自己是自己成长的主要责任</li>
+<li>公司优秀时的机遇：利用公司提供的平台、资源和流程实现快速成长</li>
+<li>公司不完善时的机遇：在问题中找到成长的机会，推动体系建设</li>
+<li>整合时间、精力和资源：有效地管理时间和精力，并充分利用公司资源，超出期望的表现：通过努力使工作成果超出他人的期望</li>
+<li>将问题转化为机会：善于解决问题，并将其视为个人成长的机会</li>
+<li>主动性强，主动承担更多，更大的任务，获得更多成长</li>
+<li>不要给给自己设限，划定边界，设置障碍，不要定义自己，明白程序只是解决问题的工具</li>
+<li>重视deadline和owner意识</li>
+<li>寻求资深人士帮助，所谓遇到贵人</li>
 </ol>
+<hr>
 
     </div>
     <footer class="article-footer">
