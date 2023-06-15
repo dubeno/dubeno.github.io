@@ -103,7 +103,22 @@
     </header>
     
     <div class="article-entry" itemprop="articleBody">
-      <img class="[class names] img1.png &quot;title text&quot; &quot;alt text&quot;">
+      <h2 id="什么是Lora？"><a href="#什么是Lora？" class="headerlink" title="什么是Lora？"></a>什么是Lora？</h2><p>Lora（低秩适应）是一种用于Stable Diffusion的微调技术。</p>
+<p>初除此之外还有DreamBooth和Textual inversion等训练技术。那Lora有什么不得了？<br>实际上Lora在文件大小和训练能力之间提供了一个很好的平衡。DR功能强大，但是会生成<br>大模型文件（2-7G）TI生成的文件小（100k），但是效果又差点。</p>
+<p>Lora介于两者之间，文件（2-200M）文件大小可控，训练能力不错。</p>
+<p>玩过Stable Diffusion的人都知道，要试验各种模型，前提是你要又足够的磁盘空间<br>而且下载那么大的模型，你的网络带宽也得非常OK，不然真的没耐心等待吧。那么Lora流行<br>不是没有他得道理。</p>
+<p>与TI相同，Lora模型不能单独使用，必须与训练得基础模型一起使用。</p>
+<ol start="2">
+<li>Lora是如何工作的？<br>Lora对Stable Diffusion模型最关键的部分进行了微小修改：cross-attention layers<br>它是模型中图像和提示相交的部分（LORA 微调交叉注意层（U-Net 噪声预测器的 QKV 部分））。<br>研究人员发现，通过聚焦大模型的 Transformer 注意力块，使用 LoRA 进行的微调质量与全模型微调相当，同时速度更快且需要更少的计算。</li>
+</ol>
+<p>cross-attention 注意力交叉层的权重排列在矩阵中。矩阵只是一堆按行和列排列的数字<br>就像在Excle里面一样。Lora通过将其权重添加到这些矩阵来微调模型。</p>
+<p>假设模型包含1000行和2000列的矩阵。这是要存在模型中的2,000,000 个数字 (1,000 x 2,000)<br>Lora将矩阵分解为：1,000×2 矩阵和 2×2,000 矩阵。这只有 6,000 个数字 (1,000 x 2 + 2 x 2,000)<br>少了333倍，这就是Lora文件小得多得原因。</p>
+<p>LoRA 将一个大矩阵分解为两个小的低阶矩阵</p>
+<p>在这个例子中，矩阵得秩为2。它比原始维度低很多，所以被称之为低秩矩阵。</p>
+<p>那这样搞有没有问题？研究人员发现在交叉注意力层这样做不会对微调得能力产生太大影响。</p>
+<h1 id="在哪里可以找到Lora模型"><a href="#在哪里可以找到Lora模型" class="headerlink" title="在哪里可以找到Lora模型"></a>在哪里可以找到Lora模型</h1><p>这里推荐3个：<br>第一个是civitai.com,江湖人称之为C站，模型很丰富，因为有些模型不合规，国内现在直接访问不了，需要魔法。<br>第二个是Hugging Face,模型部署很多，但是还有很多不错的模型可挑选。<br>第三个是炼丹阁：这是一家国内公司连夜去civitai搬运的，模型经过了筛选，具有一定的合规性，试过也可以。</p>
+<p>好了，本章不将</p>
+
     </div>
     <footer class="article-footer">
       
@@ -113,6 +128,15 @@
   
     
 <nav class="article-nav pt-4 mt-3" id="article-nav">
+  
+    <a href="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
   
   
     <a href="/2023/06/12/StableDiffusion%E5%9C%A8%E7%94%B5%E5%95%86%E5%9C%BA%E6%99%AF%E7%94%9F%E6%88%90%E6%A8%A1%E7%89%B9%E6%90%AD%E9%85%8D%E6%9C%8D%E8%A3%85%E7%9A%84%E6%96%B9%E6%A1%88/" id="article-nav-older" class="article-nav-link-wrap">
