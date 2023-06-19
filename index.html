@@ -121,6 +121,87 @@
   <div class="row flex-wrap">
     
       <div class="col-3">
+        <article id="post-sd-webui-只能由一个用户同时使用吗？" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h5 class="article-title" itemprop="name">
+      <a href="/2023/06/20/sd-webui-%E5%8F%AA%E8%83%BD%E7%94%B1%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%E5%90%8C%E6%97%B6%E4%BD%BF%E7%94%A8%E5%90%97%EF%BC%9F/">sd-webui 只能由一个用户同时使用吗？</a>
+    </h5>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-19T23:36:30.000Z" itemprop="datePublished">
+  2023-06-20
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p>有人在AUTOMATIC1111问：<br>我在带有 NVIDIA Tesla T4 的 GPU 服务器上部署了一个 sd webui，并配置了一个远程服务，这意味着任何地方的任何人都可以通过 GPU 服务器的公共 IP 地址访问 sd webui url。</p>
+<p>例如，Li 从纽约访问 webui url，而 James 从芝加哥访问 webui url</p>
+<p>但是我发现如果李正在生成图像，同时，詹姆斯点击生成按钮，他必须等待李完成她的生成工作（webui 显示“等待，排队”）。真是令人费解，李在生成图像时GPU服务器几乎空闲，为什么詹姆斯不能立即开始生成？如果我希望 2 或 200 人可以同时从不同的地方开始生成图像，我该怎么办？</p>
+<p>Q：如何配置为“启动多个 WebUI 实例，我是新手？</p>
+<p>A: 如果启动多个WebUI，它们会默认挂载在不同的端口上，可以并行工作。 由于 Python 的性质，单实例并行是不可能的。</p>
+<p>总结：在不同的 web 端口上启动 web 服务，并部署负载平衡以响应多用户生成的请求。</p>
+
+    </div>
+    <footer class="article-footer">
+      
+    </footer>
+  </div>
+  
+  
+</article>
+      </div>
+      
+      <div class="col-3">
+        <article id="post-controlnet更新" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h5 class="article-title" itemprop="name">
+      <a href="/2023/06/18/controlnet%E6%9B%B4%E6%96%B0/">controlnet更新</a>
+    </h5>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-17T23:50:57.000Z" itemprop="datePublished">
+  2023-06-18
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p>在你沒注意的時候ControlNet又更新了幾次? ControlNet更新總整理!! - YouTube<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=PTyWM15W7mg">https://www.youtube.com/watch?v=PTyWM15W7mg</a></p>
+<p>Transcript:</p>
+<p>大家好，我是艾粒，我是杰克。今天我们来更新一下信息。从上一篇tile模型更新后，ControlNet又用非常惊人的速度持续更新。今天我们来看看，到底又更新了些什么吧。在开始之前，我们拍这片的时候，ControlNet的版本是1.1.201版。那就开始吧。首先，ControlNet最让人诟病的问题就是模型跟预处理器非常的乱。现在的ControlNet预处理器大概有40个以上，然后模型也有十几个。每一个选择都非常花时间。现在终于出现了非常方便的选择器，只需要在画面上点击你要的内容，例如我选OpenPose，系统就会把OpenPose能够对应的预处理器放上去。如果你有对应的模型，系统也会帮你把模型放好，非常方便。<br>(00:16) 大家好我是艾粒 我是杰克 今天我們來更新一下資訊 從上一篇tile模型更新後 ControlNet又用非常驚人的速度持續更新 今天我們來看看 到底又更新了些什麼吧 在開始前說一下 我們拍這片的時候 Controlnet的版本是1.1.201版 那就開始吧 首先Controlnet最讓人詬病的問題 就是模型跟預處理器非常的亂 現在的Controlnet預處理器 大概有40個以上 然後模型也有十幾個 每一個選擇都非常花時間 現在終於出現了非常方便的選擇器 只需要在畫面上 點選你要的內容 例如我選openpose 系統就會把openpose 能夠對應的預處理器放上去 如果你有對應的模型 系統也會幫你把模型放好 非常的方便<br>(01:19) 之後不用在預處理器之海迷航啦 接下來我們來說說 又增加了什麼預處理器吧 第一個是Depth 他新增了一個leres++ 這個預處理器 對畫面的細分度更高 可以針對每一個區域 做出更明確的分類 我們來看一下對照圖 這是每一個預處理器 分別畫出五張 從中間挑出三張比較好的結果 在我看來 細緻度排名分別是這樣子 什麼意思呢 就是leres++ 對畫面的還原度最高 不過主要還是看你的需求 再選擇要使用的預處理器 接著我們看Tile Tile多了兩個預處理器 過去有使用過tile應該會知道 tile在放大動漫圖像的時候 會有顏色失真的問題 原本的顏色會跑掉很多 還有一些報告指出 某些部分會模糊 通常是因為CFG不足導致<br>(02:24) 所以目前tile針對這兩個問題 做了對應的處理 經過調整 已經不需要提高CFG去控制Tile了 另外增加了兩個預處理器 一個是tile_colorfix 他會針對顏色做補正 讓顏色不會跑掉 另一個是tile_colorfix+sharp 這個是顏色補正加上銳利化 下方還有可以調整銳利度的滑塊 這也是目前官方最推薦的預處理器 大家可以參考一下 目前在顏色修復上 我認為效果非常明顯 但是要注意 colorfix會把原圖的顏色鎖死 是沒有辦法靠提詞改變顏色的喔 再來是inpaint 在過去要使用inpaint模型的時候 通常我們會使用圖生圖的局部重繪 但是這樣會有一個問題 我們得要上面塗一次遮罩 下面ControlNet也圖一次遮罩 現在ControlNet不用這麼麻煩了<br>(03:27) 我們只需要在局部重繪的地方塗好遮罩 下方ControlNet的部分 不需要放入任何東西 只需要選擇局部重繪 ControlNet的啟用打勾 直接按下生產就可以了 系統會自動把局部重繪的圖像 送到ControlNet裡面 就不用像過去的教學一樣 上下都塗遮罩了 而inpaint目前多了一個 inpaint_only預處理器 這個預處理器是用在 不使用webui的局部重繪功能時 如果你用inpaint_only預處理器 系統就不會重繪遮罩以外的部分 最後是Reference 這是一個全新功能 他只有預處理器 不需要模型 Reference是一個概念簡單 但是非常強大的功能 我們先來說一下原理 Reference的意思是參考 那他怎麼參考的呢 其實就是將我們用來參考的圖像 先送進SD的注意力層 等到我們的提詞和參數進入的時候 做為參考<br>(04:31) 得出相近的結果 目前Reference有三種 參考的方式有點不同 我們一樣直接上對照圖 Reference_only 讀取的比較像是風格 Reference_adain 比較像是構圖 最後是Reference_adain+attn 這是前面兩個的結合 所以構圖跟風格都會轉移 這個功能有一個重點 他對參考圖像的品質要求很高 如果你的圖片是網頁上面的照片 很容易產生品質不佳的狀況 今天就介紹到這邊(? 等一下!! 在影片快做完的時候 ControlNet又更新了4次 我們又有一個重大的更新 大家知道Adobe的Filefly 前陣子發布了 生成式填色的功能吧 不使用任何提詞 就可以獲得很棒的重繪結果 這個功能甚至可以輕鬆的向外繪製 前幾天如果你問 SD能不能做一樣的事 那答案是否定的 我們不使用任何提詞<br>(05:34) 就沒有辦法達成這個效果 而且結果並沒有辦法非常多樣化 但就在前不久 ControlNet做到了 我們現在可以用SD 重現類似的成果 做法很簡單 只要再文生圖的地方使用inpaint 需要的只有高解析度修復打勾 CFG官方建議小於5 接著打開ControlNet 模型選擇局部重繪 下方的控制模式 改成ControlNet更重要 接著放上你想要填色的圖片 這邊要注意你的預處理器了 使用inpaint only 才不會改變遮罩以外的圖像 針對要填色的區域塗上遮罩後 只要按下產生就可以了 如果你想要畫面多做一些改變 只要加上少量的提 詞 就能夠獲得很好的成果 那如果想要向外繪製呢 我們現在也可以用inpaint來達成了 只要把ControlNet的縮放模式<br>(06:38) 改為調整大小並填充 接著調整你需要擴張的像素 按下一次產生 就會獲得一張向外擴充的圖片 接著再把這張圖片 放入ControlNet中 把需要擴充的內容圖上遮罩 當然也可以再其他繪圖軟體中先做好 再放到SD裡面 就不需要只是為了把圖像擴張(口誤) 而多執行一次 說不定你看到這部影片的時候 已經不需要這樣做了 最後只要按下產生就完成了 今天真的就介紹到這邊 各位看完這篇的時候 ControlNet可能又更新了好幾次了 等過陣子 我們再來整理ControlNet又會了些什麼吧 那就這樣啦 下次見 掰</p>
+
+    </div>
+    <footer class="article-footer">
+      
+    </footer>
+  </div>
+  
+  
+</article>
+      </div>
+      
+      <div class="col-3">
         <article id="post-Stable-Diffusion的工作原理" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   
@@ -850,101 +931,6 @@
 <li><p>家庭、生活和放松时间：平衡工作与个人生活，确保拥有足够的时间放松和休息。设定明确的工作时间和个人时间，优化时间利用，避免过度工作。培养兴趣爱好、锻炼身体和与家人朋友交流，以保持身心健康和持续进步。</p>
 </li>
 </ol>
-
-    </div>
-    <footer class="article-footer">
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/" rel="tag">职业规划</a></li></ul>
-
-    </footer>
-  </div>
-  
-  
-</article>
-      </div>
-      
-      <div class="col-3">
-        <article id="post-xiangshangguanli" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  
-  <div class="article-inner">
-    
-    <header class="article-header">
-      
-      
-  
-    <h5 class="article-title" itemprop="name">
-      <a href="/2023/06/11/xiangshangguanli/">向上管理两点很重要</a>
-    </h5>
-  
-
-      <div class="article-meta">
-        <time class="text-gray" datetime="2023-06-11T05:00:00.000Z" itemprop="datePublished">
-  2023-06-11
-</time>
-        
-      </div>
-      
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      <p>向上管理两点很重要<br>及时汇报进度：确保在项目进行过程中及时向领导汇报进展情况，特别是关键节点的进展情况。这样可以给领导足够的信息，使其能够把握项目的整体方向，并了解项目是否按预期进行。如果缺乏汇报，领导可能会感到被交付的事情变成了一个未知的盒子，一旦项目失控，领导也会感到焦虑，无法确认团队是否能按时完成项目。</p>
-<p>及时暴露风险：除了关键节点之外，在项目进行过程中遇到的风险也需要及时向领导报告，让领导知道可能存在的风险。在向领导报告风险时，应该先思考解决方案来应对这些风险。适当地放权给团队成员，让他们参与全局和方向的把控，并对项目结果负责。不放权的话，团队无法面临挑战和成长，因为每个人都不希望永远只是一颗螺丝钉。追求可控中的失控，意味着不能盲目放权，而是要有足够的信息来掌握整个项目的全局。此外，领导还应该帮助团队应对风险，并解决问题，在可控范围内给予每个成员空间和机会。要全面考虑问题，以便做出最佳决策。</p>
-
-    </div>
-    <footer class="article-footer">
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/" rel="tag">职业规划</a></li></ul>
-
-    </footer>
-  </div>
-  
-  
-</article>
-      </div>
-      
-      <div class="col-3">
-        <article id="post-zhiyexuanzhe" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  
-  <div class="article-inner">
-    
-    <header class="article-header">
-      
-      
-  
-    <h5 class="article-title" itemprop="name">
-      <a href="/2023/06/11/zhiyexuanzhe/">职业选择考虑那些方面？</a>
-    </h5>
-  
-
-      <div class="article-meta">
-        <time class="text-gray" datetime="2023-06-11T05:00:00.000Z" itemprop="datePublished">
-  2023-06-11
-</time>
-        
-      </div>
-      
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      <ol>
-<li><p>赛道和行业发展：选择一个具有潜力和增长前景的赛道或行业。研究市场趋势、行业竞争情况以及相关公司的发展前景，确保选择的领域有良好的发展前景。</p>
-</li>
-<li><p>公司业务增长：了解目标公司的业务增长情况。查看公司的财务报告、市场份额和产品&#x2F;服务创新能力等方面的信息，确保公司处于积极发展的轨道上。</p>
-</li>
-<li><p>成长机会：评估目标公司提供的成长机会。考虑公司的培训和发展计划、晋升机制、项目的多样性和挑战性，以及与高级人员的合作机会等因素。</p>
-</li>
-<li><p>公司文化和同事关系：了解目标公司的文化价值观和工作氛围，确保与自己的价值观和工作方式相契合。考虑与团队和同事的相处关系，以及是否能够获得合作和支持。</p>
-</li>
-<li><p>薪资和福利：考虑薪资水平、绩效奖金、福利待遇和其他补偿措施。确保薪资和福利能够满足个人的经济需求和生活品质。</p>
-</li>
-<li><p>职位的了解：深入了解目标职位的工作职责、技能要求和发展路径。确保自己具备所需的技能和背景，同时也有机会在该职位中发展和提升。</p>
-</li>
-<li><p>做出综合评估：综合考虑以上因素，并权衡各个方面的重要性。每个人的情况和偏好不同，因此根据个人的目标和价值观做出最适合自己的职业选择。</p>
-</li>
-</ol>
-<hr>
 
     </div>
     <footer class="article-footer">
