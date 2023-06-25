@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+    <meta name="keywords" content="AI架构师, ai infra, AI系统设计, AI系统优化, 机器学习, 深度学习, 大数据处理, 高性能AI架构, 可扩展AI系统, ChatGPT, Stable Diffusion, AI 绘画, 大模型">
+  
+  
+    <meta name="description" content="这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>如何使用 ChatGPT 和 LangChain 框架构建自己的QA应用 |  AI架构 | AI系统基础架构设计与优化</title>
+  
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/webclip/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/webclip/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/webclip/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/webclip/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/webclip/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/webclip/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/webclip/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/webclip/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/images/webclip/apple-touch-icon-167x167.png">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <main class="main">
+    
+	<header class="header">
+
+	<div class="container">
+		<nav class="navbar d-flex align-items-center">
+			<a class="brand" href="/">
+				<img class="logo lazyload" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+			</a>
+			<ul class="main-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		</nav>
+		<a id="mobile-nav-toggle">
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+		</a>
+	</div>
+</header>
+
+    <section>
+      <div class="container">
+  <article id="post-如何使用-ChatGPT-和-LangChain-框架构建自己的QA应用" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="artcle-cover mb-5">
+    
+  </div>
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h1 class="article-title" itemprop="name">
+      如何使用 ChatGPT 和 LangChain 框架构建自己的QA应用
+    </h1>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-25T22:50:32.000Z" itemprop="datePublished">
+  2023-06-26
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p>大型语言模型 (LLM) 正在成为一种变革性技术，使开发人员能够构建他们以前无法构建的应用程序。但是单独使用这些 LLM 往往不足以创建一个真正强大的应用程序——当您可以将它们与其他计算或知识来源相结合时，真正的力量就来了。</p>
+<p>LLM 本质上是非常通用的，这意味着虽然它们可以有效地执行许多通用的任务，比如回答如何制作一道美味的红烧肉。但它们通常不能直接为特定领域的问题或任务提供具体答案。</p>
+<p><strong>这里就提出了一个问题：如何基于ChatGPT为自己的业务赋能。</strong></p>
+<p>虽然官方提供了微调服务，但是由于缺乏最佳实践作为参考，加上费用不小，对于很多没有专门的算法人员的企业来说，显然微调不是一个好选择。</p>
+<p>幸运的是，LangChain出现了，它是包含一个称为数据增强生成的功能，它允许您提供一些上下文数据来增强 LLM 的知识；</p>
+<p>今天就给大家介绍下如何基于自己文本资料，构建基于文档的问答Demo。</p>
+<p>代码的结构可以分为3个主要部分：</p>
+<ol>
+<li><p>1.加载自己的txt文件(里面是自己业务领域的东西)</p>
+</li>
+<li><p>2.创建embedding和向量化</p>
+</li>
+<li><p>3.查询txt</p>
+</li>
+</ol>
+<p>现在，让我们深入了解这些步骤中的每一个！</p>
+<p>运行前提条件：</p>
+<p>需要有个OpenAI api_key用于程序跟ChatGPT做身份验证，这个需要去OpenAI 官方注册，如果你不会搞，可以留言说明。</p>
+<p>python安装依赖：我用的python 3.11.1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install langchain llama_index openai chromadb</span><br></pre></td></tr></table></figure>
+
+<p>然后我们需要在终端中设置环境变量，设置open api。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export OPENAI_API_KEY=&quot;...&quot;</span><br></pre></td></tr></table></figure>
+
+<p>或者，您可以从 Jupyter notebook（或 Python 脚本）中执行此操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import osos.environ[&quot;OPENAI_API_KEY&quot;] = &quot;...&quot;</span><br></pre></td></tr></table></figure>
+
+<p>首先准备一个content.txt文档，文件里存入一些数据，内容摘录：</p>
+<img src="/2023/06/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-ChatGPT-%E5%92%8C-LangChain-%E6%A1%86%E6%9E%B6%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84QA%E5%BA%94%E7%94%A8/640.png" class="" title="图片">
+
+<p>现在创建一个程序来完成问答：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> langchain.embeddings.openai <span class="keyword">import</span> OpenAIEmbeddings</span><br><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> CharacterTextSplitter</span><br><span class="line"><span class="keyword">from</span> langchain.llms <span class="keyword">import</span> OpenAI</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> RetrievalQA</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> TextLoader</span><br><span class="line"><span class="comment"># 加载放了QA的txt文件</span></span><br><span class="line">loader = TextLoader(<span class="string">&quot;content.txt&quot;</span>)</span><br><span class="line">documents = loader.load()</span><br><span class="line"><span class="comment"># 把大段文字切成小块</span></span><br><span class="line">text_splitter = CharacterTextSplitter(chunk_size=<span class="number">200</span>, chunk_overlap=<span class="number">0</span>)</span><br><span class="line">texts = text_splitter.split_documents(documents)</span><br><span class="line"><span class="comment"># 创建embeddings</span></span><br><span class="line">embeddings = OpenAIEmbeddings()</span><br><span class="line">docsearch = Chroma.from_documents(texts, embeddings)</span><br><span class="line"><span class="comment"># 通过这个OpenAIEmbedding api给每个小文档计算embedding，存到doc_search</span></span><br><span class="line"><span class="comment"># 根据查询输入找到相似度最高的块作为上下文</span></span><br><span class="line">qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type=<span class="string">&quot;stuff&quot;</span>, retriever=docsearch.as_retriever())</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">query</span>(<span class="params">q</span>):</span><br><span class="line">     <span class="built_in">print</span>(<span class="string">f&quot;Query: <span class="subst">&#123;q&#125;</span>&quot;</span>)</span><br><span class="line">     <span class="built_in">print</span>(<span class="string">f&quot;Answer: <span class="subst">&#123;qa.run(q)&#125;</span>&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">     <span class="built_in">print</span>(query(<span class="string">&quot;如何开会&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>我们看下结果, 返回结果就是我原始文档中数据，很强大有没有!而且代码也很简单。</p>
+<img src="/2023/06/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-ChatGPT-%E5%92%8C-LangChain-%E6%A1%86%E6%9E%B6%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84QA%E5%BA%94%E7%94%A8/640-1687733479465-1.png" class="" title="图片">
+
+<p>借助这个小案例，其实也就是抛砖引玉，这里关键就是引入了LangChain这个框架，把ChatGPT和LangChain结合那就是如虎填翼。有了这样一个基础，你想想只要能文本化的东西都能创建这样一个知识提取的应用，结合特定业务那就有非常多的应用空间。</p>
+
+    </div>
+    <footer class="article-footer">
+      
+    </footer>
+  </div>
+  
+  
+    
+<nav class="article-nav pt-4 mt-3" id="article-nav">
+  
+  
+    <a href="/2023/06/26/LoRA%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">LoRA是什么？</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+</div>
+    </section>
+    <footer class="footer pt-5 mt-5">
+  <div class="container">
+    <div class="py-3">
+      <div class="row justify-content-between">
+        <div class="col-6">
+          <img class="filter-gray mb-3 lazyload" height="40" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+          <p class="mb-4">这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。</p>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="javascript:;">
+                  <img 0="微信" src="/images/icons/contact_wechat.svg">
+                </a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="mailto:a@abc.com">
+                  <img 0="邮箱" src="/images/icons/contact_email.svg">
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+        <div class="col-4">
+          <h5>友情链接</h5>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="https://acorn.imaging.xin/" title="Acorn" target="_blank" rel="noopener">Acorn</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://github.com/" title="GitHub" target="_blank" rel="noopener">GitHub</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://duoyu.wang/" title="To Base64" target="_blank" rel="noopener">To Base64</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" style="opacity: .25;">
+    <div class="pt-3 pb-5">
+      <ul class="list-inline mb-0 text-center">
+        <li class="list-inline-item">&copy; 2023 AI架构 | AI系统基础架构设计与优化</li>
+        
+        <li class="list-inline-item">Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+        <li class="list-inline-item">Designer <a href="https://acorn.imaging.xin/" target="_blank">罗平</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+  </main>
+  <div id="mobile-nav-dimmer"></div>
+<div id="mobile-nav">
+	<div id="mobile-nav-inner">
+		<ul class="mobile-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		
+	</div>
+</div>
+
+  <script src="/libs/feather/feather.min.js"></script>
+<script src="/libs/lazysizes/lazysizes.min.js"></script>
+
+	<script src="/libs/tocbot/tocbot.min.js"></script>
+	<script>
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.js-toc-content',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h2, h3',
+      // For headings inside relative or absolute positioned containers within content.
+      hasInnerContainers: true,
+    });
+	</script>
+
+
+
+
+
+<script src="/js/mobile-nav.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-178892506-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-178892506-1');
+</script>
+</body>
+</html>

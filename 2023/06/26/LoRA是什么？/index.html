@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+    <meta name="keywords" content="AI架构师, ai infra, AI系统设计, AI系统优化, 机器学习, 深度学习, 大数据处理, 高性能AI架构, 可扩展AI系统, ChatGPT, Stable Diffusion, AI 绘画, 大模型">
+  
+  
+    <meta name="description" content="这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>LoRA是什么？ |  AI架构 | AI系统基础架构设计与优化</title>
+  
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/webclip/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/webclip/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/webclip/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/webclip/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/webclip/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/webclip/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/webclip/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/webclip/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/images/webclip/apple-touch-icon-167x167.png">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <main class="main">
+    
+	<header class="header">
+
+	<div class="container">
+		<nav class="navbar d-flex align-items-center">
+			<a class="brand" href="/">
+				<img class="logo lazyload" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+			</a>
+			<ul class="main-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		</nav>
+		<a id="mobile-nav-toggle">
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+		</a>
+	</div>
+</header>
+
+    <section>
+      <div class="container">
+  <article id="post-LoRA是什么？" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="artcle-cover mb-5">
+    
+  </div>
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h1 class="article-title" itemprop="name">
+      LoRA是什么？
+    </h1>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-25T22:48:58.000Z" itemprop="datePublished">
+  2023-06-26
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p><strong>1. LoRA介绍</strong></p>
+<p>LoRA（ Low-rank Adaptation）是微软研究员引入的一项新技术，主要用于处理大模型微调的问题，本文主要介绍Lora如何微调Stable Diffusion。除此之外微调Stable Diffusion还有DreamBooth（DR）和Textual Inversion（TI）等训练技术。</p>
+<p>LoRA有什么厉害之处？实际上LoRA在文件大小和训练能力之间提供了一个很好的平衡。DR虽然功能强大，但是生成的模型文件很大（2-7G）。TI生成的文件虽小（100k），但是训练效果不怎么好。</p>
+<p>LoRA介于两者之间，模型（2-200M）文件大小可控，训练能力不错。玩过Stable Diffusion的人都知道，要试验各种模型，前提是你要有足够的磁盘空间，一般一个模型都是好几G的。下载那么大的模型，你的网络带宽也得非常OK（至少每秒几M），不然真的没耐心。所以这也是LoRA比较流行的原因之一吧。与TI相同，LoRA模型不能单独使用，必须与训练的基础模型配合一起使用。</p>
+<p><strong>2. LoRA是如何工作的？</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">首先我们来看看Stable Diffusion的架构，主要由三部分组成：文本编码器，可将您的提示词转换为latent向量。一种扩散模型，它反复对 64x64 latent patch进行&quot;去噪&quot;。解码器，将最终的 64x64 latent patch转换为更高分辨率的 512x512 图像。它的一个处理过程就是下图所示，上面每一个组成部分都是一个模型，然后通过PIPLINE把几个模型串联起来，就可以达到生成图片的效果。而且每个部分实际上都是可以独立部署的。</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最近总是听到LoRA，LoRA，名字怪好听，就是难理解，什么低秩适应完全搞不懂，今天就来扒扒，看看它是怎么个低法。</p>
+<p>原来LoRA对Stable Diffusion模型最关键的部分进行了微小修改：cross-attention layers，它是模型中图像和提示相交的部分-交叉注意层（U-Net 噪声预测器的 QKV 部分）。</p>
+<img src="/2023/06/26/LoRA%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/640.png" class="" title="图片">
+
+
+
+<p>研究人员发现，通过聚焦大模型的 Transformer 注意力块，使用 LoRA 进行的微调质量与全模型微调相当，同时速度更快且需要更少的计算。</p>
+<p>Simo Ryu (<code>@cloneofsimo</code>) 是第一个提出适用于 Stable Diffusion 的 LoRA实现的人。如果想查看相关示例和许多其他有趣的讨论和见解。请一定要看看他们的GitHub 项目。</p>
+<p>cross-attention 注意力交叉层的权重排列在矩阵中。矩阵是一堆按行和列排列的数字<br>就像在Excle里面一样。LoRA通过将其权重添加到这些矩阵来微调模型。</p>
+<p>假设模型是包含1000行和2000列的矩阵。那模型需要存2,000,000 个数字 (1,000 x 2,000)。</p>
+<p>LoRA将矩阵分解为：1,000×2 矩阵和 2×2,000 矩阵。那模型只需要存 6,000 个数字 (1,000 x 2 + 2 x 2,000)，少了333倍，这就是LoRA文件小得多的原因。</p>
+<p>我们看下作者在github中的介绍：</p>
+<img src="/2023/06/26/LoRA%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/640-1687733382169-1.png" class="" title="图片">
+
+
+
+<p>意思就是说：完全微调过程慢，在质量和训练速度很难找到平衡，虽然也有像TI这样的方法，但是效果不理想。LoRA的出现解决了社区遇到的问题：就是模型太大，用户想要基于社区各种模型进行微调，因为模型太大而无法使用，LoRA尝试微调模型的残差，而不是整个模型：也就训练delta W代替W。而delta W进一步分解成A矩阵和B的转置矩阵相乘。然后微调A和B替代W，A和B比原始的W要小多。</p>
+<img src="/2023/06/26/LoRA%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/640-1687733382169-2.jpeg" class="" title="图片">
+
+
+<p>LoRA 将一个大矩阵分解为两个小的低阶矩阵，在这个例子中，矩阵的秩为2。它比原始维度低很多，所以被称之为低秩矩阵。</p>
+<p>使用 LoRA 对插图数据集进行微调：W&#x3D;W0 + aΔW， a是合并比率。ΔW说就是上面说的矩阵A矩阵和B矩阵的转置乘积，gif是将 alpha从0缩放到1。将alpha设置为0与使用原始模型相同，将alpha设置为1与使用完全微调的模型相同，通过整个公式我们也就清楚了LoRA为什么要配合基础模型一起用，因为W0来自于基础模型（几个G），ΔW来自于自己训练的LoRA模型（小，百M），用a来控制两个模型的融合程度。</p>
+<img src="/2023/06/26/LoRA%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/640-1687733382169-3.gif" class="" title="图片">
+
+
+
+
+<p><strong>3. 在哪里可以找到LoRA模型？</strong>  </p>
+<p>这里推荐3个：<br>第一个是civitai.com,江湖人称之为C站，模型很丰富，因为有些模型不合规，国内现在直接访问不了，需要魔法。<br>第二个是Hugging Face,模型不是很多，但是还有很多不错的模型可挑选。<br>第三个是炼丹阁：这是一家国内公司连夜去civitai搬运的，模型经过了筛选，具有一定的合规性，试过也可以。</p>
+
+    </div>
+    <footer class="article-footer">
+      
+    </footer>
+  </div>
+  
+  
+    
+<nav class="article-nav pt-4 mt-3" id="article-nav">
+  
+    <a href="/2023/06/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-ChatGPT-%E5%92%8C-LangChain-%E6%A1%86%E6%9E%B6%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84QA%E5%BA%94%E7%94%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          如何使用 ChatGPT 和 LangChain 框架构建自己的QA应用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/06/26/1-LoRA%E4%BB%8B%E7%BB%8D/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">1. LoRA介绍</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+</div>
+    </section>
+    <footer class="footer pt-5 mt-5">
+  <div class="container">
+    <div class="py-3">
+      <div class="row justify-content-between">
+        <div class="col-6">
+          <img class="filter-gray mb-3 lazyload" height="40" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+          <p class="mb-4">这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。</p>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="javascript:;">
+                  <img 0="微信" src="/images/icons/contact_wechat.svg">
+                </a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="mailto:a@abc.com">
+                  <img 0="邮箱" src="/images/icons/contact_email.svg">
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+        <div class="col-4">
+          <h5>友情链接</h5>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="https://acorn.imaging.xin/" title="Acorn" target="_blank" rel="noopener">Acorn</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://github.com/" title="GitHub" target="_blank" rel="noopener">GitHub</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://duoyu.wang/" title="To Base64" target="_blank" rel="noopener">To Base64</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" style="opacity: .25;">
+    <div class="pt-3 pb-5">
+      <ul class="list-inline mb-0 text-center">
+        <li class="list-inline-item">&copy; 2023 AI架构 | AI系统基础架构设计与优化</li>
+        
+        <li class="list-inline-item">Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+        <li class="list-inline-item">Designer <a href="https://acorn.imaging.xin/" target="_blank">罗平</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+  </main>
+  <div id="mobile-nav-dimmer"></div>
+<div id="mobile-nav">
+	<div id="mobile-nav-inner">
+		<ul class="mobile-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		
+	</div>
+</div>
+
+  <script src="/libs/feather/feather.min.js"></script>
+<script src="/libs/lazysizes/lazysizes.min.js"></script>
+
+	<script src="/libs/tocbot/tocbot.min.js"></script>
+	<script>
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.js-toc-content',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h2, h3',
+      // For headings inside relative or absolute positioned containers within content.
+      hasInnerContainers: true,
+    });
+	</script>
+
+
+
+
+
+<script src="/js/mobile-nav.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-178892506-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-178892506-1');
+</script>
+</body>
+</html>
