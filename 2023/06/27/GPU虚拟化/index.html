@@ -10,7 +10,7 @@
     <meta name="description" content="这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。">
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>Tag: 商业化场景 |  AI架构 | AI系统基础架构设计与优化</title>
+  <title>GPU虚拟化 |  AI架构 | AI系统基础架构设计与优化</title>
   
     <link rel="apple-touch-icon" sizes="57x57" href="/images/webclip/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/images/webclip/apple-touch-icon-72x72.png">
@@ -75,113 +75,76 @@
 
     <section>
       <div class="container">
-  <div class="page-heading">
-  <!-- page-type-title -->
+  <article id="post-GPU虚拟化" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
+  
+  <div class="artcle-cover mb-5">
     
-<h1 class="page-type-title">#&nbsp商业化场景</h1>
-  
-  <!-- page-type-slogan -->
-  <h5 class="slogan font-w-lighter text-gray">
-    
-    从实践中学习优化AI架构的技巧和策略
-    
-  </h5>
-</div>
-  
-  
-  
-  
-  
-  
-
-<section class="archives-wrap">
-  <div class="archive-year-wrap">
-    <a href="/archives/2023" class="archive-year">2023</a>
   </div>
-  <div class="archives">
-    <div class="row flex-wrap">
-      
-      <div class="col-3">
-  <article class="archive-article archive-type-post">
-    <div class="card rounded">
-      
   
+  <div class="article-inner">
     
-        <a class="card-img-link" href="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/" rel="gallery_cljoein22000758tz2v344zjj">
-          <img class="card-img lazyload" data-src="/images/sample/mydesk.png" itemprop="image" alt="gallery">
-        </a>
-       
+    <header class="article-header">
+      
+      
+  
+    <h1 class="article-title" itemprop="name">
+      GPU虚拟化
+    </h1>
   
 
-      <div class="card-body bg-light">
-        
-  
-    <h5 class="article-title mb-0 line-clamp line-clamp-1" itemprop="name">
-      <a href="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/">Stable Diffusion：什么是 LoRA 模型以及如何使用它们？</a>
-    </h5>
-  
-
-        <time class="text-gray" datetime="2023-06-15T14:00:00.000Z" itemprop="datePublished">
-  2023-06-15
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-27T11:53:18.000Z" itemprop="datePublished">
+  2023-06-27
 </time>
-        <div class="card-text mt-3 line-clamp line-clamp-2"></div>
-        <hr class="hr">
-        
-        <div class="article-more-link">
-          <a href="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/#more">阅读全文</a>
-        </div>
         
       </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p>GPU 资源池化技术从初期的简单虚拟化，到资源池化，经历了四个技术演进阶段。</p>
+<p><strong>简单虚拟化</strong></p>
+<p>将物理 GPU 按照 2 的 N 次方，切分成多个固定大小的 vGPU（VirtualGPU，虚拟 GPU），每个 vGPU 的算力和显存相等。实践证明，不同的 AI 模型对于算力、显存资源的需求是不同的。所以，这样的切分方式，并不能满足 AI 模型多样化的需求。</p>
+<p><strong>任意虚拟化</strong></p>
+<p>将物理 GPU 按照算力和显存两个维度，自定义切分，获得满足 AI 应用个性化需求的 vGPU。</p>
+<p><strong>远程调用</strong></p>
+<p>AI 应用与物理 GPU 服务器分离部署，允许通过高性能网络远程调用 GPU资源。这样可以实现 AI 应用与物理 GPU 资源剥离，AI 应用可以部署在私有云的任</p>
+<p>意位置，只需要网络可达，即可调用 GPU 资源。</p>
+<p><strong>资源池化</strong></p>
+<p>形成 GPU 资源池后，需要统一的管理面来实现管理、监控、资源调度和资源回收等功能。同时，也需要提供北向 API，与数据中心级的资源调度平台对</p>
+<p>接，让用户在单一界面，就可以调度包括 vGPU 在内的数据中心内的各类资源。</p>
+
     </div>
-  </article>
-</div>
+    <footer class="article-footer">
       
+    </footer>
+  </div>
   
-  
-      <div class="col-3">
-  <article class="archive-article archive-type-post">
-    <div class="card rounded">
-      
   
     
-        <a class="card-img-link" href="/2023/06/15/%E5%A6%82%E4%BD%95%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8%20Stable%20Diffusion%20%E2%80%93%20%E6%96%B0%E6%89%8B%E6%8C%87%E5%8D%97/" rel="gallery_cljoein2g000s58tzg0tx1j69">
-          <img class="card-img lazyload" data-src="/images/sample/mydesk.png" itemprop="image" alt="gallery">
-        </a>
-       
+<nav class="article-nav pt-4 mt-3" id="article-nav">
   
-
-      <div class="card-body bg-light">
+    <a href="/2023/07/04/%E4%BB%80%E4%B9%88%E6%98%AFDreambooth%EF%BC%9F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
         
-  
-    <h5 class="article-title mb-0 line-clamp line-clamp-1" itemprop="name">
-      <a href="/2023/06/15/%E5%A6%82%E4%BD%95%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8%20Stable%20Diffusion%20%E2%80%93%20%E6%96%B0%E6%89%8B%E6%8C%87%E5%8D%97/">如何免费使用 Stable Diffusion – 新手指南</a>
-    </h5>
-  
-
-        <time class="text-gray" datetime="2023-06-15T14:00:00.000Z" itemprop="datePublished">
-  2023-06-15
-</time>
-        <div class="card-text mt-3 line-clamp line-clamp-2"></div>
-        <hr class="hr">
-        
-        <div class="article-more-link">
-          <a href="/2023/06/15/%E5%A6%82%E4%BD%95%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8%20Stable%20Diffusion%20%E2%80%93%20%E6%96%B0%E6%89%8B%E6%8C%87%E5%8D%97/#more">阅读全文</a>
-        </div>
+          什么是Dreambooth？
         
       </div>
-    </div>
-  </article>
-</div>
-      
-      
-    </div>
-  </div>
-</section>
+    </a>
+  
+  
+    <a href="/2023/06/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-ChatGPT-%E5%92%8C-LangChain-%E6%A1%86%E6%9E%B6%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84QA%E5%BA%94%E7%94%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">如何使用 ChatGPT 和 LangChain 框架构建自己的QA应用</div>
+    </a>
+  
+</nav>
 
 
-
-
+  
+</article>
 </div>
     </section>
     <footer class="footer pt-5 mt-5">
