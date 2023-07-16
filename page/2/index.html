@@ -121,6 +121,391 @@
   <div class="row flex-wrap">
     
       <div class="col-3">
+        <article id="post-Stable-Diffusion的工作原理" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h5 class="article-title" itemprop="name">
+      <a href="/2023/06/17/Stable-Diffusion%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Stable Diffusion的工作原理</a>
+    </h5>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-17T08:07:29.000Z" itemprop="datePublished">
+  2023-06-17
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p>Stable Diffusion 是一种文本到图像的潜在扩散模型，由<a target="_blank" rel="noopener" href="https://github.com/CompVis">CompVis</a>、<a target="_blank" rel="noopener" href="https://stability.ai/">Stability AI</a>和<a target="_blank" rel="noopener" href="https://laion.ai/">LAION</a>的研究人员和工程师创建。它使用来自<a target="_blank" rel="noopener" href="https://laion.ai/blog/laion-5b/">LAION-5B</a>数据库子集的 512x512 图像进行训练。 <em>LAION-5B</em>是目前最大的、可免费访问的多模态数据集。</p>
+<p>看过Stable Diffusion可以产生的高质量图像后，让我们尝试更好地了解模型的功能。Stable Diffusion基于一种特殊类型的扩散模型，称为<strong>Latent Diffusion</strong>（<strong>潜在扩散</strong>）, 由本文提出：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2112.10752">High-Resolution Image Synthesis with Latent Diffusion Models</a>。</p>
+<p>一般来说，扩散模型是机器学习系统，经过训练可以逐步对随机高斯噪声<em>进行去噪</em>，以获得感兴趣的样本，例如<em>图像</em>。要更详细地了解它们的工作原理，请查看<a target="_blank" rel="noopener" href="https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/diffusers_intro.ipynb">此 colab</a>。</p>
+<p>扩散模型已显示可实现生成图像数据的最先进结果。但扩散模型的一个缺点是反向去噪过程很慢，因为它具有重复的、连续的性质。此外，这些模型会消耗大量内存，因为它们在像素空间中运行，在生成高分辨率图像时像素空间会变得很大。因此，训练这些模型并将它们用于推理具有挑战性。</p>
+<p><em>潜在扩散可以通过在较低维度的潜在</em>空间上应用扩散过程而不是使用实际像素空间来降低内存和计算复杂性。这是标准扩散模型和潜在扩散模型之间的主要区别：<strong>在潜在扩散中，模型经过训练以生成图像的潜在（压缩）表示。</strong></p>
+<p>潜在扩散有三个主要组成部分。</p>
+<ol>
+<li>A autoencoder (VAE).</li>
+<li>A <a target="_blank" rel="noopener" href="https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/diffusers_intro.ipynb#scrollTo=wW8o1Wp0zRkq">U-Net</a>.</li>
+<li>A text-encoder, <em>e.g.</em> <a target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers/model_doc/clip#transformers.CLIPTextModel">CLIP’s Text Encoder</a>.</li>
+</ol>
+<p><strong>1. The autoencoder (VAE)</strong></p>
+<p>VAE模型有两部分，编码器和解码器。编码器用于将图像转换为低维潜在表示，作为<em>U-Net</em>模型的输入。相反，解码器将潜在表示转换回图像。</p>
+<p>在潜在扩散<em>训练</em>期间，编码器用于获取图像的潜在表示（<em>潜在）用于前向扩散过程，它在每一步应用越来越多的噪声。</em>在<em>推理过程</em>中，使用 VAE 解码器将反向扩散过程生成的去噪潜伏转换回图像。我们在推理过程中，我们<strong>只需要 VAE 解码器</strong>。</p>
+<p><strong>2. The U-Net</strong></p>
+<p>U-Net 的编码器部分和解码器部分均由 ResNet 块组成。编码器将图像表示压缩为较低分辨率的图像表示，解码器将较低分辨率的图像表示解码回据称噪声较小的原始高分辨率图像表示。更具体地说，U-Net 输出预测可用于计算预测去噪图像表示的噪声残差。</p>
+<p>为了防止 U-Net 在下采样时丢失重要信息，通常在编码器的下采样 ResNet 和解码器的上采样 ResNet 之间添加快捷连接。此外，稳定扩散 U-Net 能够通过交叉注意层在文本嵌入上调节其输出。通常在 ResNet 块之间将交叉注意层添加到 U-Net 的编码器和解码器部分。</p>
+<p><strong>3.文本编码器</strong></p>
+<p>文本编码器负责将输入提示（<em>例如</em>“An astronaut riding a horse”）转换为 U-Net 可以理解的嵌入空间。它通常是一个简单的<em>基于转换器的</em>编码器，将输入标记序列映射到潜在文本嵌入序列。</p>
+<p>受<a target="_blank" rel="noopener" href="https://imagen.research.google/">Imagen</a>的启发，Stable Diffusion 在训练期间不<strong>训练</strong>文本编码器，而只是使用 CLIP 已经训练好的文本编码器<a target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers/model_doc/clip#transformers.CLIPTextModel">CLIPTextModel</a>。</p>
+<p><strong>为什么潜在扩散快速有效？</strong></p>
+<p>由于潜在扩散在低维空间上运行，因此与像素空间扩散模型相比，它大大降低了内存和计算要求。例如，Stable Diffusion 中使用的自动编码器的缩减系数为 8。这意味着形状图像<code>(3, 512, 512)</code>进入<code>(3, 64, 64)</code>潜在空间，这需要<code>8 × 8 = 64</code>更少的内存。</p>
+<p>这就是为什么可以<code>512 × 512</code>如此快速地生成图像，即使在 16GB Colab GPU 上也是如此！</p>
+<p><strong>推理过程中的稳定扩散</strong></p>
+<img src="/2023/06/17/Stable-Diffusion%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/stable_diffusion.png" class="" title="SD管道">
+
+<p>稳定扩散模型将latent seed和 text prompt作为输入。然后使用latent seed生成大小为64×64的随机潜在图像，而text prompt通过 CLIP 的文本编码器转换为大小77×768的text embeddings。</p>
+<p>接下来，U-Net在以text embeddings为条件的同时迭代地对随机潜在图像表示<em>进行去噪。</em>U-Net 的输出是噪声残差，用于通过调度程序算法计算去噪的潜在图像表示。许多不同的调度程序算法可用于此计算，每个算法都有其优点和缺点。对于稳定扩散，我们建议使用以下之一：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_pndm.py">PNDM scheduler</a> (used by default)</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py">DDIM scheduler</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_lms_discrete.py">K-LMS scheduler</a></li>
+</ul>
+<p>关于调度程序算法功能如何超出本笔记本范围的理论，但简而言之，应该记住他们根据先前的噪声表示和预测的噪声残差计算预测的去噪图像表示。有关更多信息，建议查看<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2206.00364"><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2206.00364">Elucidating the Design Space of Diffusion-Based Generative Models</a></a></p>
+<p>重复去噪<em>过程**。</em>50 次逐步检索更好的潜在图像表示。完成后，潜在图像表示由变分自动编码器的解码器部分解码。</p>
+<h2 id="编写自己的推理管道"><a href="#编写自己的推理管道" class="headerlink" title="编写自己的推理管道"></a>编写自己的推理管道</h2><p>最后，我们展示如何将 Stable Diffusion 与不同的调度器一起使用，即<a target="_blank" rel="noopener" href="https://github.com/huggingface/diffusers/pull/185">本 PR中添加的</a><a target="_blank" rel="noopener" href="https://github.com/crowsonkb">Katherine Crowson 的</a>K-LMS 调度器。</p>
+<p><a target="_blank" rel="noopener" href="https://huggingface.co/CompVis/stable-diffusion-v1-4/tree/main">预训练模型</a>包括设置完整扩散管道所需的所有组件。它们存储在以下文件夹中：</p>
+<ul>
+<li><code>text_encoder</code>: Stable Diffusion 使用 CLIP，但其他扩散模型可能使用其他编码器，例如<code>BERT</code>.</li>
+<li><code>tokenizer</code>. 它必须与模型使用的相匹配<code>text_encoder</code>。</li>
+<li><code>scheduler</code>：用于在训练期间逐步向图像添加噪声的调度算法。</li>
+<li><code>unet</code>：用于生成输入的潜在表示的模型。</li>
+<li><code>vae</code>：自动编码器模块，我们将使用它来将潜在表示解码为真实图像。</li>
+</ul>
+<p>我们可以通过引用保存组件的文件夹来加载组件，<code>from_pretrained</code> 中传递<code>subfolder</code></p>
+<p>首先，您应该安装<code>diffusers==0.10.2</code>以运行以下代码片段：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install diffusers==0.10.2 transformers scipy  accelerate</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> CLIPTextModel, CLIPTokenizer</span><br><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> AutoencoderKL, UNet2DConditionModel, PNDMScheduler</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. Load the autoencoder model which will be used to decode the latents into image space. </span></span><br><span class="line">vae = AutoencoderKL.from_pretrained(<span class="string">&quot;CompVis/stable-diffusion-v1-4&quot;</span>, subfolder=<span class="string">&quot;vae&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Load the tokenizer and text encoder to tokenize and encode the text. </span></span><br><span class="line">tokenizer = CLIPTokenizer.from_pretrained(<span class="string">&quot;openai/clip-vit-large-patch14&quot;</span>)</span><br><span class="line">text_encoder = CLIPTextModel.from_pretrained(<span class="string">&quot;openai/clip-vit-large-patch14&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. The UNet model for generating the latents.</span></span><br><span class="line">unet = UNet2DConditionModel.from_pretrained(<span class="string">&quot;CompVis/stable-diffusion-v1-4&quot;</span>,  subfolder=<span class="string">&quot;unet&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>现在我们不再加载预定义的调度程序，而是加载具有一些拟合参数的<a target="_blank" rel="noopener" href="https://github.com/huggingface/diffusers/blob/71ba8aec55b52a7ba5a1ff1db1265ffdd3c65ea2/src/diffusers/schedulers/scheduling_lms_discrete.py#L26">K-LMS 调度程序</a>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> LMSDiscreteScheduler</span><br><span class="line"></span><br><span class="line">scheduler = LMSDiscreteScheduler(beta_start=<span class="number">0.00085</span>, beta_end=<span class="number">0.012</span>, beta_schedule=<span class="string">&quot;scaled_linear&quot;</span>, num_train_timesteps=<span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>接下来，让我们将模型移动到 GPU。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">torch_device = <span class="string">&quot;cuda&quot;</span></span><br><span class="line">vae.to(torch_device)</span><br><span class="line">text_encoder.to(torch_device)</span><br><span class="line">unet.to(torch_device) </span><br></pre></td></tr></table></figure>
+
+<p>我们现在定义我们将用于生成图像的参数。</p>
+<p>请注意，<code>guidance_scale</code>它的定义类似于<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2205.11487.pdf">Imagen 论文</a><code>w</code>中等式 (2) 的指导权重。对应于不进行无分类器指导。在这里，我们将其设置为 7.5，就像之前所做的那样。<code>guidance_scale == 1</code></p>
+<p>与前面的示例相比，我们设置<code>num_inference_steps</code>为 100 以获得更清晰的图像。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">prompt = [<span class="string">&quot;a photograph of an astronaut riding a horse&quot;</span>]</span><br><span class="line"></span><br><span class="line">height = <span class="number">512</span>                        <span class="comment"># default height of Stable Diffusion</span></span><br><span class="line">width = <span class="number">512</span>                         <span class="comment"># default width of Stable Diffusion</span></span><br><span class="line"></span><br><span class="line">num_inference_steps = <span class="number">100</span>           <span class="comment"># Number of denoising steps</span></span><br><span class="line"></span><br><span class="line">guidance_scale = <span class="number">7.5</span>                <span class="comment"># Scale for classifier-free guidance</span></span><br><span class="line"></span><br><span class="line">generator = torch.manual_seed(<span class="number">0</span>)    <span class="comment"># Seed generator to create the inital latent noise</span></span><br><span class="line"></span><br><span class="line">batch_size = <span class="built_in">len</span>(prompt)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>首先，我们得到<code>text_embeddings</code>传递的提示。这些嵌入将用于调整 UNet 模型并引导图像生成类似于输入提示的内容。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text_input = tokenizer(prompt, padding=<span class="string">&quot;max_length&quot;</span>, max_length=tokenizer.model_max_length, truncation=<span class="literal">True</span>, return_tensors=<span class="string">&quot;pt&quot;</span>)</span><br><span class="line"></span><br><span class="line">text_embeddings = text_encoder(text_input.input_ids.to(torch_device))[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们还将获得用于无分类器指导的无条件文本嵌入，它们只是填充标记（空文本）的嵌入。它们需要与条件<code>text_embeddings</code>(<code>batch_size</code>和<code>seq_length</code>)具有相同的形状</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">max_length = text_input.input_ids.shape[-<span class="number">1</span>]</span><br><span class="line">uncond_input = tokenizer(</span><br><span class="line">    [<span class="string">&quot;&quot;</span>] * batch_size, padding=<span class="string">&quot;max_length&quot;</span>, max_length=max_length, return_tensors=<span class="string">&quot;pt&quot;</span></span><br><span class="line">)</span><br><span class="line">uncond_embeddings = text_encoder(uncond_input.input_ids.to(torch_device))[<span class="number">0</span>]   </span><br></pre></td></tr></table></figure>
+
+
+
+<p>对于无分类器指导，我们需要进行两次前向传递：一次使用条件输入 ( <code>text_embeddings</code>)，另一个使用无条件嵌入 ( <code>uncond_embeddings</code>)。在实践中，我们可以将两者连接成一个批次，以避免进行两次前向传递。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">text_embeddings = torch.cat([uncond_embeddings, text_embeddings])</span><br></pre></td></tr></table></figure>
+
+
+
+<p>接下来，我们生成初始随机噪声。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">latents = torch.randn(</span><br><span class="line">    (batch_size, unet.in_channels, height // <span class="number">8</span>, width // <span class="number">8</span>),</span><br><span class="line">    generator=generator,</span><br><span class="line">)</span><br><span class="line">latents = latents.to(torch_device)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果我们在这个阶段检查 ，<code>latents</code>我们会看到它们的形状是<code>torch.Size([1, 4, 64, 64])</code>，比我们想要生成的图像小得多。<code>512 × 512</code>该模型稍后会将这种潜在表示（纯噪声）转换为图像。</p>
+<p>接下来，我们用我们选择的<code>num_inference_steps</code>. 这将计算<code>sigmas</code>去噪过程中要使用的确切时间步长值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scheduler.set_timesteps(num_inference_steps)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>K-LMS 调度程序需要将 乘以<code>latents</code>它的<code>sigma</code>值。让我们在这里这样做：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">latents = latents * scheduler.init_noise_sigma</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们准备编写去噪循环。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tqdm.auto <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line">scheduler.set_timesteps(num_inference_steps)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> tqdm(scheduler.timesteps):</span><br><span class="line">    <span class="comment"># expand the latents if we are doing classifier-free guidance to avoid doing two forward passes.</span></span><br><span class="line">    latent_model_input = torch.cat([latents] * <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    latent_model_input = scheduler.scale_model_input(latent_model_input, timestep=t)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># predict the noise residual</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        noise_pred = unet(latent_model_input, t, encoder_hidden_states=text_embeddings).sample</span><br><span class="line"></span><br><span class="line">    <span class="comment"># perform guidance</span></span><br><span class="line">    noise_pred_uncond, noise_pred_text = noise_pred.chunk(<span class="number">2</span>)</span><br><span class="line">    noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute the previous noisy sample x_t -&gt; x_t-1</span></span><br><span class="line">    latents = scheduler.step(noise_pred, t, latents).prev_sample</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们现在使用<code>vae</code>将生成的解码<code>latents</code>回图像。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># scale and decode the image latents with vae</span></span><br><span class="line">latents = <span class="number">1</span> / <span class="number">0.18215</span> * latents</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    image = vae.decode(latents).sample</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最后，让我们将图像转换为 PIL，以便我们可以显示或保存它。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">image = (image / <span class="number">2</span> + <span class="number">0.5</span>).clamp(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">image = image.detach().cpu().permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>).numpy()</span><br><span class="line">images = (image * <span class="number">255</span>).<span class="built_in">round</span>().astype(<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">pil_images = [Image.fromarray(image) <span class="keyword">for</span> image <span class="keyword">in</span> images]</span><br><span class="line">pil_images[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://huggingface.co/blog/assets/98_stable_diffusion/stable_diffusion_k_lms.png"><img src="/./Stable-Diffusion%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/stable_diffusion_k_lms.png" alt="PNG"></a></p>
+
+    </div>
+    <footer class="article-footer">
+      
+    </footer>
+  </div>
+  
+  
+</article>
+      </div>
+      
+      <div class="col-3">
+        <article id="post-图像生成热门项目" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h5 class="article-title" itemprop="name">
+      <a href="/2023/06/17/%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90%E7%83%AD%E9%97%A8%E9%A1%B9%E7%9B%AE/">AIGC图像生成热门项目</a>
+    </h5>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-17T04:17:42.000Z" itemprop="datePublished">
+  2023-06-17
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <h2 id="Popular-Tasks-amp-Pipelines"><a href="#Popular-Tasks-amp-Pipelines" class="headerlink" title="Popular Tasks &amp; Pipelines"></a>Popular Tasks &amp; Pipelines</h2><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Pipeline</th>
+<th>🤗 Hub</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unconditional Image Generation</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/ddpm">DDPM</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/google/ddpm-ema-church-256">google&#x2F;ddpm-ema-church-256</a></td>
+</tr>
+<tr>
+<td>Text-to-Image</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/text2img">Stable Diffusion Text-to-Image</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/runwayml/stable-diffusion-v1-5">runwayml&#x2F;stable-diffusion-v1-5</a></td>
+</tr>
+<tr>
+<td>Text-to-Image</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/unclip">unclip</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/kakaobrain/karlo-v1-alpha">kakaobrain&#x2F;karlo-v1-alpha</a></td>
+</tr>
+<tr>
+<td>Text-to-Image</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/if">if</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/DeepFloyd/IF-I-XL-v1.0">DeepFloyd&#x2F;IF-I-XL-v1.0</a></td>
+</tr>
+<tr>
+<td>Text-guided Image-to-Image</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/controlnet">Controlnet</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/lllyasviel/sd-controlnet-canny">lllyasviel&#x2F;sd-controlnet-canny</a></td>
+</tr>
+<tr>
+<td>Text-guided Image-to-Image</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/pix2pix">Instruct Pix2Pix</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/timbrooks/instruct-pix2pix">timbrooks&#x2F;instruct-pix2pix</a></td>
+</tr>
+<tr>
+<td>Text-guided Image-to-Image</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/img2img">Stable Diffusion Image-to-Image</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/runwayml/stable-diffusion-v1-5">runwayml&#x2F;stable-diffusion-v1-5</a></td>
+</tr>
+<tr>
+<td>Text-guided Image Inpainting</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/inpaint">Stable Diffusion Inpaint</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/runwayml/stable-diffusion-inpainting">runwayml&#x2F;stable-diffusion-inpainting</a></td>
+</tr>
+<tr>
+<td>Image Variation</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/image_variation">Stable Diffusion Image Variation</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/lambdalabs/sd-image-variations-diffusers">lambdalabs&#x2F;sd-image-variations-diffusers</a></td>
+</tr>
+<tr>
+<td>Super Resolution</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/upscale">Stable Diffusion Upscale</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/stabilityai/stable-diffusion-x4-upscaler">stabilityai&#x2F;stable-diffusion-x4-upscaler</a></td>
+</tr>
+<tr>
+<td>Super Resolution</td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/latent_upscale">Stable Diffusion Latent Upscale</a></td>
+<td><a target="_blank" rel="noopener" href="https://huggingface.co/stabilityai/sd-x2-latent-upscaler">stabilityai&#x2F;sd-x2-latent-upscaler</a></td>
+</tr>
+</tbody></table>
+
+    </div>
+    <footer class="article-footer">
+      
+    </footer>
+  </div>
+  
+  
+</article>
+      </div>
+      
+      <div class="col-3">
+        <article id="post-Stable Diffusion：什么是 LoRA 模型以及如何使用它们？" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h5 class="article-title" itemprop="name">
+      <a href="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/">Stable Diffusion：什么是 LoRA 模型以及如何使用它们？</a>
+    </h5>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-15T14:00:00.000Z" itemprop="datePublished">
+  2023-06-15
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p>Stable Diffusion 已经风靡全球，让任何人都可以<a target="_blank" rel="noopener" href="https://softwarekeep.com/help-center/stable-diffusion-for-free-beginner-guide">免费生成 AI 驱动的艺术作品</a>。但是，如果您曾想生成知名人物、概念或使用特定风格的图像，您可能会对结果感到失望。Stable Diffusion 强大的 AI 本身并不能很好地使角色和风格栩栩如生，这很常见。幸运的是，LoRA 模型可以帮助解决这个问题。</p>
+<p>有这么多惊人的扩展和模型可用于增强稳定扩散，LoRA 模型如此受欢迎也就不足为奇了。但是 LoRA 模型到底做了什么？您如何使用它使您的艺术更加壮观？</p>
+<img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/howtouselorainsd-1686843893059-1.png" class="" title="稳定扩散：什么是 LoRA 模型以及如何使用它们？">
+
+<p>在本初学者指南中，我们探讨了什么是 LoRA 模型、在哪里可以找到它们以及如何在 Automatic1111 的 Web GUI 中使用它们，以及一些 LoRA 模型演示。</p>
+<h4 id="目录"><a href="#目录" class="headerlink" title="目录"></a><strong>目录</strong></h4><ol>
+<li>什么是 LoRA？</li>
+<li>LoRA 模型类型</li>
+<li>在哪里可以找到和下载 LoRA 模型</li>
+<li>LoRA 模型安装到 Automatic1111</li>
+<li>如何在 Automatic1111 中使用 LoRA 模型</li>
+</ol>
+<h2 id="什么是-LoRA？"><a href="#什么是-LoRA？" class="headerlink" title="什么是 LoRA？"></a><strong>什么是 LoRA？</strong></h2><p>LoRA 代表低秩适应。它允许您使用低秩自适应技术来快速微调扩散模型。简单来说，LoRA 训练模型可以更轻松地针对不同的概念（例如角色或特定风格）训练 Stable Diffusion。然后，这些训练有素的模型可以导出并供他们这一代的其他人使用。</p>
+<p>稳定扩散模型因其生成高质量图像和文本的能力而在机器学习领域越来越受欢迎。然而，这些模型的一个主要缺点是它们的文件很大，这使得用户很难在他们的个人计算机上维护一个集合。这就是 LoRA 作为一种训练技术发挥作用的地方，它可以在保持可管理的文件大小的同时微调稳定扩散模型。</p>
+<p><a target="_blank" rel="noopener" href="https://softwarekeep.com/help-center/best-stable-diffusion-models-to-try">LoRA 模型是小型稳定扩散模型，它对标准检查点模型</a>应用较小的更改，导致文件大小减少 2-500 MB，比检查点文件小得多。LoRA 在文件大小和训练能力之间提供了一个很好的权衡，使它们成为对拥有大量模型的用户有吸引力的解决方案。</p>
+<h2 id="LoRA-模型类型"><a href="#LoRA-模型类型" class="headerlink" title="LoRA 模型类型"></a><strong>LoRA 模型类型</strong></h2><p>我们可以将 LoRA 模型分为几种不同的类型：</p>
+<h3 id="Character-LoRA"><a href="#Character-LoRA" class="headerlink" title="Character LoRA"></a><strong>Character LoRA</strong></h3><p>在特定角色（例如卡通或视频游戏角色）上训练的模型。Character LoRA 能够准确地重现角色的外观和感觉，以及与其相关的任何关键特征。这是最常见的 LoRA 类型，因为在没有这种训练数据的情况下生成字符通常很棘手且不一致。</p>
+<img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/lora_character-1686843893059-3.png" class="" title="字符LoRA">
+
+<ul>
+<li><strong>使用的模型</strong>：<a target="_blank" rel="noopener" href="https://civitai.com/models/1274/dreamlike-diffusion-10">Dreamlike Diffusion 1.0</a></li>
+<li><strong>使用 LoRA</strong> ： <a target="_blank" rel="noopener" href="https://civitai.com/models/55339/the-joker-or-photorealistic-joker-lora">The Joker | 真实感</a></li>
+<li><strong>使用提示</strong>：小丑肖像，高质量，8k</li>
+</ul>
+<p>应用角色 LoRA 可以让您快速生成具有真实外观的角色，使它们非常适合 AI 插图、角色概念艺术，甚至参考表。根据模型的训练，角色可能适合一套衣服、一种特定的发型，甚至是某种面部表情。然而，某些角色 LoRA 可以将您选择的角色放入新的服装和设置中，从而增加他们的魅力。</p>
+<p>Character LoRA 适用于各种媒体，包括流行和鲜为人知的标题。您会发现来自超级马里奥、漫威和神奇宝贝等热门系列的角色，以及众多日本动漫角色，甚至是漫画书中的英雄。</p>
+<p>当然，角色LoRA也可以应用于原始角色，只要有足够的训练数据即可。虽然低训练数据的实验正在进行中，但最好使用至少 10-20 个不同的图像来创建角色 LoRA。这将为您的训练过程增添多样性，提高生成角色的质量。</p>
+<h3 id="Style-LoRA"><a href="#Style-LoRA" class="headerlink" title="Style LoRA"></a><strong>Style LoRA</strong></h3><p>Style LoRA 与角色 LoRA 有许多相似之处，但它不是针对特定角色或对象进行训练，而是侧重于艺术风格。这种类型的模型通常由特定艺术家进行艺术训练，让您可以在自己的作品中使用他们的标志性风格。Style LoRA 可用于任何事情，从风格化参考图像到创建相同风格的原创艺术作品。</p>
+<p>顾名思义，这些模型针对特定风格进行训练，例如动画表演、水彩画、线稿等的特定外观。使用这种类型的 LoRA 模型，您可以轻松地为您的 AI 作品赋予与众不同的独特风格！</p>
+<img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/lora_style-1686843893060-5.png" class="" title="风格LoRA">
+
+<ul>
+<li><strong>使用的模型</strong>：<a target="_blank" rel="noopener" href="https://civitai.com/models/23900?modelVersionId=29792">AnyLoRA - Checkpoint</a></li>
+<li><strong>使用的 LoRA</strong> : <a target="_blank" rel="noopener" href="https://civitai.com/models/7094/arcane-style-lora">Arcane Style LoRA</a></li>
+<li><strong>使用提示</strong>：神秘风格，1girl，粉红色头发，长发，一条辫子，白衬衫，外套，黄色眼睛，看着观众，城市街道</li>
+</ul>
+<p>我们使用根据 Netflix 节目 Arcane 的风格训练的 LoRA 模型生成了一幅新的 AI 艺术品。该模型能够在原剧中没有出现的角色上捕捉到剧中鲜艳的色彩和独特的角色设计。</p>
+<p>样式 LoRA 的优点在于它们与常规的稳定扩散检查点一起工作，使您无需合并大型模型即可创建令人惊叹的独特作品。例如，使用现实主义检查点和绘画风格 LoRA 将生成看起来像绘画的逼真图像。</p>
+<h3 id="Concept-LoRA"><a href="#Concept-LoRA" class="headerlink" title="Concept LoRA"></a><strong>Concept LoRA</strong></h3><p>Concept LoRA 是一种特殊的 LoRA，它是针对特定概念或想法进行训练的。这些模型通常旨在概念化一些特定的东西，而这些东西很难通过简单的即时工程实现。例如，这种类型的 LoRA 可以针对特定的情绪、动作或非常特定的项目进行训练。</p>
+<p>当您尝试创建传达特定概念的原创艺术作品时，这种类型的模型特别有用。例如，如果您想生成玻璃雕塑的图像，您可以使用针对该确切想法训练的概念 LoRA。结果将是一件独特而有趣的艺术品，清楚地传达了您的目标概念。</p>
+<img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/lora_concept-1686843893060-7.png" class="" title="概念LoRA">
+
+<ul>
+<li><strong>使用的模型</strong>：<a target="_blank" rel="noopener" href="https://civitai.com/models/1274/dreamlike-diffusion-10">Dreamlike Diffusion 1.0</a></li>
+<li><strong>使用的 LoRA</strong> ：<a target="_blank" rel="noopener" href="https://civitai.com/models/11203/glass-sculptures">玻璃雕塑</a></li>
+<li><strong>使用提示</strong>：芭蕾舞演员、舞蹈、半透明、玻璃雕塑、倒影</li>
+</ul>
+<p>Concept LoRA 使创建风格化和概念性强的艺术作品变得更加容易。它们也非常适合创建更小、更模糊的作品，而这些作品很难用其他模型生成。因此，它们通常可以让您的作品在独特性和艺术价值方面更具优势。</p>
+<h3 id="Pose-LoRA"><a href="#Pose-LoRA" class="headerlink" title="Pose LoRA"></a><strong>Pose LoRA</strong></h3><p>将姿势 LoRA 应用到你这一代就像听起来一样 - 它会以某种方式摆出你的角色。这对于生成动态场景非常有用，您可以在其中生成特定的姿势和动作，而这些姿势和动作通常很难通过常规的提示工程来实现。</p>
+<p>Pose LoRA 模型更关注所述角色的姿势，而不是其风格或特征。例如，如果您要将姿势 LoRA 模型应用于人形角色，它会为他们创建不同的姿势，例如跑步、跳跃或坐着，但不会改变他们的特征、服装或改变模型的风格你正在使用。</p>
+<img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/lora_pose-1686843893060-9.png" class="" title="姿势LoRA">
+
+<ul>
+<li><strong>使用的模型</strong>：<a target="_blank" rel="noopener" href="https://civitai.com/models/36520/ghostmix">GhostMix</a></li>
+<li><strong>使用 LoRA</strong> ： <a target="_blank" rel="noopener" href="https://civitai.com/models/51900/shinji-in-a-chair-or-meme">Shinji in a Chair | 模因</a></li>
+<li><strong>使用提示</strong>：独奏，男性焦点，坐着，低着头，黑色短发，连帽夹克，牛仔裤，运动鞋</li>
+</ul>
+<p>Pose LoRA 是一种很好的方式，可以更好地控制你的世代，而无需安装和学习更高级的解决方案，如 ControlNet。这种类型的 LoRA 只需对原始提示进行一些简单的更改，就可以帮助您创建动态有趣的场景。</p>
+<h3 id="Clothing-LoRa"><a href="#Clothing-LoRa" class="headerlink" title="Clothing LoRa"></a><strong>Clothing LoRa</strong></h3><p>另一个有用的模型是服装 LoRA。如您所料，这种类型的 LoRA 模型旨在改变一个人的衣服和配饰。有了它，您可以快速轻松地为任何角色赋予新衣服，无论是现代风格还是历史风格。</p>
+<p>这些模型的优点在于它们适用于任何类型的角色。只需一个模型，您就可以应用各种不同的人的风格和设计！例如，如果您想创建一个角色穿着中国传统服饰的场景，只需将您选择的服装 LoRA 应用到您的这一代，瞧——即时的中国传统服装！</p>
+<img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/lora_clothing-1686843893060-11.png" class="" title="服装LoRA">
+
+<ul>
+<li><strong>使用的模型</strong>：<a target="_blank" rel="noopener" href="https://civitai.com/models/36520/ghostmix">GhostMix</a></li>
+<li><strong>使用的LoRA</strong> ：<a target="_blank" rel="noopener" href="https://civitai.com/models/15365/hanfu">汉服</a></li>
+<li><strong>使用提示</strong>：女孩，蓝色汉服，全身</li>
+</ul>
+<p>很多时候，即使您清楚地描述了角色的着装，Stable Diffusion 也可能无法最好地将您的想法变为现实。然而，在服装 LoRA 的帮助下，您可以微调角色的确切外观，并为您的作品带来额外的真实感。</p>
+<h3 id="Object-LoRA"><a href="#Object-LoRA" class="headerlink" title="Object LoRA"></a><strong>Object LoRA</strong></h3><p>最后但同样重要的是，我们有对象 LoRA。这是一个广泛的 LoRA 模型类别，用于生成家具、植物甚至车辆等对象。当然，您可以使用这些模型创建的项目类型取决于您使用的特定模型和您提供的提示。</p>
+<p>但是，该术语也适用于用于创建更抽象对象的 LoRA，例如游戏或网站的 UI 元素。这对于为您的项目创建更具凝聚力的外观非常有用。</p>
+<img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/lora_object-1686843893060-13.png" class="" title="Object LoRA">
+
+<ul>
+<li><strong>使用型号</strong>：<a target="_blank" rel="noopener" href="https://civitai.com/models/57931/szechuan-special-sauce?modelVersionId=62378">川菜特制酱料</a></li>
+<li><strong>LoRA 使用</strong>：<a target="_blank" rel="noopener" href="https://civitai.com/models/58247/product-design-dark-minimalism-eddiemauro-lora">产品设计（黑暗极简主义-eddiemauro）</a></li>
+<li><strong>使用提示</strong>：未来派水壶，计算机渲染，极简主义，4k</li>
+</ul>
+<p>Object LoRA 不仅是艺术家的宝贵工具，也是游戏开发人员、网页设计师和其他需要高效创建资产的创意专业人士的宝贵工具。能够生成具有自定义设计的对象让您可以自由地试验和探索不同的视觉效果，直到找到最适合您的项目的视觉效果。</p>
+<h2 id="在哪里可以找到和下载-LoRA-模型"><a href="#在哪里可以找到和下载-LoRA-模型" class="headerlink" title="在哪里可以找到和下载 LoRA 模型"></a><strong>在哪里可以找到和下载 LoRA 模型</strong></h2><p>LoRA 模型在各种开源存储库中可用，包括 <a target="_blank" rel="noopener" href="https://civitai.com/">Civitai</a>和<a target="_blank" rel="noopener" href="https://huggingface.co/">Hugging Face</a>。这些模型可免费使用，只需几个简单的步骤即可轻松下载。这些模型最好的地方在于它们的大小——大多数 LoRA 模型不超过几兆字节，这使得它们非常轻巧且易于使用。</p>
+<p>下载您要使用的模型后，您必须将它们安装到正确的文件夹中。根据您的设置，这可能会发生变化。在本文中，我们将探索 LoRA 模型与 Automatic1111 webUI 的结合使用，但您可以研究您的平台以获取有关使用 LoRA 模型的具体说明。</p>
+<h2 id="如何将-LoRA-模型安装到-Automatic1111-中"><a href="#如何将-LoRA-模型安装到-Automatic1111-中" class="headerlink" title="如何将 LoRA 模型安装到 Automatic1111 中"></a><strong>如何将 LoRA 模型安装到 Automatic1111 中</strong></h2><p>在将模型放入 webUI 之前，无论您使用什么平台生成图像，您很可能需要安装 LoRA 扩展本身。以下是安装 Automatic1111 扩展的方法：</p>
+<ol>
+<li>首先，启动 Automatic1111 网络用户界面。</li>
+<li>打开“<strong>扩展”选项卡，然后</strong>从可用选项中单击“<strong>从 URL 安装”。</strong></li>
+<li>将以下链接粘贴到“<strong>扩展的 git 存储库的 URL</strong> ”输入字段中，然后按“<strong>安装</strong>”按钮：<a target="_blank" rel="noopener" href="https://github.com/kohya-ss/sd-webui-additional-networks.git">https://github.com/kohya-ss/sd-webui-additional-networks.git</a><img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/Photoshop_s6W3JR02z5-1686843893060-15.png" class="" title="安装 lora 扩展"></li>
+<li>切换到“ <strong>Installed</strong> ”选项卡，然后单击“ <strong>Apply and restart UI</strong> ”按钮。现在，等待 Automatic1111 Web UI 重新启动。<img src="/2023/06/15/Stable%20Diffusion%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%20LoRA%20%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC%EF%BC%9F/Photoshop_MYVL9qfa6j-1686843893060-17.png" class="" title="重新启动用户界面"></li>
+<li>执行这些步骤后，您应该注意到“ <strong>models</strong> ”文件夹中有一些新的子文件夹。这些模型将存储您的 LoRA。但是，您需要配置此文件夹，以便 Automatic1111 Web UI 可以读取它。</li>
+<li>打开“<strong>设置</strong>”选项卡，然后切换到“<strong>其他网络</strong>”选项卡。找到“<strong>用于扫描 LoRA 模型的额外路径</strong>”输入字段并粘贴到正确的文件夹中。<strong>您会在“ stable-diffusion-webui&#x2F;models&#x2F;Lora ”目录</strong>中找到它。</li>
+<li>输入 LoRA 文件夹的正确完整路径后，单击“<strong>应用设置</strong>”。</li>
+</ol>
+<p>这负责安装 LoRA 扩展，但是，这还不足以开始生成图像。您还需要将实际的 LoRA 模型安装到正确的文件夹中。为此，请获取下载的 LoRA 文件并将其放在“ <strong>stable-diffusion-webui&#x2F;models&#x2F;Lora</strong> ”文件夹中。</p>
+<h2 id="如何在-Automatic1111-中使用-LoRA-模型"><a href="#如何在-Automatic1111-中使用-LoRA-模型" class="headerlink" title="如何在 Automatic1111 中使用 LoRA 模型"></a><strong>如何在 Automatic1111 中使用 LoRA 模型</strong></h2><p>一旦安装了您要使用的 LoRA 模型，您就可以开始使用它创建图像。</p>
+<ol>
+<li>启动 Automatic1111 Web UI 并选择所需的检查点模型。一些 LoRA 需要使用特定的检查点；始终检查您的 LoRA 的描述和说明。</li>
+<li>输入您的提示。确保包括 LoRA 的触发词（如果有的话）。创作者通常会把这个词放在描述中，或者你可以在Civitai 上的“<strong>触发词”参数中找到它。</strong></li>
+<li>单击“*<em>生成”按钮下的“*</em>**附加网络**”图标，然后切换到“ <strong>Lora</strong> ”选项卡。在这里，单击要使用的 Lora 以将其插入到提示符中。</li>
+<li><strong>如果需要，通过将默认值“ 1</strong> ”修改为更低或更高的数字来更改 LoRA 的权重。例如，一些 LoRA 在“ <strong>0.6</strong> ”或“ <strong>1.2</strong> ”这样的权重上效果更好，这取决于它是如何训练的，以及你正在寻找什么样的结果。</li>
+<li>完成生成设置的配置，然后单击“<strong>生成</strong>”按钮。</li>
+</ol>
+<p>您应该注意到 LoRA 已应用于生成的图像，使您能够处理更具体和独特的概念。您为配置 LoRA 所花费的时间和精力是非常值得的；结果可能是惊人的！</p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a><strong>结论</strong></h4><p>LoRA 模型是为 AI 生成的图像添加更多细节和准确性的好方法。只需几个简单的步骤，您就可以开始将这些模型整合到您的 Automatic1111 工作流程中，让您的项目进入一个充满可能性的全新世界。我们建议密切关注最新版本，因为平台上总是会添加新的和有趣的模型。快乐创造！</p>
+
+    </div>
+    <footer class="article-footer">
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%95%86%E4%B8%9A%E5%8C%96%E5%9C%BA%E6%99%AF/" rel="tag">商业化场景</a></li></ul>
+
+    </footer>
+  </div>
+  
+  
+</article>
+      </div>
+      
+      <div class="col-3">
         <article id="post-如何免费使用 Stable Diffusion – 新手指南" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   
@@ -369,7 +754,7 @@
       </div>
       
       <div class="col-3">
-        <article id="post-shijianguanli" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <article id="post-gongchengshizhuanxing" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   
   <div class="article-inner">
@@ -379,7 +764,7 @@
       
   
     <h5 class="article-title" itemprop="name">
-      <a href="/2023/06/11/shijianguanli/">如何管理时间，持续进步？</a>
+      <a href="/2023/06/11/gongchengshizhuanxing/">工程师管理转型</a>
     </h5>
   
 
@@ -393,18 +778,68 @@
     </header>
     
     <div class="article-entry" itemprop="articleBody">
-      <ol>
-<li><p>商业洞察：明确商业目标和战略，确保你所做的事与公司的核心价值相关。集中精力在具有最大商业影响力的任务上，避免分散注意力。</p>
-</li>
-<li><p>知识体系建设和扩展：建立一个系统化的知识体系，不断学习和深化领域知识。阅读书籍、参加培训课程、参与行业会议等方式扩展知识，并将学到的知识应用到实际工作中。</p>
-</li>
-<li><p>项目管理方法：采用有效的项目管理方法，如制定明确的目标和里程碑，制定详细的计划和时间表，分解任务，设定优先级，及时跟进进度并调整计划。使用项目管理工具和技术帮助提高效率和组织能力。</p>
-</li>
-<li><p>极致做事方法：注重细节，追求卓越。确保每个任务都精益求精，准确无误地完成。细心审查工作成果，检查错误并进行修正。持续反思并改进自己的工作方法和流程，以提高效率和质量。</p>
-</li>
-<li><p>家庭、生活和放松时间：平衡工作与个人生活，确保拥有足够的时间放松和休息。设定明确的工作时间和个人时间，优化时间利用，避免过度工作。培养兴趣爱好、锻炼身体和与家人朋友交流，以保持身心健康和持续进步。</p>
-</li>
+      <p>从功能，代码，架构 转到全局思考，视角切换，能力要求均衡</p>
+<p>Leader：建立有战斗力的团队，放权，迅速补齐团队成员短板，但不能所有事情，亲历亲为，提供兜底</p>
+<h2 id="职责："><a href="#职责：" class="headerlink" title="职责："></a>职责：</h2><ol>
+<li>帮助公司拿结果，帮助员工成长</li>
 </ol>
+<h2 id="目标："><a href="#目标：" class="headerlink" title="目标："></a>目标：</h2><ol>
+<li>向上：与公司目标对齐</li>
+<li>向下：目标拆解成可执行的行动项</li>
+<li>横向：与兄弟部门合作，目标对齐</li>
+</ol>
+<h2 id="能力："><a href="#能力：" class="headerlink" title="能力："></a>能力：</h2><ol>
+<li>团队：有能力接收挑战，内部培养，外部引入</li>
+<li>个人：补齐短板，扬长避短，最大化每个人的价值</li>
+</ol>
+<h2 id="招聘"><a href="#招聘" class="headerlink" title="招聘"></a>招聘</h2><ol>
+<li>是否与公司文化契合</li>
+<li>是否具备owner意识 </li>
+<li>是否具备成长性</li>
+</ol>
+<h2 id="信任："><a href="#信任：" class="headerlink" title="信任："></a>信任：</h2><ol>
+<li>上级、下级、平级之间形成双向信任关系，我做事你放心，你做事我放心，对人的认可，站在对方角度</li>
+</ol>
+
+    </div>
+    <footer class="article-footer">
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/" rel="tag">职业规划</a></li></ul>
+
+    </footer>
+  </div>
+  
+  
+</article>
+      </div>
+      
+      <div class="col-3">
+        <article id="post-xiangshangguanli" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h5 class="article-title" itemprop="name">
+      <a href="/2023/06/11/xiangshangguanli/">向上管理两点很重要</a>
+    </h5>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-06-11T05:00:00.000Z" itemprop="datePublished">
+  2023-06-11
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p>向上管理两点很重要<br>及时汇报进度：确保在项目进行过程中及时向领导汇报进展情况，特别是关键节点的进展情况。这样可以给领导足够的信息，使其能够把握项目的整体方向，并了解项目是否按预期进行。如果缺乏汇报，领导可能会感到被交付的事情变成了一个未知的盒子，一旦项目失控，领导也会感到焦虑，无法确认团队是否能按时完成项目。</p>
+<p>及时暴露风险：除了关键节点之外，在项目进行过程中遇到的风险也需要及时向领导报告，让领导知道可能存在的风险。在向领导报告风险时，应该先思考解决方案来应对这些风险。适当地放权给团队成员，让他们参与全局和方向的把控，并对项目结果负责。不放权的话，团队无法面临挑战和成长，因为每个人都不希望永远只是一颗螺丝钉。追求可控中的失控，意味着不能盲目放权，而是要有足够的信息来掌握整个项目的全局。此外，领导还应该帮助团队应对风险，并解决问题，在可控范围内给予每个成员空间和机会。要全面考虑问题，以便做出最佳决策。</p>
 
     </div>
     <footer class="article-footer">
@@ -474,7 +909,7 @@
       </div>
       
       <div class="col-3">
-        <article id="post-xiangshangguanli" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <article id="post-shijianguanli" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   
   <div class="article-inner">
@@ -484,7 +919,7 @@
       
   
     <h5 class="article-title" itemprop="name">
-      <a href="/2023/06/11/xiangshangguanli/">向上管理两点很重要</a>
+      <a href="/2023/06/11/shijianguanli/">如何管理时间，持续进步？</a>
     </h5>
   
 
@@ -498,114 +933,23 @@
     </header>
     
     <div class="article-entry" itemprop="articleBody">
-      <p>向上管理两点很重要<br>及时汇报进度：确保在项目进行过程中及时向领导汇报进展情况，特别是关键节点的进展情况。这样可以给领导足够的信息，使其能够把握项目的整体方向，并了解项目是否按预期进行。如果缺乏汇报，领导可能会感到被交付的事情变成了一个未知的盒子，一旦项目失控，领导也会感到焦虑，无法确认团队是否能按时完成项目。</p>
-<p>及时暴露风险：除了关键节点之外，在项目进行过程中遇到的风险也需要及时向领导报告，让领导知道可能存在的风险。在向领导报告风险时，应该先思考解决方案来应对这些风险。适当地放权给团队成员，让他们参与全局和方向的把控，并对项目结果负责。不放权的话，团队无法面临挑战和成长，因为每个人都不希望永远只是一颗螺丝钉。追求可控中的失控，意味着不能盲目放权，而是要有足够的信息来掌握整个项目的全局。此外，领导还应该帮助团队应对风险，并解决问题，在可控范围内给予每个成员空间和机会。要全面考虑问题，以便做出最佳决策。</p>
-
-    </div>
-    <footer class="article-footer">
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/" rel="tag">职业规划</a></li></ul>
-
-    </footer>
-  </div>
-  
-  
-</article>
-      </div>
-      
-      <div class="col-3">
-        <article id="post-gongchengshizhuanxing" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  
-  <div class="article-inner">
-    
-    <header class="article-header">
-      
-      
-  
-    <h5 class="article-title" itemprop="name">
-      <a href="/2023/06/11/gongchengshizhuanxing/">工程师管理转型</a>
-    </h5>
-  
-
-      <div class="article-meta">
-        <time class="text-gray" datetime="2023-06-11T05:00:00.000Z" itemprop="datePublished">
-  2023-06-11
-</time>
-        
-      </div>
-      
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      <p>从功能，代码，架构 转到全局思考，视角切换，能力要求均衡</p>
-<p>Leader：建立有战斗力的团队，放权，迅速补齐团队成员短板，但不能所有事情，亲历亲为，提供兜底</p>
-<h2 id="职责："><a href="#职责：" class="headerlink" title="职责："></a>职责：</h2><ol>
-<li>帮助公司拿结果，帮助员工成长</li>
-</ol>
-<h2 id="目标："><a href="#目标：" class="headerlink" title="目标："></a>目标：</h2><ol>
-<li>向上：与公司目标对齐</li>
-<li>向下：目标拆解成可执行的行动项</li>
-<li>横向：与兄弟部门合作，目标对齐</li>
-</ol>
-<h2 id="能力："><a href="#能力：" class="headerlink" title="能力："></a>能力：</h2><ol>
-<li>团队：有能力接收挑战，内部培养，外部引入</li>
-<li>个人：补齐短板，扬长避短，最大化每个人的价值</li>
-</ol>
-<h2 id="招聘"><a href="#招聘" class="headerlink" title="招聘"></a>招聘</h2><ol>
-<li>是否与公司文化契合</li>
-<li>是否具备owner意识 </li>
-<li>是否具备成长性</li>
-</ol>
-<h2 id="信任："><a href="#信任：" class="headerlink" title="信任："></a>信任：</h2><ol>
-<li>上级、下级、平级之间形成双向信任关系，我做事你放心，你做事我放心，对人的认可，站在对方角度</li>
+      <ol>
+<li><p>商业洞察：明确商业目标和战略，确保你所做的事与公司的核心价值相关。集中精力在具有最大商业影响力的任务上，避免分散注意力。</p>
+</li>
+<li><p>知识体系建设和扩展：建立一个系统化的知识体系，不断学习和深化领域知识。阅读书籍、参加培训课程、参与行业会议等方式扩展知识，并将学到的知识应用到实际工作中。</p>
+</li>
+<li><p>项目管理方法：采用有效的项目管理方法，如制定明确的目标和里程碑，制定详细的计划和时间表，分解任务，设定优先级，及时跟进进度并调整计划。使用项目管理工具和技术帮助提高效率和组织能力。</p>
+</li>
+<li><p>极致做事方法：注重细节，追求卓越。确保每个任务都精益求精，准确无误地完成。细心审查工作成果，检查错误并进行修正。持续反思并改进自己的工作方法和流程，以提高效率和质量。</p>
+</li>
+<li><p>家庭、生活和放松时间：平衡工作与个人生活，确保拥有足够的时间放松和休息。设定明确的工作时间和个人时间，优化时间利用，避免过度工作。培养兴趣爱好、锻炼身体和与家人朋友交流，以保持身心健康和持续进步。</p>
+</li>
 </ol>
 
     </div>
     <footer class="article-footer">
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/" rel="tag">职业规划</a></li></ul>
-
-    </footer>
-  </div>
-  
-  
-</article>
-      </div>
-      
-      <div class="col-3">
-        <article id="post-智源大会嘉宾发言" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  
-  <div class="article-inner">
-    
-    <header class="article-header">
-      
-      
-  
-    <h5 class="article-title" itemprop="name">
-      <a href="/2023/06/11/%E6%99%BA%E6%BA%90%E5%A4%A7%E4%BC%9A%E5%98%89%E5%AE%BE%E5%8F%91%E8%A8%80/">智源大会大模型行业洞察？</a>
-    </h5>
-  
-
-      <div class="article-meta">
-        <time class="text-gray" datetime="2023-06-11T05:00:00.000Z" itemprop="datePublished">
-  2023-06-11
-</time>
-        
-      </div>
-      
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      <p>大模型三驾马车<br>数据：ChatGPT的成功要素在于工程和算法的协调创新，数据是燃料也是基础，特别是高质量的数据；<br>算法：算法发挥引擎的作用；<br>算力：算力则是加速器，不止涉及到超大GPU集群，存储与网络集群也直观重要；</p>
-<p>算力要满足三大要素：<br>一是通用，可支持模型的快速变形、快速支持新算子，快速支持新通讯；<br>二是易用，可利用现有算法模块实现、调优经验可借鉴；<br>三是好用，可重构并行计算，访存全交换，计算全互联。</p>
-<p>国内算力产业必经三道窄门：<br>一是量产，量产可以摊薄前期流片的巨大投入，通过量产摊薄成本是实现盈利的唯一方式，也是衡量芯片成熟度的指标之一；<br>二是生态，为了让客户更好的开发应用，要着力构建一个合理，合适的软件生态；<br>三是软硬一体产品化，要与垂直行业结合起来实现产品的价值传递；</p>
-
-    </div>
-    <footer class="article-footer">
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E3%80%81AI%E7%AE%97%E5%8A%9B/" rel="tag">大模型、AI算力</a></li></ul>
 
     </footer>
   </div>

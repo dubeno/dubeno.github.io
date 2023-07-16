@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+    <meta name="keywords" content="AI架构师, ai infra, AI系统设计, AI系统优化, 机器学习, 深度学习, 大数据处理, 高性能AI架构, 可扩展AI系统, ChatGPT, Stable Diffusion, AI 绘画, 大模型">
+  
+  
+    <meta name="description" content="这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title> AI架构 | AI系统基础架构设计与优化</title>
+  
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/webclip/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/webclip/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/webclip/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/webclip/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/webclip/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/webclip/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/webclip/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/webclip/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/images/webclip/apple-touch-icon-167x167.png">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <main class="main">
+    
+	<header class="header">
+
+	<div class="container">
+		<nav class="navbar d-flex align-items-center">
+			<a class="brand" href="/">
+				<img class="logo lazyload" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+			</a>
+			<ul class="main-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		</nav>
+		<a id="mobile-nav-toggle">
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+		</a>
+	</div>
+</header>
+
+    <section>
+      <div class="container">
+  <article id="post-提示工程" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="artcle-cover mb-5">
+    
+  </div>
+  
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p>最近兴起的大型语言模型 (LLM)，例如 GPT-3、ChatGPT、AI21 的 Jurassic 和 Cohere，彻底改变了人工智能所能实现的目标。这些模型经过大量文本的训练，如果使用得当，可以回答问题、生成营销内容、总结会议记录、编写代码等等。</p>
+<p>与法学硕士的交互与传统的机器学习模型有很大不同。我们提供文本提示作为 LLM 完成特定任务的说明，依靠其对大型数据集的预训练为我们提供准确的答案。</p>
+
+
+<p>这些指令称为<strong>提示。</strong>提示是LLM的输入，其目的是告诉LLM该做什么或如何思考问题，以获得尽可能最佳和最准确的任务输出。调整提示以获得LLM更具体&#x2F;可用的答复称为<strong>提示工程</strong>，是一项关键技能；这是使用LLM的最大努力部分。</p>
+<h1 id="在提示中包含直接说明"><a href="#在提示中包含直接说明" class="headerlink" title="在提示中包含直接说明"></a>在提示中包含直接说明</h1><p>让我们举一个简单的例子，要求 GPT-3（经过指令调整）将一个句子从英语翻译成西班牙语。我们的提示将包含三个元素：</p>
+<ol>
+<li>清晰、简洁、直接的指示：“**Translate.**”</li>
+<li>我们要翻译的英语短语前面带有“ <strong>English:</strong> ”</li>
+<li>明确指定供法学硕士回答的空间，前面有故意相似的前缀“<strong>Spanish:</strong> ”</li>
+</ol>
+
+
+
+
+<h1 id="在提示中举例以获得最佳回应"><a href="#在提示中举例以获得最佳回应" class="headerlink" title="在提示中举例以获得最佳回应"></a>在提示中举例以获得最佳回应</h1><p>如果清晰和直接的指示不足以一致和准确地解决任务，那么为LLM提供一些例子通常是个好主意。</p>
+<p>让我们看一个英语到西班牙语翻译任务的示例。我们将用一个英语到西班牙语翻译的示例来替换指令“翻译”。我们应该以与最后一对完全相同的方式格式化示例，除了我们的示例将填写西班牙语翻译，以告诉LLM我们正在尝试做什么。</p>
+
+
+<p>少量学习可以帮助澄清任务，尤其有助于语气、语法或风格等方面。这里一个翻译示例足以让模型正确响应。</p>
+<p>我们可以看到，通过给模型提供我们想要的示例，模型可以计算出任务，就像我们给它一组直接指令一样。在提示中包含示例称为<strong>小样本学习。</strong>这是 GPT-3 的突破性功能，它是其研究论文标题的主要焦点：“语言模型是小样本学习器”。GPT-3 的创建者知道，小样本学习非常强大，它将成为人们与模型交互的主要方式之一。</p>
+<h1 id="将提示说明与任务的最终目标保持一致"><a href="#将提示说明与任务的最终目标保持一致" class="headerlink" title="将提示说明与任务的最终目标保持一致"></a>将提示说明与任务的最终目标保持一致</h1><p>在设计提示时，我们需要设身处地为 LLM 着想并询问：模型认为我的任务的最终目标是什么？</p>
+<p>例如，如果我们希望模型以友好的方式对客户做出单一响应，我们可以编写如下提示：</p>
+
+
+<p>我们可以看到，GPT-3 认为任务是根据客户的初始输入创建完整的对话记录，而不仅仅是只回复客户一次。GPT-3不一定是错误的，但它与最初的具体任务意图不一致。让我们将提示更改为“以礼貌、乐于助人的客户服务代理的身份响应客户。”。</p>
+
+
+<p>将提示更改为“回复…”更符合我们希望从LLM获得的最终目标。</p>
+<p>从“这是一次对话……”到“响应……”的微小变化使 GPT-3 的响应与我们期望的结果保持一致。提示必须直接且适合任务；当它们不正确时，无论我们的意图如何，模型都会以它认为正确的任务来响应。</p>
+<h1 id="使用角色获得更具体的声音"><a href="#使用角色获得更具体的声音" class="headerlink" title="使用角色获得更具体的声音"></a>使用角色获得更具体的声音</h1><p>在上一个示例中，我们希望 GPT-3 作为礼貌且乐于助人的客户服务代理来响应客户。“礼貌”和“乐于助人”等术语的使用引导模型的响应风格，促使其以某种角色进行响应。我们可以对这些项进行实验，看看它如何影响模型的响应。让我们将“礼貌、乐于助人”更改为“粗鲁”，并观察模型的反应。</p>
+
+
+<p>我们甚至可以要求模型以名人或流行的虚构人物的身份进行回应。</p>
+<h1 id="在提示中包含可接受的响应以保持一致性"><a href="#在提示中包含可接受的响应以保持一致性" class="headerlink" title="在提示中包含可接受的响应以保持一致性"></a>在提示中包含可接受的响应以保持一致性</h1>
+
+
+
+<p>让我们引导 GPT-3 仅响应“肯定”或“否定”。</p>
+<h1 id="尝试不同的提示以找到最有效的"><a href="#尝试不同的提示以找到最有效的" class="headerlink" title="尝试不同的提示以找到最有效的"></a>尝试不同的提示以找到最有效的</h1><p>我们可以继续提供更多有关如何设计提示的提示和技巧，但让您继续前进的最佳方法是尝试相同基本提示的变体，看看哪种最有效。例如：</p>
+<ol>
+<li>当尝试少样本学习时，也尝试包括直接指令</li>
+<li>将直接指令集改写为或多或少简洁（例如，以我们之前仅说“翻译”的示例为例，然后扩展指令以说“从英语翻译成西班牙语”。</li>
+<li>尝试不同的角色关键字，看看它如何影响响应风格</li>
+<li>在几次学习中使用更少或更多的例子</li>
+</ol>
+<h1 id="概括"><a href="#概括" class="headerlink" title="概括"></a>概括</h1><p>我们已经看到了一些快速工程入门的技巧。快速回顾一下：</p>
+<ol>
+<li>使用清晰、直接、简洁的说明</li>
+<li>尝试“完成这句话”提示以获得更自然的反应</li>
+<li>使用任务的示例（小样本学习）</li>
+<li>将提示说明与明确的最终目标保持一致</li>
+<li>使用角色关键字来改变响应的风格和语气</li>
+<li>通过在提示中列出所需的响应来限制 LLM 的响应</li>
+<li>尝试不同的提示，看看哪种最适合您！</li>
+</ol>
+<p>继续使用这些新发现的技能开始工程提示，并记住，如果一开始没有成功，请再次尝试（提示的不同变体）！</p>
+
+    </div>
+    <footer class="article-footer">
+      
+    </footer>
+  </div>
+  
+  
+    
+<nav class="article-nav pt-4 mt-3" id="article-nav">
+  
+    <a href="/2023/07/16/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91LangChain+ChatGLM2-6B%E6%90%AD%E5%BB%BA%E7%9F%A5%E8%AF%86%E5%BA%93/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/04/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8ChatGPT%E8%B5%9A%E9%92%B1%EF%BC%9F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">如何利用ChatGPT赚钱？</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+</div>
+    </section>
+    <footer class="footer pt-5 mt-5">
+  <div class="container">
+    <div class="py-3">
+      <div class="row justify-content-between">
+        <div class="col-6">
+          <img class="filter-gray mb-3 lazyload" height="40" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+          <p class="mb-4">这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。</p>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="javascript:;">
+                  <img 0="微信" src="/images/icons/contact_wechat.svg">
+                </a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="mailto:a@abc.com">
+                  <img 0="邮箱" src="/images/icons/contact_email.svg">
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+        <div class="col-4">
+          <h5>友情链接</h5>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="https://acorn.imaging.xin/" title="Acorn" target="_blank" rel="noopener">Acorn</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://github.com/" title="GitHub" target="_blank" rel="noopener">GitHub</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://duoyu.wang/" title="To Base64" target="_blank" rel="noopener">To Base64</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" style="opacity: .25;">
+    <div class="pt-3 pb-5">
+      <ul class="list-inline mb-0 text-center">
+        <li class="list-inline-item">&copy; 2023 AI架构 | AI系统基础架构设计与优化</li>
+        
+        <li class="list-inline-item">Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+        <li class="list-inline-item">Designer <a href="https://acorn.imaging.xin/" target="_blank">罗平</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+  </main>
+  <div id="mobile-nav-dimmer"></div>
+<div id="mobile-nav">
+	<div id="mobile-nav-inner">
+		<ul class="mobile-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		
+	</div>
+</div>
+
+  <script src="/libs/feather/feather.min.js"></script>
+<script src="/libs/lazysizes/lazysizes.min.js"></script>
+
+	<script src="/libs/tocbot/tocbot.min.js"></script>
+	<script>
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.js-toc-content',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h2, h3',
+      // For headings inside relative or absolute positioned containers within content.
+      hasInnerContainers: true,
+    });
+	</script>
+
+
+
+
+
+<script src="/js/mobile-nav.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-178892506-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-178892506-1');
+</script>
+</body>
+</html>
