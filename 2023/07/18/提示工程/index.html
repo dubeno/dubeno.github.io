@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+    <meta name="keywords" content="大模型,AI架构师, ai infra, AI系统设计, AI系统优化, 机器学习, 深度学习, 大数据处理, 高性能AI架构, 可扩展AI系统, ChatGPT, Stable Diffusion, AI 绘画, 大模型">
+  
+  
+    <meta name="description" content="提示工程，也称为上下文提示，是指如何在不更新模型权重的情况下与LLM通信以引导其行为以获得所需结果的方法。这是一门实证科学，快速工程方法的效果在不同模型之间可能有很大差异，因此需要大量的实验和启发式。">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>Prompt Engineering |  AI架构 | AI系统基础架构设计与优化</title>
+  
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/webclip/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/webclip/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/webclip/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/webclip/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/webclip/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/webclip/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/webclip/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/webclip/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/images/webclip/apple-touch-icon-167x167.png">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <main class="main">
+    
+	<header class="header">
+
+	<div class="container">
+		<nav class="navbar d-flex align-items-center">
+			<a class="brand" href="/">
+				<img class="logo lazyload" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+			</a>
+			<ul class="main-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		</nav>
+		<a id="mobile-nav-toggle">
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+		</a>
+	</div>
+</header>
+
+    <section>
+      <div class="container">
+  <article id="post-提示工程" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="artcle-cover mb-5">
+    
+  
+    
+      <img class="artcle-cover-img lazyload" data-src="/images/sample/mydesk.png" itemprop="image" alt="">
+       
+  
+
+  </div>
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h1 class="article-title" itemprop="name">
+      Prompt Engineering
+    </h1>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-07-18T05:00:00.000Z" itemprop="datePublished">
+  2023-07-18
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <p><strong>提示工程</strong>，也称为<strong>上下文提示</strong>，是指如何在不更新模型权重<em>的情况下与</em>LLM通信以引导其行为以获得所需结果的方法。这是一门实证科学，快速工程方法的效果在不同模型之间可能有很大差异，因此需要大量的实验和启发式。</p>
+<h1 id="Basic-Prompting（基本提示）"><a href="#Basic-Prompting（基本提示）" class="headerlink" title="Basic Prompting（基本提示）"></a>Basic Prompting（基本提示）</h1><h2 id="Zero-shot（零镜头）"><a href="#Zero-shot（零镜头）" class="headerlink" title="Zero-shot（零镜头）"></a>Zero-shot（零镜头）</h2><p>零镜头(Zero-shot)和少镜头( few-shot)学习是提示模型的两种最基本的方法，由许多LLM论文开创，通常用于基准测试LLM性能。</p>
+<p><strong>零镜头学习</strong>是简单地将任务文本提供给模型并要求结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Text: i&#x27;ll bet the video game is a lot more fun than the film.</span><br><span class="line">Sentiment:</span><br></pre></td></tr></table></figure>
+
+<h2 id="few-shot（少镜头）"><a href="#few-shot（少镜头）" class="headerlink" title="few-shot（少镜头）"></a>few-shot（少镜头）</h2><p><strong>少镜头学习</strong>提供了一组关于目标任务的高质量演示，每个演示都包含<strong>输入和期望</strong>输出。当模型首先看到好的例子时，它可以<strong>更好地理解人类的意图和想要什么样的答案的标准</strong>。因此，少镜头学习通常比零镜头学习带来更好的表现。但是，它以消耗更多的令牌为代价，并且当输入和输出文本较长时，可能会达到上下文长度限制。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Text: (lawrence bounces) all over the stage, dancing, running, sweating, mopping his face and generally displaying the wacky talent that brought him fame in the first place.</span><br><span class="line">Sentiment: positive</span><br><span class="line"></span><br><span class="line">Text: despite all evidence to the contrary, this clunker has somehow managed to pose as an actual feature movie, the kind that charges full admission and gets hyped on tv and purports to amuse small children and ostensible adults.</span><br><span class="line">Sentiment: negative</span><br><span class="line"></span><br><span class="line">Text: for the first time in years, de niro digs deep emotionally, perhaps because he&#x27;s been stirred by the powerful work of his co-stars.</span><br><span class="line">Sentiment: positive</span><br><span class="line"></span><br><span class="line">Text: i&#x27;ll bet the video game is a lot more fun than the film.</span><br><span class="line">Sentiment:</span><br></pre></td></tr></table></figure>
+
+<p>许多研究研究了如何构建上下文示例以最大限度地提高性能，并观察到<strong>提示格式、训练示例和示例顺序的选择会导致性能大不相同</strong>，从近乎随机猜测到接近 SoTA。</p>
+<h1 id="Instruction-Prompting（指令提示）"><a href="#Instruction-Prompting（指令提示）" class="headerlink" title="Instruction Prompting（指令提示）"></a>Instruction Prompting（指令提示）</h1><p>在提示中呈现几个镜头示例的目的是向模型解释我们的意图;换句话说，以<strong>演示</strong>的形式向模型描述任务指令。但是，在令牌使用方面，<strong>少数镜头可能很昂贵</strong>，并且由于上下文<strong>长度有限</strong>而限制了输入长度。那么，为什么不直接下达指令呢？</p>
+<p><em>Instructed LM</em> (e.g. <a target="_blank" rel="noopener" href="https://openai.com/research/instruction-following">InstructGPT</a>, <a target="_blank" rel="noopener" href="https://github.com/allenai/natural-instructions">natural instruction</a>) ,用高质量的元组（task instruction, input, ground truth output）微调预训练模型，以使LM更好地理解用户意图并遵循<a target="_blank" rel="noopener" href="https://github.com/allenai/natural-instructions">指令</a>。<a target="_blank" rel="noopener" href="https://lilianweng.github.io/posts/2021-01-02-controllable-text-generation/#rl-fine-tuning-with-human-preferences">RLHF</a>（来自人类反馈的强化学习）是一种常用的方法。遵循风格微调的指令的好处是改进了模型，使其更符合人类的意图，并大大降低了沟通成本。</p>
+<p>在与指令模型交互时，我们应该详细描述任务需求，尽量<em>具体</em>和<em>精确</em>，避免说“不做某事”，而是指定要做什么。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Definition: Determine the speaker of the dialogue, &quot;agent&quot; or &quot;customer&quot;.</span><br><span class="line">Input: I have successfully booked your tickets.</span><br><span class="line">Ouput: agent</span><br><span class="line"></span><br><span class="line">Definition: Determine which category the question asks for, &quot;Quantity&quot; or &quot;Location&quot;.</span><br><span class="line">Input: What&#x27;s the oldest building in US?</span><br><span class="line">Ouput: Location</span><br><span class="line"></span><br><span class="line">Definition: Classify the sentiment of the given movie review, &quot;positive&quot; or &quot;negative&quot;.</span><br><span class="line">Input: i&#x27;ll bet the video game is a lot more fun than the film.</span><br><span class="line">Output:</span><br></pre></td></tr></table></figure>
+
+<h1 id="Self-Consistency-Sampling-自一致性采样"><a href="#Self-Consistency-Sampling-自一致性采样" class="headerlink" title="Self-Consistency Sampling(自一致性采样)"></a>Self-Consistency Sampling(自一致性采样)</h1><p><strong>自一致性采样</strong>（<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2203.11171">Wang 等人，2022</a>）是在 temperature &gt; 0的情况下对多个输出进行采样，然后从这些候选输出中选择最佳输出。 选择最佳候选人的标准可能因任务而异。一般的解决方案是选择<strong>多数票</strong>。对于易于验证的任务，例如带有单元测试的编程问题，我们可以简单地运行解释器并通过单元测试验证正确性。</p>
+<h1 id="Chain-of-Thought-思维链"><a href="#Chain-of-Thought-思维链" class="headerlink" title="Chain-of-Thought (思维链 )"></a>Chain-of-Thought (思维链 )</h1><p><strong>思维链 （CoT） 提示</strong>（<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2201.11903">Wei 等人，2022</a> 年）生成一系列短句，逐步描述推理逻辑，称为<em>推理链</em>或<em>理由</em>，最终导致最终答案。CoT的好处对于<strong>复杂的推理任务</strong>更为明显，同时使用<strong>大型模型</strong>（例如，参数超过50B）。简单任务仅从 CoT 提示中略有受益。</p>
+<h2 id="CoT-提示的类型"><a href="#CoT-提示的类型" class="headerlink" title="CoT 提示的类型"></a>CoT 提示的类型</h2><p><strong>Few-shot CoT</strong>: 它是通过一些演示来提示模型，每个演示都包含手动编写（或模型生成的）高质量推理链。</p>
+<p>（所有数学推理示例均来自<a target="_blank" rel="noopener" href="https://github.com/openai/grade-school-math">GSM8k</a>)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Question: Tom and Elizabeth have a competition to climb a hill. Elizabeth takes 30 minutes to climb the hill. Tom takes four times as long as Elizabeth does to climb the hill. How many hours does it take Tom to climb up the hill?</span><br><span class="line">Answer: It takes Tom 30*4 = &lt;&lt;30*4=120&gt;&gt;120 minutes to climb the hill.</span><br><span class="line">It takes Tom 120/60 = &lt;&lt;120/60=2&gt;&gt;2 hours to climb the hill.</span><br><span class="line">So the answer is 2.</span><br><span class="line">===</span><br><span class="line">Question: Jack is a soccer player. He needs to buy two pairs of socks and a pair of soccer shoes. Each pair of socks cost $9.50, and the shoes cost $92. Jack has $40. How much more money does Jack need?</span><br><span class="line">Answer: The total cost of two pairs of socks is $9.50 x 2 = $&lt;&lt;9.5*2=19&gt;&gt;19.</span><br><span class="line">The total cost of the socks and the shoes is $19 + $92 = $&lt;&lt;19+92=111&gt;&gt;111.</span><br><span class="line">Jack need $111 - $40 = $&lt;&lt;111-40=71&gt;&gt;71 more.</span><br><span class="line">So the answer is 71.</span><br><span class="line">===</span><br><span class="line">Question: Marty has 100 centimeters of ribbon that he must cut into 4 equal parts. Each of the cut parts must be divided into 5 equal parts. How long will each final cut be?</span><br><span class="line">Answer:</span><br></pre></td></tr></table></figure>
+
+<p><strong>Zero-shot CoT</strong>:使用自然语言语句来明确鼓励模型首先生成推理链，然后提示产生答案（<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2205.11916">Kojima 等人，2022</a> 年）。或类似的说法（<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2211.01910">周等人，2022</a> 年）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Question: Marty has 100 centimeters of ribbon that he must cut into 4 equal parts. Each of the cut parts must be divided into 5 equal parts. How long will each final cut be? Answer: Let&#x27;s think step by step.</span><br></pre></td></tr></table></figure>
+
+<h1 id="Automatic-Prompt-Design-自动提示设计"><a href="#Automatic-Prompt-Design-自动提示设计" class="headerlink" title="Automatic Prompt Design(自动提示设计)"></a>Automatic Prompt Design(自动提示设计)</h1><p>提示是一系列前缀标记，可增加给定输入获得所需输出的可能性。因此，我们可以将它们视为可训练的参数，并通过梯度下降直接在嵌入空间上<a target="_blank" rel="noopener" href="https://lilianweng.github.io/posts/2021-01-02-controllable-text-generation/#smart-prompt-design">优化它们</a>，例如 <strong>AutoPrompt</strong> （Shin 等人，2020 年，<strong><strong>Prefix-Tuning</strong></strong>（Li &amp; Liang （2021 年））、<strong><strong>P-tuning</strong></strong>（Liu 等人，2021 年）和<strong><strong>Prompt-Tuning</strong></strong>（<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2104.08691">Lester 等人，</a><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2101.00190">2021 年</a>）。<a target="_blank" rel="noopener" href="https://lilianweng.github.io/posts/2021-01-02-controllable-text-generation/#smart-prompt-design">我的“可控神经文本生成”帖子中的这一部分</a>很好地涵盖了它们。从自动提示到提示调整的趋势是设置逐渐简化。</p>
+<p><strong>APE</strong>（自动提示工程师;<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2211.01910">周等人，2022）</a>是一种搜索模型生成的指令候选池的方法，然后根据所选的分数函数过滤候选集，以最终选择得分最高的最佳候选者。</p>
+<h1 id="Augmented-Language-Models-增强语言模型"><a href="#Augmented-Language-Models-增强语言模型" class="headerlink" title="Augmented Language Models(增强语言模型)"></a>Augmented Language Models(增强语言模型)</h1><h2 id="检索"><a href="#检索" class="headerlink" title="检索"></a>检索</h2><p>通常，我们需要在模型预训练时间截止或内部&#x2F;私有知识库之后完成需要最新知识的任务。在这种情况下，如果我们不在提示中显式提供上下文，模型将不知道上下文。<a target="_blank" rel="noopener" href="https://lilianweng.github.io/posts/2020-10-29-odqa/">开放域问答</a>的许多方法都依赖于首先通过知识库进行检索，然后将检索到的内容合并为提示的一部分。这种过程的准确性取决于检索和生成步骤的质量。</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2203.05115">Lazaridou 等人（2022 年）</a>研究了如何使用谷歌搜索进行文档检索以增强 LLM。给定一个问题�，从 Google 返回的 20 个网址中提取干净的文本，从而生成一组文档。由于这些文件很长，因此每个文档被分成6个句子的段落，{�}.段落按基于TF-IDF的证据段落和查询之间的余弦相似度进行排名。提示中仅使用最相关的段落来生成答案一个.</p>
+<h2 id="程序设计语言"><a href="#程序设计语言" class="headerlink" title="程序设计语言"></a>程序设计语言</h2><p>两种 <strong>PAL</strong>（程序辅助语言模型）;<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2211.10435">高等人，2022）</a>和<strong>PoT</strong>（思想程序提示;<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2211.12588">陈等人，2022）</a>要求LLM生成编程语言语句来解决自然语言推理问题，从而将解决方案步骤卸载到运行时，例如Python解释器。这种设置将复杂的计算和推理解耦。它依赖于具有足够好的编码技能的 LM。</p>
+<img src="/2023/07/18/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/PoT.png" class="" title="img">
+
+<h2 id="外部接口"><a href="#外部接口" class="headerlink" title="外部接口"></a>外部接口</h2><p><strong>TALM</strong>（工具增强语言模型;<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2205.12255">帕里西等人，2022</a>）是一种通过文本到文本 API 调用增强的语言模型。LM 被引导生成任务输入文本并以此为条件来构造 API 调用请求。显示时，将调用指定的工具 API，并将返回的结果追加到文本序列中。最终输出是按照令牌生成的。</p>
+<img src="/2023/07/18/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/TALM.png" class="" title="img">
+
+<p><strong>Toolformer</strong> （<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2302.04761">Schick 等人，2023</a> 年）是一个 LM，可以通过简单的 API 使用外部工具，它以自我监督的方式构建，每个 API 只需要少量演示。Toolformer 的工具箱包括：</p>
+<ul>
+<li><em>计算器</em>可帮助LM解决缺乏精确数学技能的问题;</li>
+<li><em>问答系统</em>，以帮助处理不忠的内容和幻觉;</li>
+<li><em>搜索引擎</em>在预培训截止时间后提供最新信息;</li>
+<li><em>翻译系统</em>，以提高低资源语言的性能;</li>
+<li><em>日历，</em>使LM了解时间进度。</li>
+</ul>
+<img src="/2023/07/18/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/toolformer-16896364542184.png" class="" title="img">
+
+<p><a target="_blank" rel="noopener" href="https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/#augmented-language-models">快速工程 |利尔日志 (lilianweng.github.io)</a></p>
+
+    </div>
+    <footer class="article-footer">
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E3%80%81Prompt/" rel="tag">大模型、Prompt</a></li></ul>
+
+    </footer>
+  </div>
+  
+  
+    
+<nav class="article-nav pt-4 mt-3" id="article-nav">
+  
+  
+    <a href="/2023/07/16/ChatGPT%E5%BE%AE%E8%B0%83%E5%AE%9E%E6%88%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ChatGPT微调实战</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+</div>
+    </section>
+    <footer class="footer pt-5 mt-5">
+  <div class="container">
+    <div class="py-3">
+      <div class="row justify-content-between">
+        <div class="col-6">
+          <img class="filter-gray mb-3 lazyload" height="40" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+          <p class="mb-4">这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。</p>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="javascript:;">
+                  <img 0="微信" src="/images/icons/contact_wechat.svg">
+                </a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="mailto:a@abc.com">
+                  <img 0="邮箱" src="/images/icons/contact_email.svg">
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+        <div class="col-4">
+          <h5>友情链接</h5>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="https://acorn.imaging.xin/" title="Acorn" target="_blank" rel="noopener">Acorn</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://github.com/" title="GitHub" target="_blank" rel="noopener">GitHub</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://duoyu.wang/" title="To Base64" target="_blank" rel="noopener">To Base64</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" style="opacity: .25;">
+    <div class="pt-3 pb-5">
+      <ul class="list-inline mb-0 text-center">
+        <li class="list-inline-item">&copy; 2023 AI架构 | AI系统基础架构设计与优化</li>
+        
+        <li class="list-inline-item">Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+        <li class="list-inline-item">Designer <a href="https://acorn.imaging.xin/" target="_blank">罗平</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+  </main>
+  <div id="mobile-nav-dimmer"></div>
+<div id="mobile-nav">
+	<div id="mobile-nav-inner">
+		<ul class="mobile-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		
+	</div>
+</div>
+
+  <script src="/libs/feather/feather.min.js"></script>
+<script src="/libs/lazysizes/lazysizes.min.js"></script>
+
+	<script src="/libs/tocbot/tocbot.min.js"></script>
+	<script>
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.js-toc-content',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h2, h3',
+      // For headings inside relative or absolute positioned containers within content.
+      hasInnerContainers: true,
+    });
+	</script>
+
+
+
+
+
+<script src="/js/mobile-nav.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-178892506-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-178892506-1');
+</script>
+</body>
+</html>

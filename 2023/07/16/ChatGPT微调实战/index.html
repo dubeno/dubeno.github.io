@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+    <meta name="keywords" content="AI架构师, ai infra, AI系统设计, AI系统优化, 机器学习, 深度学习, 大数据处理, 高性能AI架构, 可扩展AI系统, ChatGPT, Stable Diffusion, AI 绘画, 大模型">
+  
+  
+    <meta name="description" content="这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>ChatGPT微调实战 |  AI架构 | AI系统基础架构设计与优化</title>
+  
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/webclip/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/webclip/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/webclip/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/webclip/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/webclip/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/webclip/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/webclip/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/webclip/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/images/webclip/apple-touch-icon-167x167.png">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <main class="main">
+    
+	<header class="header">
+
+	<div class="container">
+		<nav class="navbar d-flex align-items-center">
+			<a class="brand" href="/">
+				<img class="logo lazyload" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+			</a>
+			<ul class="main-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		</nav>
+		<a id="mobile-nav-toggle">
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+			<span class="mobile-nav-toggle-bar"></span>
+		</a>
+	</div>
+</header>
+
+    <section>
+      <div class="container">
+  <article id="post-ChatGPT微调实战" class="article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  
+  <div class="artcle-cover mb-5">
+    
+  </div>
+  
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+      
+  
+    <h1 class="article-title" itemprop="name">
+      ChatGPT微调实战
+    </h1>
+  
+
+      <div class="article-meta">
+        <time class="text-gray" datetime="2023-07-16T12:05:14.000Z" itemprop="datePublished">
+  2023-07-16
+</time>
+        
+      </div>
+      
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      <h3 id="第一部分-LLaMA-x2F-ChatLLaMA的整体技术架构与代码逐行解读"><a href="#第一部分-LLaMA-x2F-ChatLLaMA的整体技术架构与代码逐行解读" class="headerlink" title="第一部分 LLaMA&#x2F;ChatLLaMA的整体技术架构与代码逐行解读"></a>第一部分 LLaMA&#x2F;ChatLLaMA的整体技术架构与代码逐行解读</h3><ul>
+<li><h4 id="第1课-实战必备-夯实基础：ChatGPT背后的原理解析"><a href="#第1课-实战必备-夯实基础：ChatGPT背后的原理解析" class="headerlink" title="第1课 实战必备 夯实基础：ChatGPT背后的原理解析"></a>第1课 实战必备 夯实基础：ChatGPT背后的原理解析</h4><h4 id="知识点1：-ChatGPT底层强大的语言模型：从transformer到GPT1-x2F-2-x2F-3"><a href="#知识点1：-ChatGPT底层强大的语言模型：从transformer到GPT1-x2F-2-x2F-3" class="headerlink" title="知识点1： ChatGPT底层强大的语言模型：从transformer到GPT1&#x2F;2&#x2F;3"></a>知识点1： ChatGPT底层强大的语言模型：从transformer到GPT1&#x2F;2&#x2F;3</h4><p>ChatGPT是一种基于GPT模型的聊天机器人，它的底层语言模型采用了Transformer结构，并且经历了多个版本的迭代和升级，包括GPT-1、GPT-2和GPT-3等。下面分别介绍一下这几个版本的特点和改进。</p>
+<ol>
+<li>Transformer模型</li>
+</ol>
+<p>Transformer是一种基于注意力机制的神经网络模型，它可以对序列数据进行编码和解码，被广泛应用于自然语言处理领域。Transformer模型的核心是自注意力机制和多头注意力机制，可以有效地捕捉序列数据中的长程依赖关系和语义信息。</p>
+<ol>
+<li>GPT-1模型</li>
+</ol>
+<p>GPT-1是基于Transformer模型的语言模型，它采用了单向的Transformer结构，并且使用了基于最大似然估计的预训练方式。GPT-1可以生成自然流畅的文本，但是对于长文本的生成和理解能力有所不足。</p>
+<ol>
+<li>GPT-2模型</li>
+</ol>
+<p>GPT-2是在GPT-1的基础上进行了改进和升级的语言模型，它采用了双向的Transformer结构，并且使用了更大的模型和更多的数据进行预训练。GPT-2可以生成更加自然、连贯、准确的文本，并且具备更强的长文本生成和理解能力。</p>
+<ol>
+<li>GPT-3模型</li>
+</ol>
+<p>GPT-3是在GPT-2的基础上进一步改进和升级的语言模型，它采用了更加复杂的Transformer结构，并且使用了超过1750亿个参数进行预训练。GPT-3可以生成非常自然、流畅、准确的文本，并且具备非常强的泛化能力和多样性，可以适应各种不同的任务和场景。</p>
+<h4 id="知识点2：-揭秘为何可以做推理和debug：从GPT3到GPT3-5的指令微调、思维链、代码训练"><a href="#知识点2：-揭秘为何可以做推理和debug：从GPT3到GPT3-5的指令微调、思维链、代码训练" class="headerlink" title="知识点2： 揭秘为何可以做推理和debug：从GPT3到GPT3.5的指令微调、思维链、代码训练"></a>知识点2： 揭秘为何可以做推理和debug：从GPT3到GPT3.5的指令微调、思维链、代码训练</h4><p>GPT-3和GPT-3.5是基于Transformer结构的神经网络模型，它们具备非常强大的自然语言处理能力，并且可以进行推理和debug。这些能力是通过指令微调、思维链和代码训练等技术来实现的。</p>
+<ol>
+<li>指令微调</li>
+</ol>
+<p>指令微调是一种将模型应用于特定任务的技术。在GPT-3和GPT-3.5中，指令微调被用来训练模型完成各种任务，如问答、翻译、文本生成等。通过将模型微调到特定的任务上，可以进一步提高模型的性能和表现。</p>
+<ol>
+<li>思维链</li>
+</ol>
+<p>思维链是一种基于模型的推理和推断技术。它通过将模型的输入和输出映射到一个中间的概念空间中，从而可以推理和推断出输入和输出之间的关系。在GPT-3和GPT-3.5中，思维链被用来解决推理和debug问题。例如，可以通过思维链来分析模型生成的输出，并找出其中的错误和潜在问题。</p>
+<ol>
+<li>代码训练</li>
+</ol>
+<p>代码训练是一种将模型应用到代码生成和代码理解等任务的技术。在GPT-3.5中，代码训练被用来训练模型生成和理解代码。通过代码训练，模型可以学习到代码的语法和语义，并且可以通过与程序员的对话来进一步提高自己的性能和表现。</p>
+<p>总之，GPT-3和GPT-3.5之所以具备推理和debug能力，是因为它们采用了指令微调、思维链和代码训练等技术，使得模型可以适应不同的任务和场景，并且可以进行推理、推断和代码理解等高级任务。这些技术的应用，使得GPT-3和GPT-3.5成为了非常强大的自然语言处理和人工智能模型。</p>
+<h4 id="知识点3：-ChatGPT是如何训练而成的：InstructGPT训练三阶段的全面理解"><a href="#知识点3：-ChatGPT是如何训练而成的：InstructGPT训练三阶段的全面理解" class="headerlink" title="知识点3： ChatGPT是如何训练而成的：InstructGPT训练三阶段的全面理解"></a>知识点3： ChatGPT是如何训练而成的：InstructGPT训练三阶段的全面理解</h4><p>ChatGPT是一种基于GPT模型的聊天机器人，它的训练过程可以分为三个阶段，分别是预训练、微调和人工纠错。下面分别介绍一下这三个阶段的具体内容和作用。</p>
+<ol>
+<li>预训练</li>
+</ol>
+<p>预训练是指在大规模的语料库上对模型进行无监督的训练，从而让模型学习到自然语言的基本规律和语义知识。ChatGPT采用了GPT-3模型进行预训练，使用了超过1750亿个参数，在大量的互联网文本数据上进行了训练。预训练的目的是让模型具备强大的语言理解和生成能力，为后续的微调和人工纠错打下基础。</p>
+<ol>
+<li>微调</li>
+</ol>
+<p>微调是指在特定的任务上对模型进行有监督的训练，从而让模型更好地适应该任务的特点和要求。ChatGPT的微调是基于InstructGPT框架进行的，它可以自动从人类的对话中学习到模型如何生成自然流畅的回复，并且可以根据对话的上下文和意图进行灵活的生成。微调的目的是让模型具备更好的聊天能力和交互能力，进一步提高模型的性能和表现。</p>
+<ol>
+<li>人工纠错</li>
+</ol>
+<p>人工纠错是指通过人工的方式对模型生成的回复进行修正和改进，从而进一步提高模型的质量和准确率。ChatGPT采用了基于人类操作的远程人工纠错方法，让人类操作员对机器人的回复进行审核和纠错。人工纠错的目的是让模型生成的回复更加准确、自然、流畅，并且更符合人类的语言习惯和风格。</p>
+</li>
+<li><h4 id="第2课-Meta-LLaMA的复现与解读：参数少但多数任务的效果好于GPT3"><a href="#第2课-Meta-LLaMA的复现与解读：参数少但多数任务的效果好于GPT3" class="headerlink" title="第2课 Meta LLaMA的复现与解读：参数少但多数任务的效果好于GPT3"></a>第2课 Meta LLaMA的复现与解读：参数少但多数任务的效果好于GPT3</h4><h4 id="知识点1：-代码级解读：LLaMA的模型架构——RMSNorm-x2F-SwiGLU-x2F-RoPE-x2F-Transformer"><a href="#知识点1：-代码级解读：LLaMA的模型架构——RMSNorm-x2F-SwiGLU-x2F-RoPE-x2F-Transformer" class="headerlink" title="知识点1： 代码级解读：LLaMA的模型架构——RMSNorm&#x2F;SwiGLU&#x2F;RoPE&#x2F;Transformer"></a>知识点1： 代码级解读：LLaMA的模型架构——RMSNorm&#x2F;SwiGLU&#x2F;RoPE&#x2F;Transformer</h4><p>LLaMA是一种基于Transformer结构的语言模型，它采用了一些特殊的技术和结构优化，包括RMSNorm、SwiGLU、RoPE和Transformer等。</p>
+<ol>
+<li>RMSNorm</li>
+</ol>
+<p>RMSNorm是一种用于归一化神经网络的技术，它可以在保证网络稳定性的同时，提高模型的收敛速度和性能。在LLaMA中，RMSNorm被用来代替标准的BatchNorm和LayerNorm，从而进一步提高模型的性能和表现。</p>
+<ol>
+<li>SwiGLU</li>
+</ol>
+<p>SwiGLU是一种基于门控线性单元（GLU）的激活函数，它可以有效地捕捉序列数据中的长程依赖关系和语义信息。在LLaMA中，SwiGLU被用来代替标准的激活函数，从而进一步提高模型的准确率和效率。</p>
+<ol>
+<li>RoPE</li>
+</ol>
+<p>RoPE是一种相对位置编码技术，它可以对序列数据的相对位置进行编码，从而进一步提高模型的长程依赖关系和语义理解能力。在LLaMA中，RoPE被用来代替标准的绝对位置编码，从而可以更好地捕捉序列数据中的语义信息和长程依赖关系。</p>
+<ol>
+<li>Transformer</li>
+</ol>
+<p>Transformer是一种基于注意力机制的神经网络模型，它可以对序列数据进行编码和解码，被广泛应用于自然语言处理领域。在LLaMA中，Transformer被用作模型的核心结构，可以有效地捕捉序列数据中的长程依赖关系和语义信息。</p>
+<h4 id="知识点2：-到底如何理解旋转位置编码并编码实现"><a href="#知识点2：-到底如何理解旋转位置编码并编码实现" class="headerlink" title="知识点2： 到底如何理解旋转位置编码并编码实现"></a>知识点2： 到底如何理解旋转位置编码并编码实现</h4><p>旋转位置编码（Rotary Position Embedding）是一种相对位置编码技术，它可以对序列数据的相对位置进行编码。相对位置编码的目的是为了使模型能够更好地理解序列数据中的语义信息和长程依赖关系。</p>
+<p>旋转位置编码的实现过程如下：</p>
+<ol>
+<li>将序列数据通过词嵌入（Word Embedding）转换为向量形式。</li>
+<li>对于每个位置的向量，将其分成两个部分：实部和虚部。</li>
+<li>对于每个位置，定义一个旋转角度。旋转角度可以通过余弦函数和正弦函数进行计算。</li>
+<li>将实部和虚部分别进行旋转，旋转的角度为该位置的旋转角度。</li>
+<li>将旋转后的实部和虚部进行拼接，得到该位置的旋转向量。</li>
+<li>将旋转向量与位置编码向量相加，得到最终的位置编码向量。</li>
+</ol>
+<p>在实现过程中，旋转角度的计算可以通过一个可学习的参数向量进行实现。具体地，对于每个位置，可以通过该位置的序号和一个可学习的参数向量进行计算，从而得到该位置的旋转角度。</p>
+<p>旋转位置编码的优点是可以减少相对位置编码中的冲突，并且在某些任务中具有更好的表现。例如，在机器翻译任务中，使用旋转位置编码可以显著提高模型的性能和准确率。</p>
+<h4 id="知识点3：-Transformer架构的实现：Attention计算、SA、FFN"><a href="#知识点3：-Transformer架构的实现：Attention计算、SA、FFN" class="headerlink" title="知识点3： Transformer架构的实现：Attention计算、SA、FFN"></a>知识点3： Transformer架构的实现：Attention计算、SA、FFN</h4><p>Transformer是一种基于注意力机制的神经网络模型，它包括了多层的自注意力机制和前馈神经网络。下面分别介绍Transformer架构中Attention计算、自注意力机制（Self-Attention）、多头自注意力机制（Multi-Head Self-Attention）和前馈神经网络（Feed-Forward Network）的实现。</p>
+<ol>
+<li>Attention计算</li>
+</ol>
+<p>Attention计算是Transformer中的一种基本操作，它可以计算序列数据中不同位置之间的关联程度。Attention计算包括三个重要的步骤：计算注意力权重、对序列数据进行加权求和和进行线性变换。具体地，给定一个查询向量Q、一组键向量K和一组数值向量V，Attention计算可以表示为：</p>
+<p>Attention(Q,K,V) &#x3D; softmax(QK^T&#x2F;sqrt(d_k))V</p>
+<p>其中，softmax函数用来计算注意力权重，sqrt(d_k)是一个缩放因子，可以使得内积在较大的维度时不会过于缩小，从而避免梯度消失的问题。</p>
+<ol>
+<li>自注意力机制（Self-Attention）</li>
+</ol>
+<p>自注意力机制是一种基于Attention计算的机制，它可以对序列数据中不同位置之间的关联程度进行建模，并且提取序列数据中的语义信息。在自注意力机制中，查询向量、键向量和数值向量均来自于输入序列数据，因此可以将自注意力机制视为一种对输入序列数据的编码操作。</p>
+<p>具体地，在自注意力机制中，输入序列数据经过三个线性变换得到查询向量Q、键向量K和数值向量V，然后通过Attention计算得到加权求和的结果，即自注意力向量。自注意力向量可以被视为输入序列数据中不同位置之间的关联程度，从而可以提取出序列数据中的语义信息。</p>
+<ol>
+<li>多头自注意力机制（Multi-Head Self-Attention）</li>
+</ol>
+<p>多头自注意力机制是一种对自注意力机制的扩展，它可以同时学习多组注意力权重，从而可以更好地捕捉序列数据中的不同方面的语义信息。在多头自注意力机制中，输入序列数据通过多个线性变换得到多组查询向量Q、键向量K和数值向量V，然后分别进行Attention计算得到多个自注意力向量，并将这些向量进行拼接后再进行一次线性变换得到最终的多头自注意力向量。</p>
+<ol>
+<li>前馈神经网络（Feed-Forward Network）</li>
+</ol>
+<p>前馈神经网络是Transformer中的另一个重要组成部分，它可以对自注意力向量进行进一步的处理和提取。前馈神经网络包括两个线性变换和一个激活函数，其中第一个线性变换将自注意力向量的维度进行缩放，第二个线性变换将维度恢复到原来的大小，然后通过激活函数进行非线性变换。在Transformer中，前馈神经网络通常采用ReLU激活函数。</p>
+<p>总之，Transformer架构包括Attention计算、自注意力机制、多头自注意力机制和前馈神经网络等部分，这些部分共同作用可以对序列数据进行编码和提取，从而实现自然语言处理任务。其中，Attention计算是基本操作，自注意力机制和多头自注意力机制可以对输入序列数据进行编码，前馈神经网络可以对编码结果进行进一步的处理和提取。</p>
+<h4 id="知识点4：-LLaMA的Optimizer设计、模型加速优化与微型版本"><a href="#知识点4：-LLaMA的Optimizer设计、模型加速优化与微型版本" class="headerlink" title="知识点4： LLaMA的Optimizer设计、模型加速优化与微型版本"></a>知识点4： LLaMA的Optimizer设计、模型加速优化与微型版本</h4><p>LLaMA是一种非常强大的自然语言处理模型，它采用了一些特殊的技术和结构优化，包括RMSNorm、SwiGLU、RoPE和Transformer等。除此之外，LLaMA还采用了一些优化策略和技巧，包括Optimizer设计、模型加速优化和微型版本等。</p>
+<ol>
+<li>Optimizer设计</li>
+</ol>
+<p>LLaMA采用了一种自适应学习率的优化器，即AdamW优化器。AdamW优化器是基于Adam优化器的一种变体，它可以在保证收敛性的同时，进一步提高模型的泛化性能和稳定性。在AdamW优化器中，对于每个参数，都会维护一个自适应的学习率，从而可以根据每个参数的不同特性进行不同程度的更新。</p>
+<ol>
+<li>模型加速优化</li>
+</ol>
+<p>LLaMA采用了一些模型加速优化技巧，包括梯度累积、梯度裁剪和权重衰减等。梯度累积可以将多个小批量的梯度累积起来，从而可以在减少GPU内存占用的同时，增加批量大小。梯度裁剪可以防止梯度爆炸的问题，从而可以提高模型的稳定性和收敛速度。权重衰减可以防止模型过拟合，从而可以提高模型的泛化性能和稳定性。</p>
+<ol>
+<li>微型版本</li>
+</ol>
+<p>为了使LLaMA可以在资源受限的设备上运行，例如移动设备和嵌入式设备，LLaMA还提供了一些微型版本，包括MobileBERT和TinyBERT等。这些微型版本可以在保证模型性能的同时，减小模型的大小和计算量，从而可以在资源受限的设备上运行。</p>
+<p>总之，LLaMA采用了一些特殊的技术和结构优化，包括RMSNorm、SwiGLU、RoPE和Transformer等。除此之外，LLaMA还采用了一些优化策略和技巧，包括Optimizer设计、模型加速优化和微型版本等。这些优化策略和技巧的应用，使得LLaMA成为了一种非常强大的自然语言处理模型，可以适用于各种不同的任务和场景。</p>
+</li>
+<li><h4 id="第3课-LLaMA的RLHF版：ChatLLaMA-英文版-x2F-ColossalChat-x2F-DeepSpeed-Chat"><a href="#第3课-LLaMA的RLHF版：ChatLLaMA-英文版-x2F-ColossalChat-x2F-DeepSpeed-Chat" class="headerlink" title="第3课 LLaMA的RLHF版：ChatLLaMA(英文版)&#x2F;ColossalChat&#x2F;DeepSpeed Chat"></a>第3课 LLaMA的RLHF版：ChatLLaMA(英文版)&#x2F;ColossalChat&#x2F;DeepSpeed Chat</h4><h4 id="知识点1：-ChatLLaMA三套数据集：分别训练actor、reward、rlhf"><a href="#知识点1：-ChatLLaMA三套数据集：分别训练actor、reward、rlhf" class="headerlink" title="知识点1： ChatLLaMA三套数据集：分别训练actor、reward、rlhf"></a>知识点1： ChatLLaMA三套数据集：分别训练actor、reward、rlhf</h4><p>ChatLLaMA是一个基于强化学习的对话生成模型，它采用了三个不同的数据集来进行训练，分别是Actor、Reward和RLHF。</p>
+<ol>
+<li>Actor</li>
+</ol>
+<p>Actor数据集是ChatLLaMA中的第一个数据集，它用于训练对话生成模型中的Actor部分。Actor是ChatLLaMA中的一个强化学习模块，它可以根据当前状态和用户输入，生成一个对话回复。在Actor数据集中，每个对话回复都被标注了一个对应的奖励分数，用于指导模型的训练和优化。</p>
+<ol>
+<li>Reward</li>
+</ol>
+<p>Reward数据集是ChatLLaMA中的第二个数据集，它用于训练对话生成模型中的Reward部分。Reward是ChatLLaMA中的另一个强化学习模块，它可以根据当前状态和用户输入，计算一个对话回复的奖励分数。在Reward数据集中，每个对话回复都被标注了一个对应的奖励分数，用于指导模型的训练和优化。</p>
+<ol>
+<li>RLHF</li>
+</ol>
+<p>RLHF数据集是ChatLLaMA中的第三个数据集，它用于训练对话生成模型中的强化学习模块。RLHF是一种基于强化学习的对话生成模型，它可以根据当前状态和用户输入，生成一个对话回复，并根据该回复的奖励分数进行优化。在RLHF数据集中，每个对话回复都被标注了一个对应的奖励分数，用于指导模型的训练和优化。</p>
+<p>总之，ChatLLaMA采用了三个不同的数据集来进行训练，分别是Actor、Reward和RLHF。这些数据集都包括对话回复和对应的奖励分数，用于指导模型的训练和优化。通过这些数据集的训练，ChatLLaMA可以生成高质量的对话回复，并且可以在不同的应用场景中得到广泛的应用。</p>
+<h4 id="知识点2：-ChatLLaMA训练流程：SFT、RM、RL-x2F-PPO训练三步骤"><a href="#知识点2：-ChatLLaMA训练流程：SFT、RM、RL-x2F-PPO训练三步骤" class="headerlink" title="知识点2： ChatLLaMA训练流程：SFT、RM、RL&#x2F;PPO训练三步骤"></a>知识点2： ChatLLaMA训练流程：SFT、RM、RL&#x2F;PPO训练三步骤</h4><p>ChatLLaMA的训练流程包括三个主要步骤：SFT（Supervised Fine-Tuning）、RM（Reinforcement Learning with Monte Carlo Tree Search）和RL&#x2F;PPO（Reinforcement Learning with Proximal Policy Optimization）训练。下面将分别介绍这三个步骤的具体内容。</p>
+<ol>
+<li>SFT（Supervised Fine-Tuning）</li>
+</ol>
+<p>在SFT阶段，ChatLLaMA使用有标注的对话数据对模型进行有监督的微调。这个阶段的目的是为了让模型更好地学习对话生成的基本技能，例如回复生成、流畅性等。在SFT阶段，模型的损失函数是交叉熵损失函数，优化器采用Adam优化器。</p>
+<ol>
+<li>RM（Reinforcement Learning with Monte Carlo Tree Search）</li>
+</ol>
+<p>在RM阶段，ChatLLaMA使用强化学习方法来让模型学习如何生成更加合理和自然的对话回复。在这个阶段，模型需要与一个人类评价者进行交互，评价者会给出每个对话回复的奖励分数，作为模型优化的指导。在这个阶段，ChatLLaMA采用Monte Carlo Tree Search（MCTS）算法来进行决策，即在每一步中，使用MCTS来搜索模型的最佳动作。在RM阶段，模型的损失函数是策略梯度损失函数，优化器采用Adam优化器。</p>
+<ol>
+<li>RL&#x2F;PPO（Reinforcement Learning with Proximal Policy Optimization）</li>
+</ol>
+<p>在RL&#x2F;PPO阶段，ChatLLaMA使用Proximal Policy Optimization（PPO）算法来进行强化学习。与RM阶段不同的是，在RL&#x2F;PPO阶段，模型的奖励分数不再是由人类评价者给出，而是由模型自行预测。在这个阶段，模型需要学会如何在不同的对话情境下生成合理和自然的对话回复，并且最大化预测到的奖励分数。在RL&#x2F;PPO阶段，模型的损失函数是PPO损失函数，优化器同样采用Adam优化器。</p>
+<p>总之，ChatLLaMA的训练流程包括SFT、RM和RL&#x2F;PPO训练三个步骤。在SFT阶段，模型进行有监督的微调；在RM阶段，模型与人类评价者进行交互，使用MCTS算法进行决策；在RL&#x2F;PPO阶段，模型自行预测奖励分数，使用PPO算法进行强化学习。通过这三个步骤的训练，ChatLLaMA可以生成高质量的对话回复，并且可以在不同的应用场景中得到广泛的应用。</p>
+<h4 id="知识点3：-ColossalChat技术架构：通过self-instruct生成的中英双语数据集-三阶段训练方式"><a href="#知识点3：-ColossalChat技术架构：通过self-instruct生成的中英双语数据集-三阶段训练方式" class="headerlink" title="知识点3： ColossalChat技术架构：通过self-instruct生成的中英双语数据集 + 三阶段训练方式"></a>知识点3： ColossalChat技术架构：通过self-instruct生成的中英双语数据集 + 三阶段训练方式</h4><p>ColossalChat是一种基于自我学习的对话生成模型，它采用了自我指导的方式来生成大规模的中英双语对话数据集，并且使用三阶段训练方式来提高模型的对话生成能力。下面将分别介绍ColossalChat的技术架构和训练方式。</p>
+<ol>
+<li>技术架构</li>
+</ol>
+<p>ColossalChat的技术架构主要包括以下几个部分：</p>
+<ul>
+<li>自我学习：ColossalChat使用自我学习的方式来生成大规模的中英双语对话数据集。具体来说，它采用了一种自我指导的方法，即先使用一个已经训练好的对话生成模型生成一些对话数据，再使用这些数据来训练下一个对话生成模型，以此类推，最终生成大规模的中英双语对话数据集。</li>
+<li>对话生成模型：ColossalChat采用了Transformer模型来进行对话生成。Transformer是一种基于自注意力机制的神经网络模型，可以很好地处理自然语言处理任务，在对话生成方面也有很好的应用。</li>
+<li>三阶段训练：ColossalChat使用三阶段训练方式来提高模型的对话生成能力。具体来说，训练分为无监督预训练、有监督微调和强化学习三个阶段。在无监督预训练阶段，模型使用自我生成的对话数据进行无监督预训练；在有监督微调阶段，模型使用人工标注的对话数据进行有监督微调；在强化学习阶段，模型通过与人类评价者进行交互，进行强化学习训练。</li>
+</ul>
+<ol>
+<li>训练方式</li>
+</ol>
+<p>ColossalChat的训练方式主要分为三个阶段：</p>
+<ul>
+<li>无监督预训练：在这个阶段，ColossalChat使用自我生成的对话数据进行无监督预训练。具体来说，模型使用中文和英文的对话数据进行预训练，预训练的目的是让模型学习对话生成的基本技能。</li>
+<li>有监督微调：在这个阶段，ColossalChat使用人工标注的对话数据进行有监督微调。具体来说，模型使用人工标注的中英文对话数据进行微调，微调的目的是让模型更好地适应真实对话数据的特点，并提高对话生成的质量。</li>
+<li>强化学习：在这个阶段，ColossalChat通过与人类评价者进行交互，进行强化学习训练。具体来说，模型生成一系列对话回复，并由人类评价者对每个回复进行评分。根据评分，模型调整自身参数，以提高对话生成的质量和流畅性。</li>
+</ul>
+<p>总之，ColossalChat采用了自我学习的方式来生成大规模的中英双语对话数据集，并且使用三阶段训练方式来提高模型的对话生成能力。通过这种方式的训练，ColossalChat可以生成高质量的对话回复，并且可以在不同的应用场景中得到广泛的应用。</p>
+<h4 id="知识点4：-ColossalChat的代码实现：SFT模型-奖励模型-PPO-training"><a href="#知识点4：-ColossalChat的代码实现：SFT模型-奖励模型-PPO-training" class="headerlink" title="知识点4： ColossalChat的代码实现：SFT模型 + 奖励模型 + PPO training"></a>知识点4： ColossalChat的代码实现：SFT模型 + 奖励模型 + PPO training</h4><p>ColossalChat的代码实现主要包括SFT模型、奖励模型和PPO训练三个部分。下面将分别介绍这三个部分的代码实现。</p>
+<ol>
+<li>SFT模型</li>
+</ol>
+<p>SFT模型是ColossalChat的第一个模型，它用于对对话生成模型进行有监督的微调。SFT模型的代码实现主要包括以下几个步骤：</p>
+<ul>
+<li>加载数据集：首先需要加载人工标注的中英文对话数据集。</li>
+<li>模型定义：使用Transformer模型定义对话生成模型。</li>
+<li>损失函数定义：使用交叉熵损失函数作为模型的损失函数。</li>
+<li>优化器定义：使用Adam优化器进行模型的优化。</li>
+<li>训练过程：使用加载的数据集对模型进行训练，训练过程中计算损失函数和进行模型优化。</li>
+</ul>
+<ol>
+<li>奖励模型</li>
+</ol>
+<p>奖励模型是ColossalChat的第二个模型，它用于计算对话回复的奖励分数。奖励模型的代码实现主要包括以下几个步骤：</p>
+<ul>
+<li>加载数据集：首先需要加载人工标注的中英文对话数据集。</li>
+<li>模型定义：使用Transformer模型定义奖励模型。</li>
+<li>损失函数定义：使用均方误差（MSE）损失函数作为模型的损失函数。</li>
+<li>优化器定义：使用Adam优化器进行模型的优化。</li>
+<li>训练过程：使用加载的数据集对模型进行训练，训练过程中计算损失函数和进行模型优化。</li>
+</ul>
+<ol>
+<li>PPO training</li>
+</ol>
+<p>PPO训练是ColossalChat的第三个部分，它用于强化学习训练对话生成模型。PPO训练的代码实现主要包括以下几个步骤：</p>
+<ul>
+<li>加载数据集：首先需要加载自我生成的中英文对话数据集。</li>
+<li>模型定义：使用Transformer模型定义对话生成模型。</li>
+<li>损失函数定义：使用PPO损失函数作为模型的损失函数。</li>
+<li>优化器定义：使用Adam优化器进行模型的优化。</li>
+<li>训练过程：使用加载的数据集对模型进行训练，训练过程中计算损失函数和进行模型优化。在训练过程中，模型需要与人类评价者进行交互，评价者会给出每个对话回复的奖励分数，用于指导模型优化。</li>
+</ul>
+<p>总之，ColossalChat的代码实现主要包括SFT模型、奖励模型和PPO训练三个部分。通过这些部分的实现，可以生成高质量的中英双语对话回复，并且可以在不同的应用场景中得到广泛的应用。</p>
+<h4 id="知识点5：-微软DeepSpeed-Chat的讲解与实现：结合RLHF一键式训练自己的ChatGPT"><a href="#知识点5：-微软DeepSpeed-Chat的讲解与实现：结合RLHF一键式训练自己的ChatGPT" class="headerlink" title="知识点5： 微软DeepSpeed Chat的讲解与实现：结合RLHF一键式训练自己的ChatGPT"></a>知识点5： 微软DeepSpeed Chat的讲解与实现：结合RLHF一键式训练自己的ChatGPT</h4><p>微软DeepSpeed Chat是一种基于深度强化学习的对话生成模型，它采用了DeepSpeed框架进行训练，并结合了RLHF（Reinforcement Learning with Human Feedback）算法进行强化学习训练。下面将分别介绍DeepSpeed Chat的讲解和实现。</p>
+<ol>
+<li>讲解</li>
+</ol>
+<p>DeepSpeed Chat的训练过程主要分为以下几个步骤：</p>
+<ul>
+<li>数据准备：首先需要准备对话数据集，可以使用已有的对话数据集，也可以使用自己的数据集。</li>
+<li>模型定义：使用GPT-2或GPT-3作为对话生成模型，并使用DeepSpeed框架定义模型。</li>
+<li>RLHF算法训练：使用RLHF算法进行强化学习训练，训练过程中需要与人类评价者进行交互，评价者会给出每个对话回复的奖励分数，用于指导模型优化。</li>
+<li>模型微调：使用微调算法对模型进行微调，以提高对话生成的质量和流畅性。</li>
+<li>模型评估：使用人类评价者对模型生成的对话回复进行评估，以进一步提高模型的质量和流畅性。</li>
+</ul>
+<ol>
+<li>实现</li>
+</ol>
+<p>DeepSpeed Chat的实现主要包括以下几个步骤：</p>
+<ul>
+<li>安装DeepSpeed：首先需要安装DeepSpeed框架，可以通过pip命令进行安装。</li>
+<li>数据准备：准备对话数据集，可以使用已有的对话数据集，也可以使用自己的数据集。</li>
+<li>模型定义：使用GPT-2或GPT-3作为对话生成模型，并使用DeepSpeed框架定义模型。</li>
+<li>RLHF算法训练：使用RLHF算法进行强化学习训练，可以使用DeepSpeed提供的训练脚本进行训练。在训练过程中，需要与人类评价者进行交互，评价者会给出每个对话回复的奖励分数，用于指导模型优化。</li>
+<li>模型微调：使用微调算法对模型进行微调，可以使用DeepSpeed提供的微调脚本进行微调。</li>
+<li>模型评估：使用人类评价者对模型生成的对话回复进行评估，可以使用DeepSpeed提供的评估脚本进行评估。</li>
+</ul>
+<p>总之，DeepSpeed Chat是一种基于深度强化学习的对话生成模型，它采用了DeepSpeed框架进行训练，并结合了RLHF算法进行强化学习训练。通过这种方式的训练，可以生成高质量的对话回复，并且可以在不同的应用场景中得到广泛的应用。</p>
+<h4 id="知识点6：-如何结合PPO算法从零起步实现RLHF"><a href="#知识点6：-如何结合PPO算法从零起步实现RLHF" class="headerlink" title="知识点6： 如何结合PPO算法从零起步实现RLHF"></a>知识点6： 如何结合PPO算法从零起步实现RLHF</h4><p>结合PPO算法从零起步实现RLHF主要包括以下几个步骤：</p>
+<ol>
+<li>数据准备：首先需要准备对话数据集，可以使用已有的对话数据集，也可以使用自己的数据集。</li>
+<li>模型定义：使用GPT-2或GPT-3作为对话生成模型，并使用PyTorch框架定义模型。</li>
+<li>环境定义：定义对话生成环境，包括对话生成模型、对话历史记录和人类评价者等。</li>
+<li>PPO算法训练：使用PPO算法进行强化学习训练，训练过程中需要与人类评价者进行交互，评价者会给出每个对话回复的奖励分数，用于指导模型优化。</li>
+<li>RLHF算法训练：使用RLHF算法进行强化学习训练，训练过程中需要与人类评价者进行交互，评价者会给出每个对话回复的奖励分数，用于指导模型优化。</li>
+<li>模型微调：使用微调算法对模型进行微调，以提高对话生成的质量和流畅性。</li>
+<li>模型评估：使用人类评价者对模型生成的对话回复进行评估，以进一步提高模型的质量和流畅性。</li>
+</ol>
+<p>具体实现步骤如下：</p>
+<ol>
+<li>数据准备</li>
+</ol>
+<p>准备对话数据集，可以使用已有的对话数据集，也可以使用自己的数据集。对话数据集应包含对话历史记录、当前对话回复和人类评价者的评价结果。</p>
+<ol>
+<li>模型定义</li>
+</ol>
+<p>使用GPT-2或GPT-3作为对话生成模型，并使用PyTorch框架定义模型。模型应包括对话历史记录和当前对话回复，以及与评价者进行交互的接口。</p>
+<ol>
+<li>环境定义</li>
+</ol>
+<p>定义对话生成环境，包括对话生成模型、对话历史记录和人类评价者等。对话历史记录应包含前几轮的对话记录，以提供上下文信息。人类评价者应提供对每个对话回复的评价结果。</p>
+<ol>
+<li>PPO算法训练</li>
+</ol>
+<p>使用PPO算法进行强化学习训练，训练过程中需要与人类评价者进行交互，评价者会给出每个对话回复的奖励分数，用于指导模型优化。在训练过程中，可以使用PyTorch框架实现PPO算法。</p>
+<ol>
+<li>RLHF算法训练</li>
+</ol>
+<p>使用RLHF算法进行强化学习训练，训练过程中需要与人类评价者进行交互，评价者会给出每个对话回复的奖励分数，用于指导模型优化。在训练过程中，可以使用PyTorch框架实现RLHF算法。</p>
+<ol>
+<li>模型微调</li>
+</ol>
+<p>使用微调算法对模型进行微调，以提高对话生成的质量和流畅性。微调算法可以是传统的有监督学习算法，也可以是强化学习算法。</p>
+<ol>
+<li>模型评估</li>
+</ol>
+<p>使用人类评价者对模型生成的对话回复进行评估，以进一步提高模型的质量和流畅性。评估结果可以用于指导模型优化和改进。</p>
+<p>总之，结合PPO算法从零起步实现RLHF需要对强化学习和深度学习算法有一定的了解，并需要熟练使用相关的框架和工具。这种方法可以生成高质量的对话回复，并且可以在不同的应用场景中得到广泛的应用。如果对相关技术不是特别熟悉，可以考虑先学习一些基础知识，如强化学习、深度强化学习、PPO算法、RLHF算法等，然后根据需求和具体情况进行实践。同时，也可以参考相关资料、论文和开源代码，加深对技术的理解和应用。</p>
+</li>
+</ul>
+<h3 id="第二部分-各种微调LLaMA：Alpaca、Vicuna、BELLE、中文LLaMA、姜子牙"><a href="#第二部分-各种微调LLaMA：Alpaca、Vicuna、BELLE、中文LLaMA、姜子牙" class="headerlink" title="第二部分 各种微调LLaMA：Alpaca、Vicuna、BELLE、中文LLaMA、姜子牙"></a>第二部分 各种微调LLaMA：Alpaca、Vicuna、BELLE、中文LLaMA、姜子牙</h3><ul>
+<li><h4 id="第4课-Stanford-Alpaca：结合英文语料通过Self-Instruct方式微调LLaMA-7B"><a href="#第4课-Stanford-Alpaca：结合英文语料通过Self-Instruct方式微调LLaMA-7B" class="headerlink" title="第4课 Stanford Alpaca：结合英文语料通过Self Instruct方式微调LLaMA 7B"></a>第4课 Stanford Alpaca：结合英文语料通过Self Instruct方式微调LLaMA 7B</h4><h4 id="知识点1：-什么是self-instruct方式：提示GPT3-x2F-GPT3-5-x2F-GPT4的API收集数据"><a href="#知识点1：-什么是self-instruct方式：提示GPT3-x2F-GPT3-5-x2F-GPT4的API收集数据" class="headerlink" title="知识点1： 什么是self-instruct方式：提示GPT3&#x2F;GPT3.5&#x2F;GPT4的API收集数据"></a>知识点1： 什么是self-instruct方式：提示GPT3&#x2F;GPT3.5&#x2F;GPT4的API收集数据</h4><p>Self-instruct方式是指通过使用GPT-3&#x2F;GPT-3.5&#x2F;GPT-4等自然语言处理模型的API接口来收集数据，以改进模型的性能。具体而言，这种方式是指使用自然语言处理模型来生成一些文本，然后将这些文本作为训练数据集或测试数据集，用于训练或评估模型。</p>
+<p>以GPT-3为例，它拥有1750亿个参数，并且可以生成高质量的自然语言文本。通过使用GPT-3的API接口，可以向模型提供一些提示文本，然后让模型自动生成一些有关该提示文本的补充文本。这些补充文本可以用来扩充数据集，从而提高模型的性能。</p>
+<p>在使用Self-instruct方式时，需要注意以下几个问题：</p>
+<ol>
+<li>数据质量：生成的文本质量会直接影响模型的性能，因此需要确保生成的文本质量高。</li>
+<li>数据样本：需要选择适当的提示文本和生成的文本，以保证生成的文本与提示文本相关，从而提高数据集的质量。</li>
+<li>数据量：需要收集足够的数据量，以保证数据集的充分性和多样性。</li>
+</ol>
+<p>总之，Self-instruct方式是一种有效的收集数据的方法，可以利用自然语言处理模型的强大能力来扩充数据集，从而提高模型的性能。但是，在使用该方法时需要注意数据质量、数据样本和数据量等问题，并对生成的文本进行仔细的筛选和处理，以保证最终的数据集质量。</p>
+<h4 id="知识点2：-微调LLM的一般都会用到Huggingface实现的Transformers库的Trainer类"><a href="#知识点2：-微调LLM的一般都会用到Huggingface实现的Transformers库的Trainer类" class="headerlink" title="知识点2： 微调LLM的一般都会用到Huggingface实现的Transformers库的Trainer类"></a>知识点2： 微调LLM的一般都会用到Huggingface实现的Transformers库的Trainer类</h4><p>微调LLM（Language Model）一般都会用到Huggingface实现的Transformers库的Trainer类。Trainer类是一个高级API，可以用于训练和评估自然语言处理模型，而不需要手动编写训练循环。它提供了许多功能，包括：</p>
+<ol>
+<li>数据加载：可以从各种数据源加载数据，例如文件、内存、网络等。</li>
+<li>模型训练：支持多种训练策略，例如梯度累积、学习率调度、early stopping等，可以轻松地进行模型训练。</li>
+<li>模型评估：支持多种评估策略，例如准确率、F1值、BLEU值等。</li>
+<li>模型保存：支持将训练后的模型保存到本地或云端，以便后续使用。</li>
+</ol>
+<p>使用Trainer类进行微调LLM的一般步骤如下：</p>
+<ol>
+<li>准备数据集：将数据集处理为Huggingface库支持的格式，例如tokenize、编码、分割等。</li>
+<li>定义模型：使用Huggingface库中的模型类定义LLM模型，例如GPT-2、BERT等。</li>
+<li>定义训练参数：定义训练参数，例如批处理大小、学习率、梯度累积步数等。</li>
+<li>实例化Trainer类：使用Trainer类的构造函数创建一个训练器对象。</li>
+<li>训练模型：使用trainer对象的train()方法进行模型训练。</li>
+<li>评估模型：使用trainer对象的evaluate()方法对模型进行评估。</li>
+<li>保存模型：使用trainer对象的save_model()方法将模型保存到本地或云端。</li>
+</ol>
+<p>总之，使用Huggingface实现的Transformers库的Trainer类可以大大简化微调LLM的过程，使得模型训练和评估更加高效和方便。同时，Trainer类提供了许多高级功能，可以帮助用户轻松地进行模型训练和评估，并支持将训练后的模型保存到本地或云端，以便后续使用。</p>
+<h4 id="知识点3：-Alpaca-LoRA：通过PEFT库在消费级GPU上微调「基于LLaMA的Alpaca」"><a href="#知识点3：-Alpaca-LoRA：通过PEFT库在消费级GPU上微调「基于LLaMA的Alpaca」" class="headerlink" title="知识点3： Alpaca-LoRA：通过PEFT库在消费级GPU上微调「基于LLaMA的Alpaca」"></a>知识点3： Alpaca-LoRA：通过PEFT库在消费级GPU上微调「基于LLaMA的Alpaca」</h4><p>Alpaca-LoRA是基于LLaMA的Alpaca模型的一个微调方法，可以在消费级GPU上进行微调。该方法使用了PEFT（Performance Estimation Tool）库，通过对GPU性能进行建模，优化模型训练过程，从而提高模型的微调效率和性能。</p>
+<p>具体而言，Alpaca-LoRA方法的主要步骤如下：</p>
+<ol>
+<li>数据准备：准备用于微调的数据集，并将其处理为Huggingface库支持的格式。</li>
+<li>模型定义：使用Huggingface库中的模型类定义基于LLaMA的Alpaca模型。</li>
+<li>训练参数定义：定义训练参数，例如批处理大小、学习率、梯度累积步数等。</li>
+<li>GPU性能建模：使用PEFT库对GPU性能进行建模，并确定最佳的训练超参数。</li>
+<li>微调模型：使用确定的训练超参数和GPU性能建模结果，使用Trainer类进行模型微调。</li>
+<li>模型评估：使用Trainer类进行模型评估，并选择最佳的微调模型。</li>
+<li>模型保存：使用Trainer类将最佳的微调模型保存到本地或云端。</li>
+</ol>
+<p>总之，Alpaca-LoRA方法可以通过对GPU性能进行建模，优化模型训练过程，从而提高模型的微调效率和性能。该方法使用了PEFT库进行GPU性能建模，可以在消费级GPU上进行微调，适用于训练规模较小的模型。同时，该方法还使用了Huggingface库中的Trainer类进行模型微调和评估，简化了模型微调过程，使得模型训练和评估更加高效和方便。</p>
+<h4 id="知识点4：-Alpaca所用的self-instruct的影响力：解决一大批模型的数据扩展问题"><a href="#知识点4：-Alpaca所用的self-instruct的影响力：解决一大批模型的数据扩展问题" class="headerlink" title="知识点4： Alpaca所用的self-instruct的影响力：解决一大批模型的数据扩展问题"></a>知识点4： Alpaca所用的self-instruct的影响力：解决一大批模型的数据扩展问题</h4><p>Alpaca模型使用的self-instruct方式对于解决一大批模型的数据扩展问题具有重要的影响力。传统的自然语言处理模型的训练需要大量的标注数据，但是标注数据的收集非常困难和昂贵，尤其是对于一些特定领域或语种的任务，标注数据更加稀缺。因此，如何扩展数据集，提高模型性能，一直是自然语言处理领域的研究热点之一。</p>
+<p>Alpaca模型采用了self-instruct方式来扩展数据集，即通过使用模型自身生成的文本来增加训练数据。这种方式有两个主要的优势：</p>
+<ol>
+<li>数据扩展：使用模型自身生成的文本可以大大扩展数据集，提高模型性能。</li>
+<li>数据多样性：生成的文本可以涵盖更多的语言风格和主题，从而提高数据集的多样性。</li>
+</ol>
+<p>通过使用self-instruct方式，Alpaca模型成功地提高了模型性能，并在多个自然语言处理任务上实现了领先的性能。同时，这种方式对于解决自然语言处理领域的数据稀缺问题具有重要的影响力，可以为其他自然语言处理模型的训练提供参考和启示。</p>
+</li>
+<li><h4 id="第5课-Vicuna-shareGPT-、BELLE-self-instruct-、Chinese-LLaMA-x2F-Chinese-Alpaca"><a href="#第5课-Vicuna-shareGPT-、BELLE-self-instruct-、Chinese-LLaMA-x2F-Chinese-Alpaca" class="headerlink" title="第5课 Vicuna(shareGPT)、BELLE(self-instruct)、Chinese-LLaMA&#x2F;Chinese-Alpaca"></a>第5课 Vicuna(shareGPT)、BELLE(self-instruct)、Chinese-LLaMA&#x2F;Chinese-Alpaca</h4><h4 id="知识点1：-UC-Berkeley的Vicuna-13B：通过ShareGPT-com的7万条对话数据微调LLaMA"><a href="#知识点1：-UC-Berkeley的Vicuna-13B：通过ShareGPT-com的7万条对话数据微调LLaMA" class="headerlink" title="知识点1： UC Berkeley的Vicuna-13B：通过ShareGPT.com的7万条对话数据微调LLaMA"></a>知识点1： UC Berkeley的Vicuna-13B：通过ShareGPT.com的7万条对话数据微调LLaMA</h4><p>Vicuna-13B是由UC Berkeley开发的一种基于LLaMA模型的自然语言处理模型。该模型使用了ShareGPT.com上的7万条对话数据进行微调，从而提高了模型的性能和准确率。</p>
+<p>ShareGPT.com是一个在线平台，提供了大量的对话数据集，可以用于自然语言处理模型的微调。UC Berkeley的研究团队使用了ShareGPT.com上的7万条对话数据集，通过微调LLaMA模型，提高了模型在多项自然语言处理任务上的性能。</p>
+<p>具体而言，Vicuna-13B模型的微调步骤如下：</p>
+<ol>
+<li>数据准备：从ShareGPT.com上下载7万条对话数据，并将其处理为Huggingface库支持的格式。</li>
+<li>LLaMA模型定义：使用Huggingface库中的LLaMA模型类定义模型。</li>
+<li>训练参数定义：定义训练参数，例如批处理大小、学习率、梯度累积步数等。</li>
+<li>微调模型：使用Trainer类进行模型微调，提高模型在多项自然语言处理任务上的性能。</li>
+<li>模型评估：使用Trainer类进行模型评估，并选择最佳的微调模型。</li>
+<li>模型保存：使用Trainer类将最佳的微调模型保存到本地或云端。</li>
+</ol>
+<p>总之，Vicuna-13B模型使用了ShareGPT.com上的7万条对话数据进行微调，优化了模型性能和准确率。该方法可以为其他自然语言处理模型的微调提供参考和启示，并为自然语言处理领域的研究和应用提供了新的思路和方法。</p>
+<h4 id="知识点2：-BELLE：结合中文语料通过Self-Instruct方式微调BLOOM-7B或LLaMA"><a href="#知识点2：-BELLE：结合中文语料通过Self-Instruct方式微调BLOOM-7B或LLaMA" class="headerlink" title="知识点2： BELLE：结合中文语料通过Self Instruct方式微调BLOOM-7B或LLaMA"></a>知识点2： BELLE：结合中文语料通过Self Instruct方式微调BLOOM-7B或LLaMA</h4><p>BELLE是一种基于Self Instruct方式微调BLOOM-7B或LLaMA模型的自然语言处理模型，该模型结合了中文语料，可以用于中文文本的处理任务。</p>
+<p>具体而言，BELLE模型的微调步骤如下：</p>
+<ol>
+<li>数据准备：准备用于微调的中文语料，并将其处理为Huggingface库支持的格式。</li>
+<li>模型选择：选择BLOOM-7B或LLaMA作为基础模型。</li>
+<li>训练参数定义：定义训练参数，例如批处理大小、学习率、梯度累积步数等。</li>
+<li>Self Instruct微调：使用Self Instruct方式进行微调，即使用模型自身生成的文本来增加训练数据。</li>
+<li>模型评估：使用Trainer类进行模型评估，并选择最佳的微调模型。</li>
+<li>模型保存：使用Trainer类将最佳的微调模型保存到本地或云端。</li>
+</ol>
+<p>BELLE模型使用了Self Instruct方式进行微调，可以扩展数据集，提高模型性能。同时，该模型结合了中文语料，可以用于中文文本的处理任务，如中文分词、命名实体识别、情感分析等。这些任务在中文自然语言处理中非常重要，BELLE模型可以为这些任务提供高效和准确的解决方案。</p>
+<h3 id="知识点3：-Chinese-LLaMA-x2F-Chinese-Alpaca：通过中文数据预训练-x2F-指令微调-涉及词表扩充"><a href="#知识点3：-Chinese-LLaMA-x2F-Chinese-Alpaca：通过中文数据预训练-x2F-指令微调-涉及词表扩充" class="headerlink" title="知识点3： Chinese-LLaMA&#x2F;Chinese-Alpaca：通过中文数据预训练&#x2F;指令微调(涉及词表扩充)"></a>知识点3： Chinese-LLaMA&#x2F;Chinese-Alpaca：通过中文数据预训练&#x2F;指令微调(涉及词表扩充)</h3><p>Chinese-LLaMA和Chinese-Alpaca是基于LLaMA和Alpaca模型的中文自然语言处理模型，分别通过中文数据预训练和指令微调进行优化。</p>
+<p>Chinese-LLaMA是基于LLaMA模型的中文自然语言处理模型，通过在大规模中文语料上进行预训练，提高模型的性能和泛化能力。在预训练过程中，模型可以自动学习中文语言的特征和规律，从而提高模型在中文自然语言处理任务中的表现。</p>
+<p>Chinese-Alpaca则是通过指令微调方式对模型进行优化，通过对模型的指令微调，提高模型在特定的中文自然语言处理任务中的性能。在微调过程中，还会对模型的词表进行扩充，以适应更加复杂和多样的中文文本。</p>
+<p>总之，Chinese-LLaMA和Chinese-Alpaca是基于LLaMA和Alpaca模型的中文自然语言处理模型，分别通过中文数据预训练和指令微调进行优化。这些模型可以为中文自然语言处理任务提供高效和准确的解决方案，具有重要的研究和应用价值。</p>
+<h4 id="知识点4：-姜子牙Ziya-LLaMA-13B-v1的模型结构与微调部署"><a href="#知识点4：-姜子牙Ziya-LLaMA-13B-v1的模型结构与微调部署" class="headerlink" title="知识点4： 姜子牙Ziya-LLaMA-13B-v1的模型结构与微调部署"></a>知识点4： 姜子牙Ziya-LLaMA-13B-v1的模型结构与微调部署</h4><p>姜子牙Ziya-LLaMA-13B-v1是一种基于LLaMA模型的自然语言处理模型，由中国科学院自动化研究所的研究团队研发。该模型使用了大规模的中文语料进行预训练，并使用了指令微调来优化模型在特定任务上的表现。</p>
+<p>姜子牙Ziya-LLaMA-13B-v1模型的结构与微调部署包括以下几个方面：</p>
+<ol>
+<li>模型结构：该模型基于LLaMA模型，使用了13亿个参数进行训练，具有较强的语言建模能力和泛化能力。该模型还使用了Transformer架构，通过多层自注意力机制来处理输入序列，从而提高模型的性能和效率。</li>
+<li>预训练：该模型使用了大规模的中文语料进行预训练，包括维基百科、新闻、社交网络等多种类型的语料。预训练过程中，模型可以自动学习中文语言的特征和规律，从而提高模型的泛化能力和表现。</li>
+<li>指令微调：该模型使用指令微调来优化模型在特定任务上的表现，例如中文分词、命名实体识别、情感分析等。在微调过程中，还会对模型的词表进行扩充，以适应更加复杂和多样的中文文本。</li>
+<li>部署：该模型可以在GPU和CPU上进行高效的推理和部署，支持在线和离线应用场景。该模型还可以与其他自然语言处理工具和框架进行集成，以实现更加高效和全面的自然语言处理应用。</li>
+</ol>
+<p>总之，姜子牙Ziya-LLaMA-13B-v1是一种基于LLaMA模型的自然语言处理模型，具有较强的语言建模能力和泛化能力。该模型使用了大规模的中文语料进行预训练，并使用了指令微调来优化模型在特定任务上的表现。该模型可以在GPU和CPU上进行高效的推理和部署，具有重要的研究和应用价值。</p>
+</li>
+</ul>
+<h3 id="第三部分-以ChatGLM2-6B-x2F-MOSS-x2F-baichuan为例如何训练LLM及调参部署"><a href="#第三部分-以ChatGLM2-6B-x2F-MOSS-x2F-baichuan为例如何训练LLM及调参部署" class="headerlink" title="第三部分 以ChatGLM2-6B&#x2F;MOSS&#x2F;baichuan为例如何训练LLM及调参部署"></a>第三部分 以ChatGLM2-6B&#x2F;MOSS&#x2F;baichuan为例如何训练LLM及调参部署</h3><ul>
+<li><h4 id="第6课-ChatGLM2-6B-x2F-MOSS-x2F-baichuan的框架对比"><a href="#第6课-ChatGLM2-6B-x2F-MOSS-x2F-baichuan的框架对比" class="headerlink" title="第6课 ChatGLM2-6B&#x2F;MOSS&#x2F;baichuan的框架对比"></a>第6课 ChatGLM2-6B&#x2F;MOSS&#x2F;baichuan的框架对比</h4><h4 id="知识点1：-GLM的预训练和微调"><a href="#知识点1：-GLM的预训练和微调" class="headerlink" title="知识点1： GLM的预训练和微调"></a>知识点1： GLM的预训练和微调</h4><p>GLM（Generative Language Modeling）是一种基于生成式语言模型的自然语言处理方法，其预训练和微调步骤如下：</p>
+<ol>
+<li>预训练：GLM使用大规模的未标注数据进行预训练。在预训练阶段，GLM通过学习语言的概率分布来捕捉语言的语法和语义规律，从而提高模型的泛化能力。预训练的目标是通过最大化训练数据中的联合概率分布来训练模型，通常使用类似于语言模型的损失函数，例如交叉熵损失函数。</li>
+<li>微调：在预训练后，GLM可以通过微调来适应特定的任务和领域。微调的目标是在特定任务和领域中优化模型的性能，通常使用类似于分类或回归的损失函数，例如交叉熵损失函数或均方误差损失函数。微调过程中，可以使用监督学习的方法，通过标注数据进行模型训练；也可以使用无监督学习的方法，通过自监督学习或对抗学习等方式进行模型训练。</li>
+</ol>
+<p>总之，GLM的预训练和微调是自然语言处理中常用的方法，可以提高模型的泛化能力和性能。预训练通过学习语言的概率分布来提高模型的泛化能力，微调则通过在特定任务和领域中优化模型的性能来提高模型的表现。这些方法在自然语言处理的各个领域中都有广泛的应用</p>
+<h4 id="知识点2：-ChatGLM2-6B的升级：最长上下文32K且推理速度相比一代提升42"><a href="#知识点2：-ChatGLM2-6B的升级：最长上下文32K且推理速度相比一代提升42" class="headerlink" title="知识点2： ChatGLM2-6B的升级：最长上下文32K且推理速度相比一代提升42%"></a>知识点2： ChatGLM2-6B的升级：最长上下文32K且推理速度相比一代提升42%</h4><p>ChatGLM2-6B 在保留了初代模型对话流畅、部署门槛较低等众多优秀特性的基础之上，引入了如下新特性：</p>
+<ul>
+<li>• <strong>更强大的性能</strong>：基于 ChatGLM 初代模型的开发经验，全面升级了基座模型。ChatGLM2-6B 使用了 GLM 的混合目标函数，经过了 1.4T 中英标识符的预训练与人类偏好对齐训练，评测结果显示，相比于初代模型，ChatGLM2-6B 在 MMLU（+23%）、CEval（+33%）、GSM8K（+571%） 、BBH（+60%）等数据集上的性能取得了大幅度的提升，在同尺寸开源模型中具有较强的竞争力。</li>
+<li>• <strong>更长的上下文</strong>：基于 FlashAttention 技术，将基座模型的上下文长度（Context Length）由 ChatGLM-6B 的 2K 扩展到了 32K，并在对话阶段使用 8K 的上下文长度训练，允许更多轮次的对话。</li>
+<li>• <strong>更高效的推理</strong>：基于 Multi-Query Attention 技术，ChatGLM2-6B 有更高效的推理速度和更低的显存占用：在官方的模型实现下，推理速度相比初代提升了 42%，INT4 量化下，6G 显存支持的对话长度由 1K 提升到了 8K。</li>
+<li>• <strong>更开放的协议</strong>：ChatGLM2-6B 权重对学术研究完全开放，在获得官方的书面许可后，亦<strong>允许商业使用</strong>。</li>
+</ul>
+<h4 id="知识点3：-MOSS大模型的训练框架与微调部署"><a href="#知识点3：-MOSS大模型的训练框架与微调部署" class="headerlink" title="知识点3： MOSS大模型的训练框架与微调部署"></a>知识点3： MOSS大模型的训练框架与微调部署</h4><p>MOSS 是一个支持中英双语和多种插件的开源对话语言模型，moss-moon 系列模型具有 160 亿参数，<strong>在 FP16 精度下可在单张 A100 &#x2F; A800 或两张 3090 显卡运行，在 INT4&#x2F;8 精度下可在单张 3090 显卡运行</strong>。MOSS 基座语言模型在约七千亿中英文以及代码单词上预训练得到，后续经过对话指令微调、插件增强学习和人类偏好训练具备多轮对话能力及使用多种插件的能力。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/OpenLMLab/MOSS/blob/main/README.md">https://github.com/OpenLMLab/MOSS/blob/main/README.md</a></p>
+<h3 id="知识点4：-baichuan-7B-x2F-13B的模型结构-类似LLaMA-与微调部署"><a href="#知识点4：-baichuan-7B-x2F-13B的模型结构-类似LLaMA-与微调部署" class="headerlink" title="知识点4： baichuan-7B&#x2F;13B的模型结构(类似LLaMA)与微调部署"></a>知识点4： baichuan-7B&#x2F;13B的模型结构(类似LLaMA)与微调部署</h3><p>Baichuan-13B 是由百川智能继 <a target="_blank" rel="noopener" href="https://github.com/baichuan-inc/baichuan-7B">Baichuan-7B</a> 之后开发的包含 130 亿参数的开源可商用的大规模语言模型，在权威的中文和英文 benchmark 上均取得同尺寸最好的效果。本次发布包含有预训练 (<a target="_blank" rel="noopener" href="https://huggingface.co/baichuan-inc/Baichuan-13B-Base">Baichuan-13B-Base</a>) 和对齐 (<a target="_blank" rel="noopener" href="https://huggingface.co/baichuan-inc/Baichuan-13B-Chat">Baichuan-13B-Chat</a>) 两个版本。Baichuan-13B 有如下几个特点：</p>
+<p>1.<strong>更大尺寸、更多数据：</strong>Baichuan-13B 在 Baichuan-7B 的基础上进一步扩大参数量到 130 亿，并且在高质量的语料上训练了 1.4 万亿 tokens，超过 LLaMA-13B 40%，是当前开源 13B 尺寸下训练数据量最多的模型。支持中英双语，使用 ALiBi 位置编码，上下文窗口长度为 4096。</p>
+<p>2.<strong>同时开源预训练和对齐模型：</strong>预训练模型是适用开发者的『 基座 』，而广大普通用户对有对话功能的对齐模型具有更强的需求。因此本次开源我们同时发布了对齐模型（Baichuan-13B-Chat），具有很强的对话能力，开箱即用，几行代码即可简单的部署。</p>
+<p>3.<strong>更高效的推理：</strong>为了支持更广大用户的使用，我们本次同时开源了 int8 和 int4 的量化版本，相对非量化版本在几乎没有效果损失的情况下大大降低了部署的机器资源门槛，可以部署在如 Nvidia 3090 这样的消费级显卡上。</p>
+<p>4.<strong>开源免费可商用：</strong>Baichuan-13B 不仅对学术研究完全开放，开发者也仅需邮件申请并获得官方商用许可后，即可以免费商用。</p>
+<p>开源地址： <a target="_blank" rel="noopener" href="https://github.com/baichuan-inc/Baichuan-13B">https://github.com/baichuan-inc/Baichuan-13B</a> </p>
+<p>﻿</p>
+</li>
+<li><h4 id="第7课-基于ChatGLM2-6B的微调与实践应用"><a href="#第7课-基于ChatGLM2-6B的微调与实践应用" class="headerlink" title="第7课 基于ChatGLM2-6B的微调与实践应用"></a>第7课 基于ChatGLM2-6B的微调与实践应用</h4><h4 id="知识点1：-微调ChatGLM-6B：针对各种数据集通过LoRA或P-Tuning-v2"><a href="#知识点1：-微调ChatGLM-6B：针对各种数据集通过LoRA或P-Tuning-v2" class="headerlink" title="知识点1： 微调ChatGLM-6B：针对各种数据集通过LoRA或P-Tuning v2"></a>知识点1： 微调ChatGLM-6B：针对各种数据集通过LoRA或P-Tuning v2</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Acecai01/article/details/131463608">https://blog.csdn.net/Acecai01/article/details/131463608</a></p>
+<h4 id="知识点2：-基于ChatGLM-6B的本地知识库的应用实现-含完整代码"><a href="#知识点2：-基于ChatGLM-6B的本地知识库的应用实现-含完整代码" class="headerlink" title="知识点2： 基于ChatGLM-6B的本地知识库的应用实现(含完整代码)"></a>知识点2： 基于ChatGLM-6B的本地知识库的应用实现(含完整代码)</h4><p><a target="_blank" rel="noopener" href="https://www.heywhale.com/mw/project/643977aa446c45f4592a1e59">https://www.heywhale.com/mw/project/643977aa446c45f4592a1e59</a></p>
+</li>
+<li><h4 id="第8课-大语言模型预训练、微调、部署指南"><a href="#第8课-大语言模型预训练、微调、部署指南" class="headerlink" title="第8课 大语言模型预训练、微调、部署指南"></a>第8课 大语言模型预训练、微调、部署指南</h4><h4 id="知识点1：-Megatron-DeepSpeed到底是什么原理"><a href="#知识点1：-Megatron-DeepSpeed到底是什么原理" class="headerlink" title="知识点1： Megatron-DeepSpeed到底是什么原理"></a>知识点1： Megatron-DeepSpeed到底是什么原理</h4><p>Megatron和DeepSpeed是针对Transformer模型的两种不同的优化策略。</p>
+<p>Megatron的基本思想是:</p>
+<ol>
+<li>模型并行(model parallel):将模型的不同部分(如attention模块和FFN模块)分配给不同的GPU。从而在更多GPU上训练更大的模型。</li>
+<li>数据并行(data parallel):将同一批训练数据分发给多个GPU,并行计算其梯度,最后汇总。有效利用多GPU资源。</li>
+<li>花式混合并行:结合模型并行和数据并行,以及不同并行粒度,实现高效训练。</li>
+</ol>
+<p>而DeepSpeed的核心思想是:</p>
+<ol>
+<li>零位优化(zero stage optimization):针对模型的不同部分进行不同的优化,包括量化、剪裁、稀疏 etc。</li>
+<li>混合精度训练: 使用FP16等低精度的数据格式训练,降低GPU计算开销。</li>
+<li>模型压缩:采用知识蒸馏、剪裁等手段,有效压缩模型体积。</li>
+<li>高效数据读取:利用复用缓存、批归一化等手段改进数据读取。</li>
+</ol>
+<p>简而言之:</p>
+<ul>
+<li>Megatron侧重于利用多GPU资源训练大模型。</li>
+<li>DeepSpeed则侧重于对单个模型实施各种优化手段,降低训练成本。</li>
+</ul>
+<p>两者互补且互有所长,目前通常会采用Megatron + DeepSpeed的混合策略,共同促进 Transformer 模型高效训练。</p>
+<h4 id="知识点2：-ZeRO、数据并行、模型并行、张量并行"><a href="#知识点2：-ZeRO、数据并行、模型并行、张量并行" class="headerlink" title="知识点2： ZeRO、数据并行、模型并行、张量并行"></a>知识点2： ZeRO、数据并行、模型并行、张量并行</h4><p>ZeRO、数据并行、模型并行、张量并行都是分布式训练中常用的技术，用于加速大规模模型的训练。</p>
+<ol>
+<li>ZeRO：ZeRO（Zero Redundancy Optimizer）是一种优化分布式训练的技术，可以减少通信开销和内存占用，提高训练速度和规模。ZeRO采用了模型并行和数据并行的方式，将模型分割成多个部分，并将不同部分分配到不同的GPU上进行计算。同时，ZeRO还通过减少参数冗余和优化内存使用等技术，来提高训练效率和性能。</li>
+<li>数据并行：数据并行是一种分布式训练的技术，将数据分成多个部分，分配到不同的GPU上进行计算，以提高训练速度和规模。数据并行通常用于处理大规模数据集，可以将数据集分成多个小批次，每个GPU处理其中的一部分数据，然后将梯度合并到一个梯度中，更新模型参数。</li>
+<li>模型并行：模型并行是一种分布式训练的技术，将模型分成多个部分，分配到不同的GPU上进行计算，以提高训练速度和规模。模型并行通常用于处理大规模模型，可以将模型分成多个子模型，每个GPU处理其中的一部分模型，然后将梯度合并到一个梯度中，更新模型参数。</li>
+<li>张量并行：张量并行是一种分布式训练的技术，将张量分成多个部分，分配到不同的GPU上进行计算，以提高训练速度和规模。张量并行通常用于处理大规模张量，可以将张量分成多个子张量，每个GPU处理其中的一部分张量，然后将梯度合并到一个梯度中，更新模型参数。</li>
+</ol>
+<p>总之，ZeRO、数据并行、模型并行、张量并行都是分布式训练中常用的技术，用于加速大规模模型的训练。这些技术的应用可以提高训练效率和性能，从而加速模型的训练和推理。</p>
+<h4 id="知识点3：-如何更好的调参：Optimizer设计-Adam等-、epochs、learning-rate、dropout"><a href="#知识点3：-如何更好的调参：Optimizer设计-Adam等-、epochs、learning-rate、dropout" class="headerlink" title="知识点3： 如何更好的调参：Optimizer设计(Adam等)、epochs、learning rate、dropout"></a>知识点3： 如何更好的调参：Optimizer设计(Adam等)、epochs、learning rate、dropout</h4><p>调参是模型优化的重要步骤，可以通过优化参数来提高模型的性能。在调参过程中，需要考虑优化器设计、epochs、learning rate和dropout等参数。下面是一些有关这些参数的调优技巧：</p>
+<ol>
+<li>优化器设计：常用的优化器包括Adam、SGD等，不同的优化器在不同的场景下性能表现可能会有所不同。一般来说，Adam优化器在大多数情况下表现良好，但在某些场景下，SGD等优化器的表现可能会更好。因此，在调参时需要根据具体场景选择合适的优化器。</li>
+<li>epochs：epochs是指模型训练的轮数。在调参时，需要通过实验找到一个合适的epochs值。通常情况下，epochs值越大，模型的性能可能会更好，但是训练时间和计算资源也会增加。因此，需要在模型性能和计算效率之间进行权衡，找到一个合适的epochs值。</li>
+<li>learning rate：learning rate是指模型训练中的学习率，是一个非常重要的参数。在调参时，需要通过实验找到一个合适的learning rate值。通常情况下，learning rate越小，模型的收敛时间越长，但是模型的性能可能会更好；learning rate越大，模型的收敛时间越短，但是模型的性能可能会受到影响。因此，需要在模型性能和收敛速度之间进行权衡，找到一个合适的learning rate值。</li>
+<li>dropout：dropout是一种正则化技术，用于防止过拟合。在调参时，需要通过实验找到一个合适的dropout值。通常情况下，dropout值越大，模型的正则化效果越好，但是可能会影响模型的性能；dropout值越小，模型的性能可能会更好，但是可能会导致过拟合。因此，需要在模型性能和正则化效果之间进行权衡，找到一个合适的dropout值。</li>
+</ol>
+<p>总之，调参是模型优化的重要步骤，需要根据具体场景选择合适的优化器、epochs、learning rate和dropout等参数。在调参过程中，需要进行实验和对比，找到一个合适的参数组合，以提高模型的性能和泛化能力。</p>
+<h4 id="知识点4：-正则化-x2F-稳定性，与数据增强"><a href="#知识点4：-正则化-x2F-稳定性，与数据增强" class="headerlink" title="知识点4： 正则化&#x2F;稳定性，与数据增强"></a>知识点4： 正则化&#x2F;稳定性，与数据增强</h4><p>正则化和稳定性是一些用于提高模型泛化能力的技术，而数据增强则是一种数据预处理技术，可以扩充训练数据集，提高模型的鲁棒性和泛化能力。</p>
+<ol>
+<li>正则化：正则化是一种用于降低模型过拟合的技术，可以通过在损失函数中添加正则项，限制模型参数的大小和复杂度。常用的正则化方法包括L1正则化、L2正则化等。正则化可以提高模型的泛化能力，避免模型在训练数据上过拟合，但是可能会导致模型的训练时间增加。</li>
+<li>稳定性：稳定性是一种用于提高模型鲁棒性和泛化能力的技术，可以使用各种方法来增强模型的稳定性，例如添加噪声、使用批标准化等。稳定性可以使模型对噪声和异常数据更加鲁棒，并且在测试集上表现更好。</li>
+<li>数据增强：数据增强是一种数据预处理技术，可以通过对原始数据进行变换和扩充，来增加训练数据的数量，提高模型的鲁棒性和泛化能力。数据增强可以采用各种方法，例如旋转、平移、剪切、缩放等。数据增强可以帮助模型更好地学习数据的不变性，提高模型的泛化能力和鲁棒性。</li>
+</ol>
+<p>总之，正则化和稳定性是提高模型泛化能力的重要技术，可以减少过拟合、提高鲁棒性；数据增强是一种数据预处理技术，可以扩充训练数据集，提高模型的鲁棒性和泛化能力。在实际应用中，可以根据具体场景选择合适的技术，以提高模型的性能和泛化能力。</p>
+<h4 id="知识点5：-如何更好的部署：模型的压缩、蒸馏、量化、剪枝"><a href="#知识点5：-如何更好的部署：模型的压缩、蒸馏、量化、剪枝" class="headerlink" title="知识点5： 如何更好的部署：模型的压缩、蒸馏、量化、剪枝"></a>知识点5： 如何更好的部署：模型的压缩、蒸馏、量化、剪枝</h4><ul>
+<li><p>模型的部署是将训练好的模型应用于实际场景的重要步骤。为了在实际场景中获得更好的性能和效率，需要对模型进行一系列优化，例如模型的压缩、蒸馏、量化、剪枝等。</p>
+<ol>
+<li>模型压缩：模型压缩是一种用于减少模型大小和计算量的技术，可以通过去除冗余参数、降低模型精度、剪枝等方法实现。常用的模型压缩方法包括网络剪枝、低秩分解、权重共享等。模型压缩可以减少模型的大小和计算量，从而提高模型的效率和性能。</li>
+<li>模型蒸馏：模型蒸馏是一种用于将大模型转换为小模型的技术，可以通过训练小模型来拟合大模型的行为。模型蒸馏可以通过减少模型中的冗余参数和复杂度，以及提高模型的泛化能力，来实现模型的压缩和优化。</li>
+<li>模型量化：模型量化是一种用于减少模型计算量和内存占用的技术，可以将模型参数从高精度浮点数转换为低精度整数表示。常用的模型量化方法包括定点量化、动态量化等。模型量化可以显著减少模型的计算量和内存占用，从而提高模型的效率和性能。</li>
+<li>模型剪枝：模型剪枝是一种用于减少模型大小和计算量的技术，可以通过去除冗余参数、减少模型深度、删除不重要的连接等方法实现。常用的模型剪枝方法包括结构剪枝、权重剪枝等。模型剪枝可以减少模型的大小和计算量，从而提高模型的效率和性能。</li>
+</ol>
+<p>总之，模型的部署是将训练好的模型应用于实际场景的重要步骤，需要对模型进行一系列优化，例如模型的压缩、蒸馏、量化、剪枝等。在实际应用中，可以根据具体场景选择合适的优化方法，以提高模型的效率和性能。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="第四部分-结合垂域数据或自己的数据定制自己的ChatGPT"><a href="#第四部分-结合垂域数据或自己的数据定制自己的ChatGPT" class="headerlink" title="第四部分 结合垂域数据或自己的数据定制自己的ChatGPT"></a>第四部分 结合垂域数据或自己的数据定制自己的ChatGPT</h3><ul>
+<li><h4 id="第9课-以医疗-x2F-金融-x2F-法律数据为例：垂域数据与自己数据的处理"><a href="#第9课-以医疗-x2F-金融-x2F-法律数据为例：垂域数据与自己数据的处理" class="headerlink" title="第9课 以医疗&#x2F;金融&#x2F;法律数据为例：垂域数据与自己数据的处理"></a>第9课 以医疗&#x2F;金融&#x2F;法律数据为例：垂域数据与自己数据的处理</h4><h4 id="知识点1：-数据的收集清洗、格式规范：数据处理好了-成功一半"><a href="#知识点1：-数据的收集清洗、格式规范：数据处理好了-成功一半" class="headerlink" title="知识点1： 数据的收集清洗、格式规范：数据处理好了 成功一半"></a>知识点1： 数据的收集清洗、格式规范：数据处理好了 成功一半</h4><p>数据的收集、清洗和格式规范是机器学习和深度学习等任务的重要前置步骤，对于模型的训练和性能有着至关重要的影响。下面简要介绍一下数据处理的常见方法和技巧：</p>
+<ol>
+<li>数据收集：数据收集是指收集和获取用于训练模型的数据。在数据收集之前，需要明确数据的来源和目的，并且了解数据的特征和属性。常用的数据收集方法包括数据爬取、数据采集、人工标注等。</li>
+<li>数据清洗：数据清洗是指对原始数据进行去噪、去重、填充缺失值、异常值处理等操作，以保证数据的质量和准确性。数据清洗可以帮助排除数据中的无效信息和异常数据，提高模型的准确性和鲁棒性。</li>
+<li>数据格式规范：数据格式规范是指对数据的格式、结构、类型等进行规范化和标准化，以保证数据的一致性和统一性。常用的数据格式规范方法包括数据类型转换、标准化、归一化等。数据格式规范可以提高模型的训练效率和性能。</li>
+</ol>
+<p>总之，数据的收集、清洗和格式规范是机器学习和深度学习等任务的重要前置步骤，对于模型的训练和性能有着至关重要的影响。在实际应用中，需要根据具体场景采取合适的数据处理方法和技巧，以提高模型的准确性和鲁棒性。</p>
+<h4 id="知识点2：-分词-tokenizer-与编码-如BPE、WordPiece等）"><a href="#知识点2：-分词-tokenizer-与编码-如BPE、WordPiece等）" class="headerlink" title="知识点2： 分词(tokenizer)与编码(如BPE、WordPiece等）"></a>知识点2： 分词(tokenizer)与编码(如BPE、WordPiece等）</h4><p>在自然语言处理任务中，分词和编码是两个重要的步骤。</p>
+<ol>
+<li>分词（tokenizer）：分词是将一段文本分割成一个个单独的词语的过程。在自然语言处理中，通常将一个词定义为具有独立语义或语法功能的最小单位。分词的目的是将文本转换为计算机可以理解和处理的形式。常见的分词方法有基于规则的分词方法和基于统计模型的分词方法。</li>
+<li>编码：编码是将文本转换为数字序列的过程。在自然语言处理中，通常使用向量表示来表示文本。常用的编码方法有BPE（Byte Pair Encoding）、WordPiece等。这些编码方法利用统计模型和机器学习算法，将词语或字母组合转换为数字序列。编码的目的是将文本转换为计算机可以处理的数字表示形式，以便进行后续的处理和分析。</li>
+</ol>
+<p>总之，分词和编码是自然语言处理中的两个重要步骤，分别用于将文本转换为计算机可以理解和处理的形式。在实际应用中，可以根据具体任务和数据集的特点选择合适的分词和编码方法，以提高模型的性能和效果。</p>
+<h4 id="知识点3：-数据增强技术、数据集划分与加载"><a href="#知识点3：-数据增强技术、数据集划分与加载" class="headerlink" title="知识点3： 数据增强技术、数据集划分与加载"></a>知识点3： 数据增强技术、数据集划分与加载</h4><p>数据增强技术、数据集划分和加载是机器学习中常用的数据预处理步骤，用于提高模型的泛化性能和减少过拟合。</p>
+<p>数据增强技术指的是通过对原始数据进行一系列的变换和扩充来生成更多的训练数据，从而提高模型的鲁棒性和泛化性能。常用的数据增强技术包括图像翻转、旋转、缩放、裁剪、加噪声等。对于文本数据，常用的数据增强技术包括替换、删除、插入、交换等。数据增强技术可以通过增加数据量、增加数据多样性、减少过拟合等方式提高模型的性能。</p>
+<p>数据集划分是将原始数据集划分为训练集、验证集和测试集的过程。训练集用于训练模型，验证集用于调整模型的超参数和评估模型的性能，测试集用于最终评估模型的性能。数据集划分的目的是防止模型在训练过程中过拟合，同时也可以用于评估模型的泛化性能。通常，训练集占原始数据集的大多数，验证集和测试集占比较少的部分。在实际应用中，可以采用交叉验证等技术来更好地利用数据集。</p>
+<p>数据加载是将数据集加载到内存中以便进行训练和评估。数据加载的方式包括批量读取、并行读取等。在深度学习中，通常采用小批量随机梯度下降的方式来训练模型，因此需要将数据集划分为若干个小批量，并且要保证每个小批量的数据样本是均匀分布的。数据加载的效率对于训练模型的速度和性能有重要影响，因此需要采用高效的数据加载技术。常用的数据加载库包括PyTorch、TensorFlow等。</p>
+<h4 id="知识点4：-如何提升数据利用率及数据细粒度上的理解"><a href="#知识点4：-如何提升数据利用率及数据细粒度上的理解" class="headerlink" title="知识点4： 如何提升数据利用率及数据细粒度上的理解"></a>知识点4： 如何提升数据利用率及数据细粒度上的理解</h4><p>提升数据利用率和数据细粒度上的理解是机器学习和深度学习中数据处理的重要目标之一。下面是一些常用的方法：</p>
+<ol>
+<li>数据增强：数据增强是通过对原始数据进行变换和扩充，来增加训练数据的数量，提高模型的鲁棒性和泛化能力。数据增强可以帮助模型更好地学习数据的不变性，提高数据利用率和模型的泛化能力。</li>
+<li>数据清洗和预处理：数据清洗和预处理是将原始数据进行去噪、去重、填充缺失值、异常值处理等操作，以保证数据的质量和准确性。数据清洗和预处理可以提高数据的质量和利用率，减少噪声和干扰，提高模型的准确性和鲁棒性。</li>
+<li>数据标注和注释：数据标注和注释是对数据进行分类、标记、注释、描述等操作，以便更好地理解和利用数据。数据标注和注释可以提高数据的细粒度理解和利用率，帮助模型更好地了解数据的含义和关系。</li>
+<li>多任务学习：多任务学习是一种同时训练多个任务的方法，可以提高数据的利用率和模型的泛化能力。多任务学习可以利用不同任务之间的相关性和共享信息，提高数据的利用率和模型的效果。</li>
+</ol>
+<p>总之，提升数据利用率和数据细粒度上的理解是机器学习和深度学习中数据处理的重要目标之一。在实际应用中，可以根据具体任务和数据集的特点选择合适的方法和技巧，以提高数据利用率和模型的效果。</p>
+</li>
+<li><h4 id="第10课-模型的优化、评估与部署上线"><a href="#第10课-模型的优化、评估与部署上线" class="headerlink" title="第10课 模型的优化、评估与部署上线"></a>第10课 模型的优化、评估与部署上线</h4><h4 id="知识点1：-如何更好的解决灾难性遗忘：再训练、学习率调整、权重衰减等"><a href="#知识点1：-如何更好的解决灾难性遗忘：再训练、学习率调整、权重衰减等" class="headerlink" title="知识点1： 如何更好的解决灾难性遗忘：再训练、学习率调整、权重衰减等"></a>知识点1： 如何更好的解决灾难性遗忘：再训练、学习率调整、权重衰减等</h4><p>灾难性遗忘是指在模型训练过程中，当新的数据被添加进来，原来的模型会忘记之前学习到的知识，导致模型的性能下降。为了解决灾难性遗忘问题，可以采用以下方法：</p>
+<ol>
+<li>再训练：在原来的模型基础上，继续使用新的数据进行训练。这种方法可以保留原来的知识，同时学习新的知识。但是，再训练可能会导致过拟合，需要注意调整超参数，以避免出现过拟合问题。</li>
+<li>学习率调整：在新数据的训练过程中，可以降低学习率，以减缓模型对新数据的更新速度。这种方法可以让模型更加稳定，避免新数据对原有知识的影响过大。但是，学习率调整可能会导致收敛速度较慢，需要根据具体情况进行调整。</li>
+<li>权重衰减：在模型训练过程中，可以使用权重衰减（Weight Decay）等正则化方法，对模型的权重进行约束。这种方法可以减少模型的过拟合，避免新数据对原有知识的影响过大。但是，权重衰减可能会导致模型的性能下降，需要根据具体情况进行调整。</li>
+</ol>
+<p>总之，灾难性遗忘是机器学习中常见的问题，可以通过再训练、学习率调整、权重衰减等方法来解决。在实际应用中，需要根据具体情况选择合适的方法和调整超参数，以提高模型的性能和泛化能力。</p>
+<h3 id="知识点2：-如何更好的在线监测、在线学习"><a href="#知识点2：-如何更好的在线监测、在线学习" class="headerlink" title="知识点2： 如何更好的在线监测、在线学习"></a>知识点2： 如何更好的在线监测、在线学习</h3><p>在线监测和在线学习是机器学习中常见的技术，可以提高模型的效果和实用性。以下是一些常用的方法：</p>
+<ol>
+<li>在线监测：在线监测是指对模型的实时性能进行监控和评估。可以使用一些指标（如准确率、召回率、F1值等）来评估模型的性能，并及时发现和处理异常情况。在线监测可以帮助我们及时发现模型的问题，及时进行调整和优化，提高模型的性能和实用性。</li>
+<li>在线学习：在线学习是指在模型部署后，不断从实时数据中学习和更新模型。可以使用增量学习算法（如在线SVM、增量式随机森林等）进行在线学习。在线学习可以使模型不断适应变化的数据，保持模型的实时性和准确性。</li>
+<li>滑动窗口：滑动窗口是一种常用的数据处理方法，可以对数据进行实时处理。可以使用滑动窗口来实现在线学习和在线监测，对实时数据进行处理和分析。滑动窗口可以使模型及时获取最新的数据，保持模型的实时性和准确性。</li>
+</ol>
+<p>总之，在线监测和在线学习是机器学习中常见的技术，可以提高模型的效果和实用性。在实际应用中，可以根据具体需求和场景选择合适的方法和算法，以提高模型的性能和实用性。</p>
+<h4 id="知识点3：-如何评估一个LLM的效果，都有哪些评估指标"><a href="#知识点3：-如何评估一个LLM的效果，都有哪些评估指标" class="headerlink" title="知识点3： 如何评估一个LLM的效果，都有哪些评估指标"></a>知识点3： 如何评估一个LLM的效果，都有哪些评估指标</h4><p>如何评估一个LLM的效果，都有哪些评估指标：</p>
+<ol>
+<li>困惑度（Perplexity）：困惑度是一种常用的评估指标，用于衡量语言模型在预测下一个词时的不确定性。困惑度越低，说明模型的预测能力越好。</li>
+<li>准确率（Accuracy）：准确率是指模型在预测下一个词时的正确率。准确率越高，说明模型的预测能力越好。</li>
+<li>召回率（Recall）：召回率是指模型在预测下一个词时能够正确预测出的比例。召回率越高，说明模型的预测能力越好。</li>
+<li>F1值（F1-score）：F1值是准确率和召回率的调和平均数，用于综合评估模型的预测能力。</li>
+<li>BLEU 分数（BLEU Score）：BLEU 分数是一种常用的机器翻译评估指标，用于衡量翻译结果与参考答案之间的相似度。</li>
+<li>ROUGE 分数（ROUGE Score）：ROUGE 分数是一种常用的文本摘要评估指标，用于衡量模型生成的摘要与参考摘要之间的相似度。</li>
+<li>生成样本的多样性（Diversity）：生成样本的多样性是指模型生成的文本样本的多样性程度。如果模型生成的文本样本过于单调，会影响用户的体验。</li>
+<li>生成速度（Generation Speed）：生成速度是指模型生成文本的速度。如果模型的生成速度过慢，会影响用户的体验。</li>
+</ol>
+<p>以上指标并不是全部，评估指标的选择应该根据具体的应用场景和需求来确定。</p>
+<h4 id="知识点4：-知识蒸馏与模型剪枝、量化与轻量化模型"><a href="#知识点4：-知识蒸馏与模型剪枝、量化与轻量化模型" class="headerlink" title="知识点4： 知识蒸馏与模型剪枝、量化与轻量化模型"></a>知识点4： 知识蒸馏与模型剪枝、量化与轻量化模型</h4><p>知识蒸馏、模型剪枝、量化和轻量化模型是一些常用的模型压缩技术，可以减少模型的大小和计算量，提高模型的效率和实用性。以下是这些技术的简要介绍：</p>
+<ol>
+<li>知识蒸馏（Knowledge Distillation）：知识蒸馏是一种将大型模型的知识传递到小型模型中的技术。通常，使用一个大型模型作为“教师模型”，将其预测结果作为“软标签”传递给一个小型模型作为“学生模型”，以便学生模型更快地收敛并获得更好的性能。</li>
+<li>模型剪枝（Model Pruning）：模型剪枝是一种通过删除模型中不必要的参数和连接来减少模型大小和计算量的技术。通常，使用一些启发式算法（如L1正则化、结构化剪枝、通道剪枝等）来寻找可以删除的参数和连接，并将其从模型中删除。</li>
+<li>量化（Quantization）：量化是一种将模型参数从高精度浮点数转换为低精度整数或定点数的技术。通常，使用一些量化算法（如线性量化、对称量化、非对称量化等）来将模型参数量化，并将其存储为整数或定点数，以减少模型的大小和计算量。</li>
+<li>轻量化模型（Lightweight Model）：轻量化模型是一种专门设计用于移动设备或嵌入式设备上的小型模型。通常，使用一些轻量化技术（如深度可分离卷积、MobileNet、ShuffleNet等）来设计高效的模型结构，并减少模型的大小和计算量。</li>
+</ol>
+<p>总之，知识蒸馏、模型剪枝、量化和轻量化模型是一些常用的模型压缩技术，可以减少模型的大小和计算量，提高模型的效率和实用性。在实际应用中，可以根据具体场景和需求选择合适的技术和方法，以提高模型的性能和效率。</p>
+<h4 id="知识点5：-以OpenMP为例，如何更好的做集群部署"><a href="#知识点5：-以OpenMP为例，如何更好的做集群部署" class="headerlink" title="知识点5： 以OpenMP为例，如何更好的做集群部署"></a>知识点5： 以OpenMP为例，如何更好的做集群部署</h4><p>OpenMP 是一种多线程编程模型，常用于共享内存并行计算。在集群部署环境下，可以通过以下几种方法来更好地使用 OpenMP：</p>
+<ol>
+<li>了解集群环境：在进行 OpenMP 集群部署之前，需要了解集群的硬件配置、操作系统、网络拓扑结构等信息。这有助于更好地优化 OpenMP 程序的性能。</li>
+<li>选择适当的编译器：在进行 OpenMP 集群部署时，需要选择适当的编译器。常用的编译器包括 GCC、Intel C++ 和 Clang 等。不同的编译器对 OpenMP 的支持程度不同。选择合适的编译器可以提高程序的性能。</li>
+<li>优化 OpenMP 程序：在进行 OpenMP 集群部署时，需要对 OpenMP 程序进行优化。常用的优化方法包括数据局部性优化、循环展开、数据复制等。这些优化方法可以提高程序的性能。</li>
+<li>部署程序：在进行 OpenMP 集群部署时，需要将程序部署到集群上。通常的做法是将程序复制到每个节点上，并通过 Shell 脚本等方式启动程序。程序的启动方式和参数需要根据具体情况进行设置。</li>
+<li>使用任务调度系统：在集群部署环境下，可以使用任务调度系统来管理 OpenMP 程序的运行。常用的任务调度系统包括 Slurm、PBS 和 LSF 等。使用任务调度系统可以更好地管理集群资源，提高程序的执行效率。</li>
+</ol>
+<p>以上是 OpenMP 在集群部署环境下的一些常用方法和技巧。需要根据具体情况进行选择和调整。</p>
+</li>
+</ul>
+
+    </div>
+    <footer class="article-footer">
+      
+    </footer>
+  </div>
+  
+  
+    
+<nav class="article-nav pt-4 mt-3" id="article-nav">
+  
+    <a href="/2023/07/18/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Prompt Engineering
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/16/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91LangChain+ChatGLM2-6B%E6%90%AD%E5%BB%BA%E7%9F%A5%E8%AF%86%E5%BA%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+</div>
+    </section>
+    <footer class="footer pt-5 mt-5">
+  <div class="container">
+    <div class="py-3">
+      <div class="row justify-content-between">
+        <div class="col-6">
+          <img class="filter-gray mb-3 lazyload" height="40" data-src="/images/brand.svg" alt="AI架构 | AI系统基础架构设计与优化" role="img">
+          <p class="mb-4">这个网站旨在为AI架构师和对AI系统设计和优化感兴趣的人提供有价值的信息和资源。我们提供关于AI架构设计原理、机器学习和深度学习算法、大规模数据处理技术等方面的深入文章、案例研究和最佳实践指南。通过这些内容，我们希望帮助读者了解如何构建高性能、可扩展的AI架构，并提供实用的建议和方法来优化AI系统的性能和可靠性。无论是初学者还是有经验的专业人士，我们致力于为您提供有益的见解和实用的资源，以推动AI架构领域的发展和进步。</p>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="javascript:;">
+                  <img 0="微信" src="/images/icons/contact_wechat.svg">
+                </a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="mailto:a@abc.com">
+                  <img 0="邮箱" src="/images/icons/contact_email.svg">
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+        <div class="col-4">
+          <h5>友情链接</h5>
+          <ul class="list-inline">
+            
+              <li class="list-inline-item">
+                <a href="https://acorn.imaging.xin/" title="Acorn" target="_blank" rel="noopener">Acorn</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://github.com/" title="GitHub" target="_blank" rel="noopener">GitHub</a>
+              </li>
+            
+              <li class="list-inline-item">
+                <a href="https://duoyu.wang/" title="To Base64" target="_blank" rel="noopener">To Base64</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr class="hr" style="opacity: .25;">
+    <div class="pt-3 pb-5">
+      <ul class="list-inline mb-0 text-center">
+        <li class="list-inline-item">&copy; 2023 AI架构 | AI系统基础架构设计与优化</li>
+        
+        <li class="list-inline-item">Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+        <li class="list-inline-item">Designer <a href="https://acorn.imaging.xin/" target="_blank">罗平</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+  </main>
+  <div id="mobile-nav-dimmer"></div>
+<div id="mobile-nav">
+	<div id="mobile-nav-inner">
+		<ul class="mobile-nav">
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/">首页</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/stories">案例</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/archives">文章</a>
+  </li>
+  
+    
+  <li class="nav-item ">
+    <a class="nav-item-link" href="/about">关于</a>
+  </li>
+  
+</ul>
+		
+	</div>
+</div>
+
+  <script src="/libs/feather/feather.min.js"></script>
+<script src="/libs/lazysizes/lazysizes.min.js"></script>
+
+	<script src="/libs/tocbot/tocbot.min.js"></script>
+	<script>
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.js-toc-content',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h2, h3',
+      // For headings inside relative or absolute positioned containers within content.
+      hasInnerContainers: true,
+    });
+	</script>
+
+
+
+
+
+<script src="/js/mobile-nav.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-178892506-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-178892506-1');
+</script>
+</body>
+</html>
