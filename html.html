@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="领先的大模型咨询服务，为企业提供前沿的AI生成内容和咨询解决方案。">
+    <meta name="keywords" content="AI技术,AI图片生成,AI视频生成,AI模型,Google AI,Open AI,免费AI服务,AI翻译工具,AI辅助工具,Kimi AI,大型AI模型,AI演示（PPT）,AI聊天机器人,AI视频制作,Gemini AI,百度AI,Character AI,AI代理,人工智能,Perplexity AI,Luma AI,可灵AI,Kling AI,Udio,即梦AI,Luma AI官网,Lode88 AI,海螺AI,AI去衣应用,上海AI实验室,豆包AI,Viggle AI,不可检测AI,百度文库AI,AI消除工具,Janitor AI,吐司AI,AI人性化工具,抄袭检测器,Wordvice AI,Humanize AI,天宫AI,无限AI聊天,Apple AI，TOP, 大模型, ai 大模型, 大模型训练, LLM
+		大模型是什么, 多模态大模型, 大模型应用, 大模型微调，开源大模型, 阿里大模型, 国内大模型, kimi，通义大模型, 百度大模型, kimi大模型, RAG，大模型RAG, 大模型agent, agent, SuperCLUE，Qwen2, Qianwen, 火山引擎, Claude 3.5, GPT4O">
+    <title>大模型落地最后一公里</title>
+    <style>
+        /* Reset and global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            background-color: #f7f9fc;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        header {
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin-left: 20px;
+        }
+
+        header nav ul li a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        header .cta {
+            background: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        header .cta:hover {
+            background: #0056b3;
+        }
+
+        .banner {
+            background: linear-gradient(to right, #007BFF, #0056b3);
+            color: #fff;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .banner h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .banner p {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .banner .cta {
+            background: #e8491d;
+            color: #fff;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        .services {
+            background: #ffffff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .services .service {
+            display: inline-block;
+            width: 30%;
+            padding: 20px;
+            margin: 1.66%;
+            background: #f7f9fc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .services .service h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .services .service p {
+            font-size: 16px;
+        }
+
+        .solutions, .blog, .about {
+            padding: 60px 0;
+        }
+
+        .solutions .container, .blog .container, .about .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .solutions .container div, .blog .container .post, .about .container div {
+            width: 48%;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .solutions h2, .blog h2, .about h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .blog .post h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .blog .post p {
+            font-size: 16px;
+        }
+
+        .blog .post a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .blog .post a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        footer ul li {
+            margin-left: 20px;
+        }
+
+        footer ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        footer .social a {
+            color: #fff;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">大模型之路</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#solutions">解决方案</a></li>
+                    <li><a href="#blog">博客</a></li>
+                    <li><a href="#about">关于</a></li>
+                </ul>
+            </nav>
+            <a href="#contact" class="cta">联系我们</a>
+        </div>
+    </header>
+
+    <!-- Banner -->
+    <section id="home" class="banner">
+        <div class="container">
+            <h1>领先的大模型咨询服务</h1>
+            <p>为企业提供前沿的AI生成内容和咨询解决方案</p>
+            <a href="#contact" class="cta">立即咨询:微信：ppoluo</a>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services">
+        <div class="container">
+            <div class="service">
+                <h2>面向企业：大模型解决方案咨询服务</h2>
+                <p>提供专业的大语言模型咨询，助力企业提升AI应用能力，紧跟趋势，帮助企业智能化转型。</p>
+            </div>
+			 <div class="service">
+                <h2>面向个人：AIGC大模型职业领路服务</h2>
+                <p>职场领路，冲击高薪，实战AIGC商业应用开发，提升个人硬核能力，实现弯道超车</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions -->
+    <section id="solutions" class="solutions">
+        <div class="container">
+            <h2>AIGC解决方案</h2>
+            <div>
+			 <h2>AIGC职业转型</h2>
+                <p>掌握AIGC技能，利用AI生成内容（AIGC）提高企业内容创作效率和质量。自动化写作、图像生成、视频制作等应用场景。</p>
+            </div>
+            <div>
+                <h2>AI企业咨询</h2>
+                <p>提供定制化的AI咨询服务，包括，AI平台构建、选型、模型训练、微调、模型部署、应用构建等。成功案例和客户评价展示。</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <ul>
+                <li><a href="#home">首页</a></li>
+                <li><a href="#solutions">解决方案</a></li>
+                <li><a href="blog.html">博客</a></li>
+                <li><a href="#about">关于</a></li>
+            </ul>
+            <p>© 2024 大模型咨询. 保留所有权利.</p>
+            <div class="social">
+                <a href="#">LinkedIn</a>
+                <a href="#">Twitter</a>
+                <a href="#">Facebook</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
