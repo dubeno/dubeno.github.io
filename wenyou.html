@@ -1,0 +1,611 @@
+<html><head><base href="https://chinese-visual-novel.com/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>云霄仙途：寻仙问道</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap');
+
+    * {
+        box-sizing: border-box;
+        touch-action: manipulation;
+    }
+
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Noto Serif SC', serif;
+        overflow: hidden;
+        background-color: #000;
+    }
+
+    #game-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .character {
+        position: absolute;
+        bottom: 0;
+        height: 90%;
+        max-height: 90vh;
+        transition: opacity 0.5s ease-in-out;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: bottom;
+    }
+
+    #left-character {
+        left: 5%;
+        width: 30%;
+    }
+
+    #right-character {
+        right: 5%;
+        width: 30%;
+    }
+
+    #dialogue-box {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 95%;
+        background: linear-gradient(180deg, rgba(139,69,19,0.8) 0%, rgba(101,67,33,0.9) 100%);
+        color: #FFD700;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        box-shadow: 0 0 20px rgba(255,215,0,0.2);
+        backdrop-filter: blur(5px);
+        border: 2px solid rgba(255,215,0,0.3);
+    }
+
+    #speaker-name {
+        font-family: 'Ma Shan Zheng', cursive;
+        font-weight: bold;
+        color: #FFA500;
+        margin-bottom: 10px;
+        font-size: 24px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    #story-text {
+        line-height: 1.8;
+        margin-bottom: 15px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    #choices {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .choice-btn {
+        background: linear-gradient(45deg, #8B4513, #D2691E);
+        border: 2px solid #FFD700;
+        color: #FFD700;
+        padding: 12px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 18px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 25px;
+        transition: background 0.3s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        font-family: 'Noto Serif SC', serif;
+    }
+
+    .choice-btn:hover {
+        background: linear-gradient(45deg, #D2691E, #8B4513);
+    }
+
+    #menu-button, #sound-toggle {
+        position: absolute;
+        top: 20px;
+        background-color: rgba(139,69,19,0.7);
+        color: #FFD700;
+        border: 2px solid #FFD700;
+        padding: 10px;
+        border-radius: 50%;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 100;
+        transition: background-color 0.3s ease;
+    }
+
+    #menu-button {
+        right: 20px;
+    }
+
+    #sound-toggle {
+        left: 20px;
+    }
+
+    #menu-button:hover, #sound-toggle:hover {
+        background-color: rgba(210,105,30,0.9);
+    }
+
+    #menu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 99;
+    }
+
+    .menu-btn {
+        background: linear-gradient(45deg, #8B4513, #D2691E);
+        border: 2px solid #FFD700;
+        color: #FFD700;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 20px;
+        margin: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background 0.3s;
+        font-family: 'Ma Shan Zheng', cursive;
+    }
+
+    .menu-btn:hover {
+        background: linear-gradient(45deg, #D2691E, #8B4513);
+    }
+</style>
+</head>
+<body>
+<div id="game-container">
+    <img id="background-image" src="http://oss-cnsq01.cdsgss.com/maas-5/data/3b2b00fb-b58a-4550-b984-ee16ace4295e/acient__heaven_cloud__china_garden_anime_game_scence_god-61c33b28-c73c-4e83-8834-e5b36223d72b.webp?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Signature=JyQ%2BdVwZpZT96NEjLsUdf7lq7h4%3D&Expires=2039475547" alt="Ancient Chinese landscape with mountains and mist" style="position: absolute; width: 100%; height: 100%; object-fit: cover;">
+    <div id="left-character" class="character"></div>
+    <div id="right-character" class="character"></div>
+    <div id="dialogue-box">
+        <div id="speaker-name"></div>
+        <p id="story-text"></p>
+        <div id="choices"></div>
+    </div>
+    <button id="menu-button">☰</button>
+    <button id="sound-toggle">🔊</button>
+</div>
+
+<div id="menu">
+    <button class="menu-btn" id="resume-btn">返回仙途</button>
+    <button class="menu-btn" id="restart-btn">重新修行</button>
+    <button class="menu-btn" id="settings-btn">洞天福地</button>
+</div>
+
+<script>
+const scenes = {
+    start: {
+        leftCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/17d825d31267409e9add7f8e071a52be.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2039656236&Signature=i%2BAGIh4kLWICLaPYTiSBksjoLro%3D",
+        rightCharacter: "/characters/elder-master.png",
+        speaker: "云霄真人",
+        text: "徒儿，你已修行百年，今日特来试你道心。天地间有三道至宝，分别藏于人间、仙境、魔域。你欲先寻何宝？",
+        audio: "/audio/chinese-flute-peaceful.mp3",
+        choices: [
+            { text: "寻访人间至宝", nextScene: "human_realm" },
+            { text: "探寻仙境奇珍", nextScene: "celestial_realm" },
+            { text: "冒险魔域凶地", nextScene: "demon_realm" }
+        ]
+    },
+    human_realm: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "神秘商人",
+        text: "这位仙师，可是寻宝而来？老朽这里有一物，传说乃是上古遗留，能助修行，不知仙师可有兴趣？",
+        audio: "/audio/market-bustle-chinese.mp3",
+        choices: [
+            { text: "仔细查看此物", nextScene: "examine_artifact" },
+            { text: "婉拒继续寻找", nextScene: "continue_search_human" }
+        ]
+    },
+    celestial_realm: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "仙子",
+        text: "凡人，你竟能寻到此处？此乃蟠桃园，万年一开，今日恰逢盛会。你可愿一尝这天地灵根？",
+        audio: "/audio/ethereal-chimes.mp3",
+        choices: [
+            { text: "品尝蟠桃", nextScene: "taste_peach" },
+            { text: "询问仙宝下落", nextScene: "ask_about_treasure" }
+        ]
+    },
+    demon_realm: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "魔尊",
+        text: "哈哈哈！区区凡人也敢踏入我魔域？不过你倒有几分胆色。若能通过我的考验，或可赐你一件魔器。",
+        audio: "/audio/ominous-wind.mp3",
+        choices: [
+            { text: "接受考验", nextScene: "accept_challenge" },
+            { text: "借机打探魔宝", nextScene: "inquire_demon_treasure" }
+        ]
+    },
+    examine_artifact: {
+        leftCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/17d825d31267409e9add7f8e071a52be.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2039656236&Signature=i%2BAGIh4kLWICLaPYTiSBksjoLro%3D",
+        rightCharacter: "/characters/mysterious-merchant.png",
+        speaker: "神秘商人",
+        text: "此物名为'太虚幻镜'，据说能照见过去未来，窥探天机。然而，它每次使用都需付出相应代价。仙师可想一试？",
+        audio: "/audio/mystical-chime.mp3",
+        choices: [
+            { text: "付出代价一试", nextScene: "use_mirror" },
+            { text: "婉拒离开", nextScene: "leave_merchant" }
+        ]
+    },
+    continue_search_human: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "游方老者",
+        text: "小友看起来在寻找什么？老朽游历人间多年，或许能为你指点一二。",
+        audio: "/audio/gentle-breeze.mp3",
+        choices: [
+            { text: "询问人间至宝", nextScene: "ask_sage" },
+            { text: "婉拒继续独自寻找", nextScene: "continue_alone" }
+        ]
+    },
+    taste_peach: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "仙子",
+        text: "此蟠桃蕴含天地精华，食之可增寿延年，悟性大增。然而，享用仙果也会让你与凡尘渐行渐远，你可想清楚了？",
+        audio: "/audio/heavenly-chorus.mp3",
+        choices: [
+            { text: "品尝蟠桃", nextScene: "eat_peach" },
+            { text: "谢绝仙果", nextScene: "refuse_peach" }
+        ]
+    },
+    ask_about_treasure: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "仙子",
+        text: "你寻仙宝，可知其中凶险？仙界至宝'太素琉璃'藏于九重天阙，历代真仙都难以窥其全貌。你可有把握一探？",
+        audio: "/audio/celestial-warning.mp3",
+        choices: [
+            { text: "请仙子指点迷津", nextScene: "guidance_celestial" },
+            { text: "自告奋勇前往天阙", nextScene: "venture_palace" }
+        ]
+    },
+    accept_challenge: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "魔尊",
+        text: "有胆量！我欣赏你的勇气。听好了，你需要在魔焰中保持心志不失，坚持一个时辰。若能做到，魔器归你。",
+        audio: "/audio/demonic-challenge.mp3",
+        choices: [
+            { text: "接受挑战", nextScene: "endure_flames" },
+            { text: "询问其他方式", nextScene: "negotiate_challenge" }
+        ]
+    },
+    inquire_demon_treasure: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "魔尊",
+        text: "哦？你对我魔域至宝感兴趣？有趣。那'九幽冥火'确实是件了不得的宝物，但它可不是那么好驾驭的。",
+        audio: "/audio/sinister-laughter.mp3",
+        choices: [
+            { text: "请教驾驭之法", nextScene: "learn_demonic_arts" },
+            { text: "婉拒离开魔域", nextScene: "escape_demon_realm" }
+        ]
+    },
+    use_mirror: {
+        leftCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/17d825d31267409e9add7f8e071a52be.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2039656236&Signature=i%2BAGIh4kLWICLaPYTiSBksjoLro%3D",
+        rightCharacter: "/characters/mysterious-merchant.png",
+        speaker: "神秘商人",
+        text: "好！你且闭目凝神，我这就为你开启太虚幻镜。记住，所见未必是真，所闻未必是实。准备好了吗？",
+        audio: "/audio/mirror-activation.mp3",
+        choices: [
+            { text: "准备就绪", nextScene: "mirror_vision" },
+            { text: "再考虑一下", nextScene: "reconsider_mirror" }
+        ]
+    },
+    leave_merchant: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "/characters/city-scene.png",
+        speaker: "旁白",
+        text: "你婉拒了神秘商人的提议，继续在人间寻找至宝的线索。不知不觉间，你来到了一座热闹的古城。",
+        audio: "/audio/city-ambience.mp3",
+        choices: [
+            { text: "探访当地茶馆", nextScene: "teahouse" },
+            { text: "前往城中大寺", nextScene: "temple" }
+        ]
+    },
+    ask_sage: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "游方老者",
+        text: "人间至宝？呵呵，老朽倒是知道一些传说。相传在东海之滨有一座仙山，山顶有株万年灵芝，食之可得长生。",
+        audio: "/audio/sage-wisdom.mp3",
+        choices: [
+            { text: "询问仙山位置", nextScene: "mountain_location" },
+            { text: "探讨灵芝真伪", nextScene: "discuss_lingzhi" }
+        ]
+    },
+    continue_alone: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "/characters/forest-path.png",
+        speaker: "旁白",
+        text: "你决定继续独自探索。沿着一条幽深的山路，你来到了一片古老的竹林。林中隐约可见一座破旧的道观。",
+        audio: "/audio/bamboo-forest.mp3",
+        choices: [
+            { text: "进入道观探索", nextScene: "enter_taoist_temple" },
+            { text: "绕过道观继续前行", nextScene: "bypass_temple" }
+        ]
+    },
+    eat_peach: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "仙子",
+        text: "你咬下一口蟠桃，顿时感觉全身充满了灵力，仿佛要羽化登仙。然而，你也感到与凡间的联系正在逐渐减弱。",
+        audio: "/audio/transcendence.mp3",
+        choices: [
+            { text: "继续食用", nextScene: "full_transcendence" },
+            { text: "停止食用", nextScene: "partial_enlightenment" }
+        ]
+    },
+    refuse_peach: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "仙子",
+        text: "你有定力，难得可贵。既然如此，我可以为你指引一条寻找仙宝的道路。你是想寻找'昆仑镜'还是'炼狱珠'？",
+        audio: "/audio/celestial-guidance.mp3",
+        choices: [
+            { text: "寻找昆仑镜", nextScene: "kunlun_mirror_quest" },
+            { text: "寻找炼狱珠", nextScene: "purgatory_pearl_quest" }
+        ]
+    },
+    guidance_celestial: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "仙子",
+        text: "既然你诚心求教，我就告诉你吧。'太素琉璃'藏于九重天阙第七层，需通过六道天门。每道天门都有一位守护者。",
+        audio: "/audio/celestial-revelation.mp3",
+        choices: [
+            { text: "询问如何通过天门", nextScene: "heavenly_gates_info" },
+            { text: "请教守护者的弱点", nextScene: "guardians_weakness" }
+        ]
+    },
+    venture_palace: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "/characters/heavenly-palace.png",
+        speaker: "旁白",
+        text: "你毅然决定前往九重天阙。穿过云海，你来到了第一重天门前。一位身披星辰袍的仙官拦住了你的去路。",
+        audio: "/audio/heavenly-winds.mp3",
+        choices: [
+            { text: "尝试说服仙官", nextScene: "persuade_celestial_official" },
+            { text: "强闯天门", nextScene: "force_entry" }
+        ]
+    },
+    endure_flames: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "魔尊",
+        text: "很好，让我们开始吧。记住，坚持一个时辰。魔焰不仅灼烧肉身，更会侵蚀神魂。准备好了吗？",
+        audio: "/audio/demonic-flames.mp3",
+        choices: [
+            { text: "开始挑战", nextScene: "flame_challenge_start" },
+            { text: "请求缓刑", nextScene: "delay_challenge" }
+        ]
+    },
+    negotiate_challenge: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "魔尊",
+        text: "哦？你想谈条件？有意思。那好，我给你两个选择：要么与我的魔将比试一场，要么解开一道上古魔咒。你选哪个？",
+        audio: "/audio/demonic-negotiation.mp3",
+        choices: [
+            { text: "与魔将比试", nextScene: "duel_demon_general" },
+            { text: "解开上古魔咒", nextScene: "decipher_ancient_curse" }
+        ]
+    },
+    learn_demonic_arts: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/257b59c5929745979615510699716427.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2037316041&Signature=xSSVpgs1usAIHqLfJYZlv6n1YVw%3D",
+        speaker: "魔尊",
+        text: "有胆识！不过，学习驾驭'九幽冥火'可不是件容易的事。你得先通过三道考验：血之誓、心之锁、魂之炼。准备好了吗？",
+        audio: "/audio/dark-magic-lesson.mp3",
+        choices: [
+            { text: "开始第一道考验", nextScene: "blood_oath" },
+            { text: "请求更多信息", nextScene: "more_info_demonic_trials" }
+        ]
+    },
+    escape_demon_realm: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "/characters/demon-realm-exit.png",
+        speaker: "旁白",
+        text: "你决定离开魔域，但出口被重重迷雾笼罩。隐约可见两条路：一条通向幽暗山洞，另一条穿过沼泽地。",
+        audio: "/audio/eerie-atmosphere.mp3",
+        choices: [
+            { text: "选择幽暗山洞", nextScene: "dark_cave" },
+            { text: "穿过沼泽地", nextScene: "treacherous_swamp" }
+        ]
+    },
+    // 新添加的场景
+    mirror_vision: {
+        leftCharacter: "/characters/young-cultivator-shocked.png",
+        rightCharacter: "/characters/mysterious-merchant.png",
+        speaker: "旁白",
+        text: "你闭上眼睛，感到一阵天旋地转。当你再次睁开眼时，发现自己站在一座高山之巅，远处是一片浩瀚的星海...",
+        audio: "/audio/cosmic-vision.mp3",
+        choices: [
+            { text: "仔细观察星海", nextScene: "observe_stars" },
+            { text: "寻找山中隐秘", nextScene: "explore_mountain" }
+        ]
+    },
+    reconsider_mirror: {
+        leftCharacter: "http://oss-cnsq01.cdsgss.com/maas-5/image/17d825d31267409e9add7f8e071a52be.png?AWSAccessKeyId=ef55cb62ff7511edb70f46ae5a5d3b50&Expires=2039656236&Signature=i%2BAGIh4kLWICLaPYTiSBksjoLro%3D",
+        rightCharacter: "/characters/mysterious-merchant-disappointed.png",
+        speaker: "神秘商人",
+        text: "唉，难得有缘人啊。不过，谨慎也是好事。若你改变主意，随时可以回来找我。",
+        audio: "/audio/merchant-sigh.mp3",
+        choices: [
+            { text: "询问其他宝物", nextScene: "ask_other_treasures" },
+            { text: "离开寻找其他线索", nextScene: "leave_market" }
+        ]
+    },
+    teahouse: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "/characters/teahouse-owner.png",
+        speaker: "茶馆老板",
+        text: "这位客官，可是第一次来我们这儿？我们这里可是有百年历史了，听说过不少奇闻异事。要不要来杯茶，我给你讲讲？",
+        audio: "/audio/teahouse-ambience.mp3",
+        choices: [
+            { text: "品茶听故事", nextScene: "listen_teahouse_stories" },
+            { text: "直接询问宝物", nextScene: "ask_teahouse_treasure" }
+        ]
+    },
+    temple: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "/characters/temple-monk.png",
+        speaker: "寺庙主持",
+        text: "阿弥陀佛，这位施主，我观你面相不凡，想必是有缘人。我寺中有一件佛门圣物，不知施主可有兴趣一观？",
+        audio: "/audio/temple-bells.mp3",
+        choices: [
+            { text: "恭敬请教圣物", nextScene: "inquire_buddhist_relic" },
+            { text: "婉拒并询问其他信息", nextScene: "ask_monk_info" }
+        ]
+    },
+    mountain_location: {
+        leftCharacter: "/characters/young-cultivator-excited.png",
+        rightCharacter: "/characters/old-sage.png",
+        speaker: "游方老者",
+        text: "此山名为'蓬莱'，位于东海之东，需乘风破浪九万里。然而，此山常隐于云雾之中，寻常人难以企及。",
+        audio: "/audio/mystical-winds.mp3",
+        choices: [
+            { text: "询问到达方法", nextScene: "ask_travel_method" },
+            { text: "探询其他宝物", nextScene: "inquire_other_treasures" }
+        ]
+    },
+    discuss_lingzhi: {
+        leftCharacter: "/characters/young-cultivator-curious.png",
+        rightCharacter: "/characters/old-sage-explaining.png",
+        speaker: "游方老者",
+        text: "万年灵芝，确实神乎其神。据说食之可得长生，但也有传言称它会带来意想不到的代价。你可要三思啊。",
+        audio: "/audio/sage-warning.mp3",
+        choices: [
+            { text: "询问代价详情", nextScene: "ask_lingzhi_consequences" },
+            { text: "决定寻找灵芝", nextScene: "search_for_lingzhi" }
+        ]
+    },
+    enter_taoist_temple: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "/characters/old-taoist.png",
+        speaker: "道观老道",
+        text: "哦？难得有人来访。这座观里藏有一卷天书，据说能预知天机。不过，想要参悟，需要付出相应的代价。",
+        audio: "/audio/taoist-flute.mp3",
+        choices: [
+            { text: "请教天书内容", nextScene: "inquire_heavenly_book" },
+            { text: "询问参悟代价", nextScene: "ask_book_price" }
+        ]
+    },
+    bypass_temple: {
+        leftCharacter: "/characters/young-cultivator.png",
+        rightCharacter: "/characters/mysterious-forest.png",
+        speaker: "旁白",
+        text: "你决定绕过道观，继续前行。不久，你来到一片迷雾笼罩的森林。隐约能听到远处传来奇怪的声音。",
+        audio: "/audio/mysterious-forest.mp3",
+        choices: [
+            { text: "穿越迷雾", nextScene: "enter_misty_forest" },
+            { text: "原路返回", nextScene: "return_to_path" }
+        ]
+    }
+};
+
+let currentScene = 'start';
+let audioElement = new Audio();
+let isSoundOn = true;
+
+function updateScene(sceneName) {
+    const scene = scenes[sceneName];
+    if (!scene) {
+        console.error(`Scene '${sceneName}' not found!`);
+        return;
+    }
+    
+    document.getElementById('left-character').style.backgroundImage = `url(${scene.leftCharacter})`;
+    document.getElementById('right-character').style.backgroundImage = `url(${scene.rightCharacter})`;
+    
+    document.getElementById('speaker-name').innerText = scene.speaker;
+    
+    if (scene.audio && isSoundOn) {
+        audioElement.src = scene.audio;
+        audioElement.play();
+    }
+    
+    typeWriter(scene.text, 'story-text', 50);
+    
+    const choicesDiv = document.getElementById('choices');
+    choicesDiv.innerHTML = '';
+    if (scene.choices) {
+        setTimeout(() => {
+            scene.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.className = 'choice-btn';
+                button.innerText = choice.text;
+                button.onclick = () => updateScene(choice.nextScene);
+                choicesDiv.appendChild(button);
+            });
+        }, scene.text.length * 50 + 500);
+    }
+}
+
+function typeWriter(text, elementId, speed = 50) {
+    let i = 0;
+    const element = document.getElementById(elementId);
+    element.innerHTML = '';
+    function type() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
+document.getElementById('menu-button').addEventListener('click', () => {
+    document.getElementById('menu').style.display = 'flex';
+});
+
+document.getElementById('resume-btn').addEventListener('click', () => {
+    document.getElementById('menu').style.display = 'none';
+});
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+    currentScene = 'start';
+    updateScene(currentScene);
+    document.getElementById('menu').style.display = 'none';
+});
+
+document.getElementById('settings-btn').addEventListener('click', () => {
+    alert('洞天福地尚在开辟中，敬请期待！');
+});
+
+document.getElementById('sound-toggle').addEventListener('click', (e) => {
+    isSoundOn = !isSoundOn;
+    e.target.innerText = isSoundOn ? '🔊' : '🔇';
+    if (!isSoundOn) {
+        audioElement.pause();
+    } else {
+        audioElement.play();
+    }
+});
+
+// Initialize the game
+updateScene(currentScene);
+</script>
+</body></html>
