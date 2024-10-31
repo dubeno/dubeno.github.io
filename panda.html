@@ -1,0 +1,1598 @@
+<html><head><base href="/" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>小朋友游戏天地</title>
+<style>
+:root {
+  --primary-color: #6B8DFF;
+  --secondary-color: #FFB6E8;
+  --background-color: #E6EEFF;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: 'Comic Sans MS', cursive;
+  background: var(--background-color);
+  overflow: hidden;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sky {
+  flex-grow: 1;
+  background: linear-gradient(180deg, #A4C6FF 0%, #E6EEFF 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.ground {
+  height: 30vh;
+  background: linear-gradient(180deg, var(--secondary-color) 0%, #FFC8F0 100%);
+  border-radius: 50% 50% 0 0;
+  transform: translateY(-40px);
+}
+
+.panda {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.panda:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.clouds {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50px;
+  animation: float 20s linear infinite;
+}
+
+.stars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  from { transform: translateX(100vw); }
+  to { transform: translateX(-100px); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@media screen and (max-width: 768px) {
+  .menu {
+    bottom: 10px;
+    padding: 8px 15px;
+  }
+
+  .menu-item {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9em;
+  }
+
+  .chat-interface {
+    width: 90%;
+    bottom: 70px;
+  }
+
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    padding: 10px;
+  }
+
+  .reading-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    padding: 10px;
+  }
+
+  .story-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .story-title {
+    font-size: 1.5em;
+  }
+
+  .story-text {
+    font-size: 1em;
+    padding: 10px;
+  }
+
+  .math-game-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .problem-display {
+    font-size: 2em;
+  }
+
+  .answer-grid input {
+    width: 100px;
+  }
+
+  .drawing-controls {
+    left: 10px;
+    width: 120px;
+  }
+
+  .canvas-container {
+    width: calc(100% - 140px);
+    margin-left: 130px;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .drawing-tool {
+    width: 25px;
+    height: 25px;
+    font-size: 10px;
+  }
+
+  .color-option {
+    width: 15px;
+    height: 15px;
+  }
+
+  .back-button {
+    top: 10px;
+    left: 10px;
+    padding: 8px 15px;
+    font-size: 0.9em;
+  }
+}
+
+@media (hover: none) {
+  .menu-item:hover,
+  .game-card:hover,
+  .book-card:hover,
+  .story-btn:hover,
+  .chat-input button:hover {
+    transform: none;
+  }
+  
+  .menu-item:active,
+  .game-card:active,
+  .book-card:active,
+  .story-btn:active,
+  .chat-input button:active {
+    transform: scale(0.95);
+  }
+}
+
+.menu {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.menu-item {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.menu-item:hover {
+  transform: scale(1.1);
+}
+
+.chat-bubble {
+  position: absolute;
+  background: white;
+  padding: 15px;
+  border-radius: 20px;
+  max-width: 200px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.chat-interface {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.chat-messages {
+  height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  max-width: 80%;
+}
+
+.user-message {
+  background: var(--primary-color);
+  color: white;
+  margin-left: auto;
+}
+
+.panda-message {
+  background: var(--secondary-color);
+  color: black;
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 2px solid var(--primary-color);
+  border-radius: 20px;
+  outline: none;
+}
+
+.chat-input button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.chat-input button:hover {
+  transform: scale(1.05);
+}
+
+.game-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-color);
+  display: none;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.game-card {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+}
+
+.game-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--secondary-color);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+}
+
+.game-title {
+  font-size: 1.2em;
+  color: #333;
+  margin: 5px 0;
+}
+
+.game-age {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-color);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.reading-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-color);
+  display: none;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.reading-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.book-card {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.book-card:hover {
+  transform: scale(1.05);
+}
+
+.book-cover {
+  width: 100%;
+  height: 200px;
+  background: var(--secondary-color);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3em;
+}
+
+.book-title {
+  font-size: 1.2em;
+  color: #333;
+  margin: 5px 0;
+}
+
+.book-age {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.drawing-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-color);
+  display: none;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.story-reading-interface {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-color);
+  display: none;
+  z-index: 1100;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.story-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.story-title {
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 2em;
+  margin-bottom: 30px;
+}
+
+.story-content {
+  min-height: 400px;
+  position: relative;
+}
+
+.story-page {
+  display: none;
+  animation: fadein 0.5s;
+}
+
+.story-page.active {
+  display: block;
+}
+
+.story-illustration {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.story-text {
+  font-size: 1.2em;
+  line-height: 1.8;
+  padding: 20px;
+}
+
+.story-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.story-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.story-btn:hover {
+  transform: scale(1.05);
+}
+
+.page-indicator {
+  font-size: 1.1em;
+  color: #666;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.drawing-controls {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: white;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 140px;
+}
+
+.drawing-tool {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 2px solid var(--primary-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+  margin: 2px;
+  font-size: 12px;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.color-section {
+  margin: 8px 0;
+}
+
+.drawing-tool.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.color-picker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  margin: 8px 0;
+  clear: both;
+}
+
+.grid-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin: 10px 0;
+  clear: both;
+  width: 100%;
+}
+
+.grid-button {
+  padding: 4px;
+  background: white;
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.grid-button.full-width {
+  grid-column: 1 / -1;
+}
+
+.grid-button.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.chinese-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.color-option {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+.color-option.active {
+  border-color: var(--primary-color);
+}
+
+.stroke-width {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.canvas-container {
+  position: relative;
+  width: calc(100% - 180px);
+  height: calc(100% - 40px);
+  margin-left: 160px;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+#drawingCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: crosshair;
+}
+
+.loading-panda {
+  width: 100px;
+  height: 100px;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.math-game-interface {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-color);
+  display: none;
+  z-index: 1100;
+  padding: 20px;
+}
+
+.math-game-container {
+  max-width: 600px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.problem-display {
+  font-size: 2.5em;
+  margin: 30px 0;
+  color: var(--primary-color);
+  min-height: 60px;
+}
+
+.answer-grid {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.answer-grid input {
+  width: 120px;
+  padding: 10px;
+  font-size: 1.2em;
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.answer-grid button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.feedback {
+  min-height: 30px;
+  margin: 20px 0;
+  font-size: 1.2em;
+}
+
+.score-display {
+  font-size: 1.2em;
+  color: var(--primary-color);
+  margin: 10px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="sky" id="sky">
+    <div class="stars" id="stars"></div>
+    <div class="clouds" id="clouds"></div>
+    <div class="panda" id="panda">
+      <svg viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="90" fill="#FFFFFF"/>
+        <circle cx="65" cy="80" r="25" fill="#000000"/>
+        <circle cx="135" cy="80" r="25" fill="#000000"/>
+        <ellipse cx="100" cy="120" rx="20" ry="15" fill="#000000"/>
+        <circle cx="70" cy="85" r="8" fill="#FFFFFF"/>
+        <circle cx="140" cy="85" r="8" fill="#FFFFFF"/>
+      </svg>
+    </div>
+    <div class="chat-bubble" id="chatBubble">你好啊！我是熊猫多多，让我们一起玩耍吧！</div>
+  </div>
+  <div class="ground"></div>
+</div>
+<div class="chat-interface" id="chatInterface">
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="和熊猫多多聊天...">
+    <button id="sendButton">发送</button>
+  </div>
+</div>
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-panda">
+    <svg viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="90" fill="#FFFFFF"/>
+      <circle cx="65" cy="80" r="25" fill="#000000"/>
+      <circle cx="135" cy="80" r="25" fill="#000000"/>
+      <ellipse cx="100" cy="120" rx="20" ry="15" fill="#000000"/>
+      <circle cx="70" cy="85" r="8" fill="#FFFFFF"/>
+      <circle cx="140" cy="85" r="8" fill="#FFFFFF"/>
+    </svg>
+  </div>
+</div>
+<div class="game-page" id="gamePage">
+  <button class="back-button" id="backButton">返回</button>
+  <div class="game-grid" id="gameGrid"></div>
+</div>
+<div class="drawing-page" id="drawingPage">
+  <button class="back-button" id="drawingBackButton">返回</button>
+  <div class="drawing-controls">
+    <div class="tools-grid">
+      <div class="drawing-tool active" data-tool="pencil">✏️</div>
+      <div class="drawing-tool" data-tool="brush">🖌️</div>
+      <div class="drawing-tool" data-tool="eraser">🧽</div>
+    </div>
+    
+    <input type="range" class="stroke-width" min="1" max="50" value="5">
+    
+    <div class="color-section">
+      <input type="color" id="colorPicker" value="#000000">
+      <div class="color-picker">
+        <div class="color-option active" style="background: #000000" data-color="#000000"></div>
+        <div class="color-option" style="background: #FF0000" data-color="#FF0000"></div>
+        <div class="color-option" style="background: #00FF00" data-color="#00FF00"></div>
+        <div class="color-option" style="background: #0000FF" data-color="#0000FF"></div>
+        <div class="color-option" style="background: #FFFF00" data-color="#FFFF00"></div>
+        <div class="color-option" style="background: #FF00FF" data-color="#FF00FF"></div>
+        <div class="color-option" style="background: #00FFFF" data-color="#00FFFF"></div>
+        <div class="color-option" style="background: #FFFFFF" data-color="#FFFFFF"></div>
+        <div class="color-option" style="background: #808080" data-color="#808080"></div>
+      </div>
+    </div>
+
+    <div class="actions-grid">
+      <div class="drawing-tool" data-tool="clear">🗑️</div>
+      <div class="drawing-tool" data-tool="save">💾</div>
+    </div>
+
+    <div class="grid-options">
+      <button class="grid-button" data-grid="square">方格</button>
+      <button class="grid-button" data-grid="chinese">田字格</button>
+      <button class="grid-button full-width" data-grid="none">无格子</button>
+    </div>
+  </div>
+  <div class="canvas-container">
+    <canvas id="drawingCanvas"></canvas>
+  </div>
+</div>
+<div class="menu">
+  <div class="menu-item">🎮</div>
+  <div class="menu-item">💬</div>
+  <div class="menu-item">🎨</div>
+  <div class="menu-item">📚</div>
+</div>
+
+<div class="reading-page" id="readingPage">
+  <button class="back-button" id="readingBackButton">返回</button>
+  <div class="reading-grid" id="readingGrid"></div>
+</div>
+
+<div class="story-reading-interface" id="storyReadingInterface">
+  <button class="back-button" id="storyBackButton">返回</button>
+  <div class="story-container">
+    <h1 class="story-title">小红帽</h1>
+    <div class="story-content">
+      <div class="story-page active">
+        <div class="story-illustration">
+          <svg viewBox="0 0 300 200">
+            <path d="M150 50 Q 180 30 200 50" stroke="red" fill="none" stroke-width="5"/>
+            <circle cx="150" cy="70" r="40" fill="#FFE4E1"/>
+            <path d="M130 90 Q 150 100 170 90" stroke="#000" fill="none" stroke-width="2"/>
+          </svg>
+        </div>
+        <p class="story-text">
+          从前，有一个可爱的小女孩，她总是戴着奶奶送给她的红色小帽子，所以大家都叫她"小红帽"。
+        </p>
+      </div>
+    </div>
+    <div class="story-controls">
+      <button class="story-btn" id="prevPage">上一页</button>
+      <span class="page-indicator">1 / 5</span>
+      <button class="story-btn" id="nextPage">下一页</button>
+    </div>
+  </div>
+</div>
+
+<div class="math-game-interface" id="mathGameInterface">
+  <button class="back-button" id="mathGameBackButton">返回</button>
+  <div class="math-game-container">
+    <h1 class="game-title">数学小游戏</h1>
+    <div class="score-display">分数: <span id="mathScore">0</span></div>
+    <div class="problem-display" id="problemDisplay"></div>
+    <div class="answer-grid">
+      <input type="number" id="mathAnswer" placeholder="输入答案">
+      <button id="submitAnswer">确认</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const drawingPage = document.getElementById('drawingPage');
+  const canvas = document.getElementById('drawingCanvas');
+  if (!canvas) {
+    console.error('Drawing canvas not found');
+    return;
+  }
+  const ctx = canvas.getContext('2d');
+  let isDrawing = false;
+  let currentTool = 'pencil';
+  let currentColor = '#000000';
+  let currentWidth = 5;
+  let lastX = 0;
+  let lastY = 0;
+  let currentGrid = 'none';
+  let brushPressure = 50;
+
+function resizeCanvas() {
+  const container = canvas.parentElement;
+  canvas.width = container.offsetWidth;
+  canvas.height = container.offsetHeight;
+  
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = currentColor;
+  ctx.lineWidth = currentWidth;
+  
+  console.log('Canvas resized to:', canvas.width, canvas.height);
+  drawGrid();
+}
+
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function drawGrid() {
+    const gridCanvas = document.createElement('canvas');
+    gridCanvas.className = 'chinese-grid';
+    gridCanvas.width = canvas.width;
+    gridCanvas.height = canvas.height;
+    const gridCtx = gridCanvas.getContext('2d');
+    
+    if (currentGrid === 'square') {
+      const gridSize = 20;
+      gridCtx.strokeStyle = '#ddd';
+      gridCtx.lineWidth = 1;
+      
+      for (let x = 0; x <= canvas.width + 1; x += gridSize) {
+        gridCtx.beginPath();
+        gridCtx.moveTo(x, 0);
+        gridCtx.lineTo(x, canvas.height);
+        gridCtx.stroke();
+      }
+      
+      for (let y = 0; y <= canvas.height + 1; y += gridSize) {
+        gridCtx.beginPath();
+        gridCtx.moveTo(0, y);
+        gridCtx.lineTo(canvas.width, y);
+        gridCtx.stroke();
+      }
+    } else if (currentGrid === 'chinese') {
+      const cellSize = 100;
+      gridCtx.strokeStyle = '#ddd';
+      gridCtx.lineWidth = 1;
+      
+      const numCellsX = Math.ceil(canvas.width / cellSize);
+      const numCellsY = Math.ceil(canvas.height / cellSize);
+      
+      for (let y = 0; y < numCellsY; y++) {
+        for (let x = 0; x < numCellsX; x++) {
+          const cellX = x * cellSize;
+          const cellY = y * cellSize;
+          
+          gridCtx.strokeRect(cellX, cellY, cellSize, cellSize);
+          
+          gridCtx.beginPath();
+          gridCtx.moveTo(cellX, cellY);
+          gridCtx.lineTo(cellX + cellSize, cellY + cellSize);
+          gridCtx.moveTo(cellX + cellSize, cellY);
+          gridCtx.lineTo(cellX, cellY + cellSize);
+          gridCtx.stroke();
+          
+          gridCtx.beginPath();
+          gridCtx.moveTo(cellX + cellSize/2, cellY);
+          gridCtx.lineTo(cellX + cellSize/2, cellY + cellSize);
+          gridCtx.moveTo(cellX, cellY + cellSize/2);
+          gridCtx.lineTo(cellX + cellSize, cellY + cellSize/2);
+          gridCtx.stroke();
+        }
+      }
+    }
+    
+    const oldGrid = document.querySelector('.chinese-grid');
+    if (oldGrid) oldGrid.remove();
+    canvas.parentElement.appendChild(gridCanvas);
+  }
+
+  function draw(e) {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    ctx.beginPath();
+    ctx.strokeStyle = currentTool === 'eraser' ? '#FFFFFF' : currentColor;
+    
+    if (currentTool === 'brush') {
+      const pressure = (brushPressure / 100) * Math.min(Math.abs(x - lastX), Math.abs(y - lastY));
+      ctx.lineWidth = Math.max(1, currentWidth * (1 - pressure/100));
+      ctx.moveTo(lastX, lastY);
+      
+      const dx = x - lastX;
+      const dy = y - lastY;
+      const angle = Math.atan2(dy, dx);
+      
+      ctx.quadraticCurveTo(
+        lastX + Math.cos(angle) * pressure,
+        lastY + Math.sin(angle) * pressure,
+        x,
+        y
+      );
+    } else {
+      ctx.lineWidth = currentWidth;
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+    }
+    
+    ctx.stroke();
+    lastX = x;
+    lastY = y;
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    isDrawing = true;
+    const rect = canvas.getBoundingClientRect();
+    lastX = e.clientX - rect.left;
+    lastY = e.clientY - rect.top;
+    console.log('Started drawing at:', lastX, lastY);
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    e.preventDefault();
+    draw(e);
+  });
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    isDrawing = true;
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    lastX = touch.clientX - rect.left;
+    lastY = touch.clientY - rect.top;
+  });
+
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!isDrawing) return;
+    const touch = e.touches[0];
+    draw({clientX: touch.clientX, clientY: touch.clientY});
+  });
+
+  canvas.addEventListener('touchend', () => isDrawing = false);
+  canvas.addEventListener('touchcancel', () => isDrawing = false);
+
+  document.querySelectorAll('.drawing-tool').forEach(tool => {
+    tool.addEventListener('click', () => {
+      const toolType = tool.dataset.tool;
+      
+      if (toolType === 'clear') {
+        if (confirm('确定要清空画布吗？')) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        return;
+      }
+      
+      if (toolType === 'save') {
+        const link = document.createElement('a');
+        link.download = '我的画作.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        return;
+      }
+      
+      document.querySelectorAll('.drawing-tool').forEach(t => t.classList.remove('active'));
+      if (['pencil', 'brush', 'eraser'].includes(toolType)) {
+        tool.classList.add('active');
+        currentTool = toolType;
+      }
+    });
+  });
+
+  document.querySelectorAll('.color-option').forEach(color => {
+    color.addEventListener('click', () => {
+      document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+      color.classList.add('active');
+      currentColor = color.dataset.color;
+    });
+  });
+
+  document.querySelector('.stroke-width').addEventListener('input', (e) => {
+    currentWidth = e.target.value;
+  });
+
+  const starsContainer = document.getElementById('stars');
+  for(let i = 0; i < 50; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.innerHTML = '⭐';
+    starsContainer.appendChild(star);
+  }
+
+  const cloudsContainer = document.getElementById('clouds');
+  for(let i = 0; i < 5; i++) {
+    const cloud = document.createElement('div');
+    cloud.className = 'cloud';
+    cloud.style.top = Math.random() * 50 + '%';
+    cloud.style.animationDelay = (i * 4) + 's';
+    cloud.innerHTML = '☁️';
+    cloud.style.fontSize = (30 + Math.random() * 20) + 'px';
+    cloudsContainer.appendChild(cloud);
+  }
+
+  const panda = document.getElementById('panda');
+  const chatBubble = document.getElementById('chatBubble');
+  
+  panda.addEventListener('click', () => {
+    chatBubble.style.display = 'block';
+    chatBubble.style.left = (panda.offsetLeft + 100) + 'px';
+    chatBubble.style.top = (panda.offsetTop - 50) + 'px';
+    
+    setTimeout(() => {
+      chatBubble.style.display = 'none';
+    }, 3000);
+  });
+
+  panda.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    chatBubble.style.display = 'block';
+    chatBubble.style.left = (panda.offsetLeft + 100) + 'px';
+    chatBubble.style.top = (panda.offsetTop - 50) + 'px';
+    
+    setTimeout(() => {
+      chatBubble.style.display = 'none';
+    }, 3000);
+  });
+
+  const menuItems = document.querySelectorAll('.menu-item');
+  menuItems[1].addEventListener('click', () => {
+    const chatInterface = document.getElementById('chatInterface');
+    chatInterface.style.display = chatInterface.style.display === 'none' ? 'block' : 'none';
+  });
+
+  const chatMessages = document.getElementById('chatMessages');
+  const userInput = document.getElementById('userInput');
+  const sendButton = document.getElementById('sendButton');
+
+  async function getPandaResponse(userMessage) {
+    try {
+      const response = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer sk-ab1aaf35e77640b39b94ed461fd5d6c3'
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            {
+              "role": "system", 
+              "content": "你是一个可爱的熊猫多多，正在和2-12岁的小朋友聊天。要用温柔、有趣、充满童趣的方式回答。回答要简短，易懂，富有教育意义。"
+            },
+            {
+              "role": "user",
+              "content": userMessage
+            }
+          ],
+          stream: false
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('API请求失败');
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error('聊天出错了:', error);
+      return '哎呀，我有点累了，休息一下再聊吧！';
+    }
+  }
+
+  function addMessage(content, isUser) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user-message' : 'panda-message'}`;
+    messageDiv.textContent = content;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  sendButton.addEventListener('click', async () => {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    addMessage(message, true);
+    userInput.value = '';
+
+    const response = await getPandaResponse(message);
+    addMessage(response, false);
+  });
+
+  userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendButton.click();
+    }
+  });
+
+  const games = [
+    { 
+      title: "数字算术", 
+      icon: "🔢", 
+      age: "6-10岁", 
+      type: "数学",
+      playable: true 
+    },
+    { 
+      title: "看图识字", 
+      icon: "🎯", 
+      age: "4-8岁", 
+      type: "语言",
+      playable: true
+    }
+  ];
+
+  const loadingScreen = document.getElementById('loadingScreen');
+  const gamePage = document.getElementById('gamePage');
+  const gameGrid = document.getElementById('gameGrid');
+  const backButton = document.getElementById('backButton');
+  
+  menuItems[0].addEventListener('click', () => {
+    loadingScreen.style.display = 'flex';
+    
+    setTimeout(() => {
+      loadingScreen.style.display = 'none';
+      gamePage.style.display = 'block';
+      
+      gameGrid.innerHTML = '';
+      games.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+        card.innerHTML = `
+          <div class="game-icon">${game.icon}</div>
+          <div class="game-title">${game.title}</div>
+          <div class="game-age">${game.age}</div>
+        `;
+        card.addEventListener('click', () => {
+          loadingScreen.style.display = 'flex';
+          
+          setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            switch(game.title) {
+              case "数字算术":
+                mathGameInterface.style.display = 'block';
+                mathScore = 0;
+                document.getElementById('mathScore').textContent = mathScore;
+                document.getElementById('mathAnswer').value = '';
+                document.getElementById('feedback').textContent = '';
+                generateMathProblem();
+                break;
+              case "看图识字":
+                startLanguageGame();
+                break;
+              default:
+                alert(`开始玩 ${game.title}！`);
+            }
+          }, 1000);
+        });
+        gameGrid.appendChild(card);
+      });
+    }, 1000);
+  });
+  
+  backButton.addEventListener('click', () => {
+    gamePage.style.display = 'none';
+  });
+
+  menuItems[2].addEventListener('click', () => {
+    drawingPage.style.display = 'block';
+    setTimeout(resizeCanvas, 100);
+  });
+
+  document.getElementById('drawingBackButton').addEventListener('click', () => {
+    drawingPage.style.display = 'none';
+  });
+
+  const readingPage = document.getElementById('readingPage');
+  const readingGrid = document.getElementById('readingGrid');
+
+  const books = [
+    { title: "小红帽", icon: "📕", age: "3-6岁", type: "童话故事" }
+  ];
+
+  const storyPages = [
+    {
+      text: '从前，有一个可爱的小女孩，她总是戴着奶奶送给她的红色小帽子，所以大家都叫她"小红帽"。',
+      illustration: '小红帽的形象'
+    },
+    {
+      text: '有一天，妈妈让小红帽去给生病的奶奶送食物。妈妈叮嘱她要小心，不要离开小路。',
+      illustration: '妈妈和小红帽'
+    },
+    {
+      text: '在森林里，小红帽遇到了一只大灰狼。狼假装友善，询问她要去哪里。',
+      illustration: '森林和大灰狼'
+    },
+    {
+      text: '大灰狼提前赶到奶奶家，假扮成奶奶。当小红帽到达时，发现奶奶看起来很奇怪。',
+      illustration: '奶奶床边的场景'
+    },
+    {
+      text: '幸运的是，猎人听到了声音赶来救了小红帽和奶奶。从此以后，小红帽再也不会随便相信陌生人了。',
+      illustration: '快乐结局'
+    }
+  ];
+
+
+let currentStoryPages;
+
+  menuItems[3].addEventListener('click', () => {
+    loadingScreen.style.display = 'flex';
+    
+    setTimeout(() => {
+      loadingScreen.style.display = 'none';
+      readingPage.style.display = 'block';
+      
+      readingGrid.innerHTML = '';
+      books.forEach(book => {
+        const card = document.createElement('div');
+        card.className = 'book-card';
+        card.innerHTML = `
+          <div class="book-cover">${book.icon}</div>
+          <div class="book-title">${book.title}</div>
+          <div class="book-age">${book.age}</div>
+        `;
+        card.addEventListener('click', () => {
+          const bookTitle = book.title;
+          if (bookTitle === "小红帽") {
+            storyReadingInterface.style.display = 'block';
+            showPage(1);
+          } else {
+            alert(`开始阅读 ${book.title}！`);
+          }
+        });
+        readingGrid.appendChild(card);
+      });
+    }, 1000);
+  });
+
+  document.getElementById('readingBackButton').addEventListener('click', () => {
+    readingPage.style.display = 'none';
+  });
+
+  const storyReadingInterface = document.getElementById('storyReadingInterface');
+  const storyBackButton = document.getElementById('storyBackButton');
+  let currentPage = 1;
+
+  document.querySelectorAll('.book-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      const bookTitle = card.querySelector('.book-title').textContent;
+      if (bookTitle === "小红帽") {
+        storyReadingInterface.style.display = 'block';
+        currentStoryPages = storyPages;
+        document.querySelector('.story-title').textContent = '小红帽';
+        showPage(1);
+      }
+    });
+  });
+
+  storyBackButton.addEventListener('click', () => {
+    storyReadingInterface.style.display = 'none';
+  });
+
+  document.getElementById('prevPage').addEventListener('click', () => {
+    if (currentPage > 1) {
+      showPage(currentPage - 1);
+    }
+  });
+
+  document.getElementById('nextPage').addEventListener('click', () => {
+    if (currentPage < storyPages.length) {
+      showPage(currentPage + 1);
+    }
+  });
+
+  function showPage(pageNum) {
+    const storyContent = document.querySelector('.story-content');
+    const page = storyPages[pageNum-1];
+    let illustration;
+    
+    switch(pageNum) {
+      case 1:
+        illustration = `
+          <svg viewBox="0 0 300 200">
+            <circle cx="150" cy="70" r="40" fill="#FFE4E1"/>
+            <path d="M150 30 Q 180 30 200 50" stroke="red" fill="none" stroke-width="5"/>
+            <path d="M130 80 Q 150 90 170 80" stroke="#000" fill="none" stroke-width="2"/>
+          </svg>`;
+        break;
+      case 2:
+        illustration = `
+          <svg viewBox="0 0 300 200">
+            <circle cx="120" cy="100" r="30" fill="#FFE4E1"/>
+            <circle cx="180" cy="80" r="40" fill="#FFB6C1"/>
+            <path d="M110 110 Q 120 120 130 110" stroke="#000" fill="none" stroke-width="2"/>
+          </svg>`;
+        break;
+      case 3:
+        illustration = `
+          <svg viewBox="0 0 300 200">
+            <circle cx="120" cy="100" r="30" fill="#FFE4E1"/>
+            <path d="M200 80 Q 220 100 240 80" fill="#808080"/>
+            <circle cx="220" cy="70" r="20" fill="#808080"/>
+          </svg>`;
+        break;
+      case 4:
+        illustration = `
+          <svg viewBox="0 0 300 200">
+            <rect x="100" y="50" width="150" height="100" fill="#F5F5F5"/>
+            <circle cx="200" cy="80" r="30" fill="#808080"/>
+            <path d="M190 90 Q 200 100 210 90" stroke="#000" fill="none" stroke-width="2"/>
+          </svg>`;
+        break;
+      case 5:
+        illustration = `
+          <svg viewBox="0 0 300 200">
+            <circle cx="120" cy="100" r="30" fill="#FFE4E1"/>
+            <circle cx="180" cy="100" r="30" fill="#A0522D"/>
+            <path d="M110 110 Q 120 120 130 110" stroke="#000" fill="none" stroke-width="2"/>
+          </svg>`;
+        break;
+    }
+    
+    storyContent.innerHTML = `
+      <div class="story-page active">
+        <div class="story-illustration">
+          ${illustration}
+        </div>
+        <p class="story-text">${page.text}</p>
+      </div>
+    `;
+    currentPage = pageNum;
+    document.querySelector('.page-indicator').textContent = `${pageNum} / ${storyPages.length}`;
+  }
+
+  let currentAnswer = 0;
+  let mathScore = 0;
+  const mathGameInterface = document.getElementById('mathGameInterface');
+  const mathGameBackButton = document.getElementById('mathGameBackButton');
+
+  function generateMathProblem() {
+    const operations = ['+', '-'];
+    const operation = operations[Math.floor(Math.random() * operations.length)];
+    let num1, num2;
+    
+    if (operation === '+') {
+      num1 = Math.floor(Math.random() * 10) + 1;
+      num2 = Math.floor(Math.random() * 10) + 1;
+      currentAnswer = num1 + num2;
+    } else {
+      num1 = Math.floor(Math.random() * 10) + 1;
+      num2 = Math.floor(Math.random() * num1) + 1; // Ensure positive result
+      currentAnswer = num1 - num2;
+    }
+    
+    document.getElementById('problemDisplay').textContent = `${num1} ${operation} ${num2} = ?`;
+  }
+
+  function checkAnswer() {
+    const userAnswer = parseInt(document.getElementById('mathAnswer').value);
+    const feedback = document.getElementById('feedback');
+    
+    if (userAnswer === currentAnswer) {
+      feedback.textContent = '太棒了！答对了！👏';
+      feedback.style.color = '#4CAF50';
+      mathScore += 10;
+      document.getElementById('mathScore').textContent = mathScore;
+      setTimeout(() => {
+        document.getElementById('mathAnswer').value = '';
+        feedback.textContent = '';
+        generateMathProblem();
+      }, 1500);
+    } else {
+      feedback.textContent = '再想想看～';
+      feedback.style.color = '#F44336';
+    }
+  }
+
+  gameGrid.addEventListener('click', (e) => {
+    const card = e.target.closest('.game-card');
+    if (!card) return;
+    
+    const title = card.querySelector('.game-title').textContent;
+    if (title === "数字算术") {
+      mathGameInterface.style.display = 'block';
+      mathScore = 0;
+      document.getElementById('mathScore').textContent = mathScore;
+      document.getElementById('mathAnswer').value = '';
+      document.getElementById('feedback').textContent = '';
+      generateMathProblem();
+    }
+  });
+
+  mathGameBackButton.addEventListener('click', () => {
+    mathGameInterface.style.display = 'none';
+  });
+
+  document.getElementById('submitAnswer').addEventListener('click', checkAnswer);
+  document.getElementById('mathAnswer').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      checkAnswer();
+    }
+  });
+
+  function startLanguageGame() {
+    const languageGameInterface = document.createElement('div');
+    languageGameInterface.className = 'math-game-interface';
+    languageGameInterface.style.display = 'block';
+    
+    languageGameInterface.innerHTML = `
+      <button class="back-button" id="languageGameBackButton">返回</button>
+      <div class="math-game-container">
+        <h1 class="game-title">看图识字</h1>
+        <div class="score-display">分数: <span id="languageScore">0</span></div>
+        <div id="imageDisplay" style="height:200px; display:flex; justify-content:center; align-items:center; margin:20px 0;">
+          <svg viewBox="0 0 200 200" style="width:200px; height:200px;">
+            <circle cx="100" cy="100" r="90" fill="#FFE4E1"/>
+          </svg>
+        </div>
+        <div class="answer-grid">
+          <input type="text" id="languageAnswer" placeholder="输入汉字">
+          <button id="submitLanguageAnswer">确认</button>
+        </div>
+        <div class="feedback" id="languageFeedback"></div>
+      </div>
+    `;
+    
+    document.body.appendChild(languageGameInterface);
+    
+    const words = [
+      {word: "太阳", svg: '<circle cx="100" cy="100" r="60" fill="#FFD700"/>'},
+      {word: "月亮", svg: '<circle cx="100" cy="100" r="60" fill="#F0F8FF"/>'},
+      {word: "星星", svg: '<path d="M100 10 L120 80 L190 80 L130 120 L150 190 L100 150 L50 190 L70 120 L10 80 L80 80 Z" fill="#FFD700"/>'}
+    ];
+    
+    let currentWordIndex = 0;
+    let languageScore = 0;
+    
+    function showNextWord() {
+      if (currentWordIndex >= words.length) {
+        currentWordIndex = 0;
+      }
+      const imageDisplay = document.getElementById('imageDisplay');
+      imageDisplay.innerHTML = `<svg viewBox="0 0 200 200" style="width:200px; height:200px;">${words[currentWordIndex].svg}</svg>`;
+    }
+    
+    document.getElementById('submitLanguageAnswer').addEventListener('click', () => {
+      const answer = document.getElementById('languageAnswer').value;
+      const feedback = document.getElementById('languageFeedback');
+      
+      if (answer === words[currentWordIndex].word) {
+        feedback.textContent = '回答正确！👏';
+        feedback.style.color = '#4CAF50';
+        languageScore += 10;
+        document.getElementById('languageScore').textContent = languageScore;
+        currentWordIndex++;
+        setTimeout(() => {
+          document.getElementById('languageAnswer').value = '';
+          feedback.textContent = '';
+          showNextWord();
+        }, 1500);
+      } else {
+        feedback.textContent = '再想想看～';
+        feedback.style.color = '#F44336';
+      }
+    });
+    
+    document.getElementById('languageGameBackButton').addEventListener('click', () => {
+      languageGameInterface.remove();
+    });
+    
+    showNextWord();
+  }
+}); 
+</script>
+</body></html>
