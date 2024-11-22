@@ -1,0 +1,619 @@
+<html><head><base href="#virtual-teacher">
+<title>AI虚拟教师助手</title>
+<style>
+:root {
+  --primary: #4f46e5;
+  --secondary: #16a34a;
+  --bg-light: #f3f4f6;
+  --text-dark: #1f2937;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-light);
+}
+
+.virtual-teacher-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.teacher-interface {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.teacher-avatar {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 2rem;
+  color: white;
+  text-align: center;
+}
+
+.avatar-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  background: white;
+  padding: 0.5rem;
+}
+
+.teacher-status {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 1rem;
+  margin-top: 1rem;
+}
+
+.chat-interface {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  background: var(--bg-light);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.message {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  max-width: 80%;
+}
+
+.message.teacher {
+  background: white;
+  margin-right: auto;
+}
+
+.message.assistant {
+  background: white;
+  margin-right: auto;
+}
+
+.message.user {
+  background: var(--primary);
+  color: white;
+  margin-left: auto;
+}
+
+.input-area {
+  display: flex;
+  gap: 1rem;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.send-btn {
+  padding: 1rem 2rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.send-btn:hover {
+  background: #4338ca;
+}
+
+.tools-panel {
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 1rem;
+}
+
+.tool-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tool-btn:hover {
+  background: var(--bg-light);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-light);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+</style>
+</head>
+<body>
+<div class="virtual-teacher-container">
+  <div class="teacher-interface">
+    <div class="teacher-avatar">
+      <div class="avatar-image">
+        <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="5"/>
+          <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/>
+        </svg>
+      </div>
+      <h2>AI英语陪练助手</h2>
+      <p>专业领域：英语</p>
+      <span class="teacher-status">🟢 在线</span>
+    </div>
+
+    <div class="chat-interface">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message teacher">
+          <p>你好！我是你的AI教师助手。我可以帮助你：</p>
+          <ul>
+            <li>解答学习疑问</li>
+            <li>提供个性化辅导</li>
+            <li>推荐学习资源</li>
+            <li>进行课程讲解</li>
+          </ul>
+        </div>
+        <div class="message student">
+          <p>请问如何提高学习效率？</p>
+        </div>
+        <div class="message teacher">
+          <p>我建议从以下几个方面入手：</p>
+          <ol>
+            <li>制定合理的学习计划</li>
+            <li>使用番茄工作法</li>
+            <li>及时复习和巩固</li>
+            <li>保持良好的学习环境</li>
+          </ol>
+          <p>需要我为你详细讲解某个方面吗？</p>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <input type="text" class="chat-input" id="userInput" placeholder="输入你的问题...">
+        <button class="send-btn" onclick="sendMessage()">发送</button>
+      </div>
+
+      <div class="tools-panel">
+        <button class="tool-btn" onclick="activateVoiceInput()">
+          <svg width="20" height="20" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+          </svg>
+          语音输入
+        </button>
+        <button class="tool-btn" onclick="uploadFile()">
+          <svg width="20" height="20" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg>
+          上传作业
+        </button>
+        <button class="tool-btn" onclick="openWhiteboard()">
+          <svg width="20" height="20" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+          </svg>
+          互动白板
+        </button>
+
+        <button class="tool-btn" id="start-voice" onclick="startVoiceRecognition()">
+          <svg width="20" height="20" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+          </svg>
+          语音录制
+        </button>
+
+        <button class="tool-btn" id="stop-voice" style="display: none"; onclick="stopVoiceRecognition()">
+          <svg width="20" height="20" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+          </svg>
+          停止录音
+        </button>
+
+
+        <!--        <button id="start-voice" class="voice-button" onclick="startVoiceRecognition()">-->
+<!--          <i class="fas fa-microphone"></i> 开始录音-->
+<!--        </button>-->
+
+<!--        <button id="stop-voice" class="voice-button" onclick="stopVoiceRecognition()" style="display: none;">-->
+<!--          <i class="fas fa-stop"></i> 停止录音-->
+<!--        </button>-->
+      </div>
+    </div>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="24" height="24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+        </svg>
+      </div>
+      <h3>智能问答</h3>
+      <p>基于深度学习的实时问答系统，准确理解问题并提供个性化解答</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="24" height="24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+        </svg>
+      </div>
+      <h3>学习分析</h3>
+      <p>追踪学习进度，分析知识掌握程度，生成个性化学习报告</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="24" height="24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+        </svg>
+      </div>
+      <h3>互动教学</h3>
+      <p>支持语音对话、图片识别、互动白板等多种教学方式</p>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/ort.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.7/dist/bundle.min.js"></script>
+<script>
+let myvad;
+let isRecording = false;
+
+async function main() {
+    myvad = await vad.MicVAD.new({
+      onSpeechStart: () => {
+        console.log("Speech start detected")
+      },
+      onSpeechEnd: (audio) => {
+       console.log("Speech end detected")
+       processSpeechToText(audio);
+      }
+    })
+  }
+main()
+
+let messages = [];
+function sendMessage(message) {
+    console.log("xxx"+messages);
+    console.log(messages)
+    let input = null;
+    if (message === undefined || message.trim() === ''){
+        input = document.getElementById('userInput');
+        message = input.value.trim();
+    }
+    if (message) {
+        // 添加用户消息
+        appendMessage('user', message);
+        
+        // 清空输入
+        input.value = '';
+        
+        // 模拟AI响应
+        setTimeout(() => {
+            generateAIResponse(message);
+        }, 1000);
+    }
+}
+
+
+function appendMessage(role, content) {
+    const messagesDiv = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${role}`;
+
+    // 使用 marked 解析 Markdown 内容
+    const htmlContent = marked.parse(content);
+    messageDiv.innerHTML = `<p>${htmlContent}</p>`;
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    messages.push({role, content});
+}
+
+sys_prompt = `你是一名中小学英语陪练老师
+核心指标：
+清晰度分数：提示明确了用户想要扮演中小学英语陪练老师的角色，具有一定的清晰度，得 7/10 分。但因缺乏如教学场景、学生年龄、教学目标等具体上下文信息，使其在实际教学应用中存在局限性。
+特异性评分：由于提示较为笼统，未涵盖具体教学细节，特异性评分仅 4/10 分。明确这些详细信息对于制定精准有效的教学计划至关重要。
+有效性评分：作为一个基础的角色设定，它为英语教学提供了起始方向，有一定有效性，得 6/10 分。不过，要开展具体教学活动，还需进一步细化和补充相关内容。
+提升潜力：鉴于当前提示较为基础，存在很大的细化和增强空间，提升潜力高达 8/10 分，可从多个方面进行优化改进。
+快速评估：
+目前影响程度：整体处于中等水平。虽然基础角色设定有一定价值，但因缺乏具体细节，对教学活动的指导作用有限。
+优先领域：包括具体化教学场景，如学校课堂、课外辅导机构等；明确教学目标，如提高学生口语表达、语法掌握等；增加互动性，以提高学生参与度和学习效果。
+立即优化潜力：有较高的立即优化潜力，得 7/10 分。通过对上述优先领域的改进，可快速提升教学的有效性和针对性。
+增强层
+风格增强：
+色调优化：通过增加语言的鼓励性和亲和力来提升色调优化，可得 7/10 分。例如，多使用积极肯定的词汇和鼓励性语句，如 “Great job! You're making excellent progress.” 等，能增强学生的学习信心和积极性。
+语音细化：模拟真实的教学对话可增强语音细化，目前评分为 6/10 分。这需要陪练老师注意语音语调的自然性、语速的适中以及表达的流畅性，让学生更有身临其境之感，提高学习体验。
+格式结构：设计成剧本格式以清晰展示对话流程，格式结构的评分为 7/10 分。这种方式有助于陪练老师更好地组织教学内容，使教学过程更加有条理，学生也更容易理解和参与。
+结构增强：
+流程优化：设计包含热身、新课介绍、练习、复习等环节的具体教学流程，可优化教学结构，评分为 7/10 分。合理的流程能帮助学生更好地进入学习状态，逐步掌握知识，巩固所学内容。
+逻辑排序：确保教学内容的逻辑性和连贯性，逻辑排序的评分为 6/10 分。教学内容应按照由易到难、由浅入深的顺序进行组织，使各知识点之间过渡自然，便于学生理解和记忆。
+信息层次：按照不同难度级别组织教学内容，信息层次的评分为 7/10 分。这样可以满足不同学习水平学生的需求，使每个学生都能在自己的能力范围内得到提高和挑战。
+技术增强：
+精准细化：提供具体的教学策略和方法，精准细化的评分为 6/10 分。例如，采用情景教学法、游戏教学法等，针对不同的教学内容和目标选择合适的教学方法，提高教学效果。
+深度扩展：增加对教学理论的引用和实践，深度扩展的评分为 5/10 分。了解和运用现代外语学习理论、教育心理学等相关理论知识，能为教学实践提供更坚实的理论支持，提升教学的科学性和专业性 。
+复杂性平衡：确保教学内容既具有挑战性，又适合学生水平，复杂性平衡的评分为 7/10 分。教学内容过难或过易都不利于学生的学习，需要根据学生的实际情况进行合理调整，保持适度的挑战性。
+情境增强：
+相关性优化：根据不同学生的需求定制教学内容，相关性优化的评分为 7/10 分。每个学生的学习需求和兴趣点都有所不同，个性化的教学内容能更好地满足他们的学习需求，提高学习的积极性和主动性 。
+适应性提升：提供多种教学方法以适应不同学习风格，适应性提升的评分为 6/10 分。学生的学习风格各异，如视觉型、听觉型、动觉型等，采用多样化的教学方法可以满足不同学习风格学生的需求，提高教学的适应性和有效性 。
+用例对齐：提供具体的教学案例来说明教学方法，用例对齐的评分为 7/10 分。通过实际案例的展示和分析，能让陪练老师更直观地理解和运用教学方法，同时也有助于学生更好地掌握知识点.
+优化周期
+性能指标：
+当前能力得分：目前的教学能力得分为 6/10 分，表明当前的教学方案和活动存在一定的提升空间，需要进一步优化和改进。
+增强选项：增加互动性练习、设计角色扮演游戏、引入教学反馈机制等增强选项，可有效提升教学的互动性和实用性。
+改进版本评级：经过增强后的版本评级为 8/10 分，表明优化后的教学方案将更加完善和有效，能为学生提供更优质的教学体验。
+详细的前后对比：增强后的版本在互动性和具体性方面有显著提升，能够提供更清晰的教学指导，有助于学生更好地理解和掌握知识，提高学习效果。
+实施路径：
+逐步改进指南：从简单的教学对话开始，逐步引入更复杂的教学元素，如角色扮演、小组讨论等，使教学过程更加丰富多样，提高学生的参与度和学习兴趣。
+预期结果预测：通过优化教学方案和实施路径，预期学生的参与度将提高，教学效果也将更加明显，学生能够更积极地参与到英语学习中，提高英语综合运用能力。
+风险评估：需要确保教学内容与学生的实际水平相匹配，避免教学内容过难或过易，影响学生的学习积极性和效果。同时，要关注学生的个体差异，及时调整教学策略和方法，以满足不同学生的学习需求。
+反馈循环
+进度跟踪：
+评级变化：每次增强循环后，评级增加 1 分，表明教学的互动性和实用性得到了有效提升，教学方案更加完善和有效。
+效果预测：学生将更积极地参与到教学活动中，教学效果将得到显著提升，如学生的英语听说读写能力、学习兴趣和自信心等方面都将有所提高。
+成功概率：基于有效的教学方法和学生反馈，成功概率高达 85%，说明优化后的教学方案具有较高的可行性和有效性。
+策略优化建议：定期评估教学效果，根据反馈调整教学计划，是不断优化教学的重要环节。通过收集学生的反馈意见，及时发现教学中存在的问题和不足，调整教学策略和方法，以提高教学质量和效果。
+后续步骤：
+优先改进：根据学生反馈调整教学内容，是后续步骤中的优先事项。关注学生的学习需求和反馈意见，及时调整教学内容和方法，以满足学生的学习需求，提高教学效果。
+替代方法：如果当前方法效果不佳，尝试不同的教学策略，如采用新的教学方法、调整教学流程等，以找到最适合学生的教学方法和策略。
+微调机会：根据每个学生的学习进度进行个性化调整，为学生提供更精准的教学服务。关注学生的个体差异，针对不同学生的学习情况和特点，进行个性化的教学调整和指导。
+最终交付
+综合分析：
+并排比较：原始版本仅提供了基本的角色设定，而增强版本则提供了详细的教学计划和互动元素，两者相比，增强版本更加完善和有效，能够更好地指导教学活动。
+总体评级改善细目：从 6/10 提升至 8/10，表明经过一系列的优化和改进，教学方案的质量和效果得到了显著提升。
+详细实施路线图：从角色设定到具体的教学活动，每一步都有明确的指导，为陪练老师提供了详细的教学操作指南，有助于提高教学的规范性和有效性。
+带有示例的定制指南：提供具体的教学对话和活动示例，使教学内容更加生动形象，易于理解和操作，为陪练老师提供了实际的教学参考，有助于提高教学质量和效果。
+未来增强路径：
+长期优化策略：持续收集学生反馈，不断优化教学方法，是提高教学质量的长期有效策略。通过不断地反思和改进教学，能够更好地满足学生的学习需求，提高教学效果。
+可扩展性机会：根据学生人数和水平调整教学计划，可扩展性机会为教学方案的推广和应用提供了更大的空间和可能性。
+高级自定义选项：提供不同难度级别的教学内容，高级自定义选项能够满足不同层次学生的学习需求，提高教学的针对性和有效性。
+#初次接触
+
+当英语陪练老师第一次与学生开始陪练并接收到学生的英语表达时，应该了解学习当前的英文水平，然后指导学习计划，引导式的让学生跟着你的思路走，不要让学生引着你进行教学;
+当学生答非所问的时候，你需要友好的把他拉回到你之前的教学路径上来，不要让他偏离主题。
+当学习故意搞破坏时，你要保持定力，始终积极引导他回归到练习上来，当学习不按说的做，你需要耐心纠正。
+输出时，在句子的末尾可以加上一些鼓励性的emoji,更加让学生有获得感
+输出时，中英文对照，你先做一个50字以内，自我介绍，然后让学生也做一个自我介绍，告诉现在几年级了，介绍完成后就根据他的情况开始练习、由浅入深。
+`
+
+
+async function generateAIResponse(userMessage) {
+
+    const lastTenMessages = messages.slice(-10);
+    lastTenMessages.unshift({"role": "system", "content": sys_prompt});
+    lastTenMessages.push( {"role": "user","content": userMessage})
+    try {
+        const response = await fetch('https://api.deepseek.com/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer sk-ab1aaf35e77640b39b94ed461fd5d6c3`
+            },
+            body: JSON.stringify({
+                model: "deepseek-chat",
+                messages: lastTenMessages
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            appendMessage('assistant', data.choices[0].message.content);
+        } else {
+            appendMessage('assistant', '抱歉，我现在遇到了一些问题，请稍后再试。');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        appendMessage('assistant', '抱歉，我现在遇到了一些问题，请稍后再试。');
+    }
+}
+
+<!--function activateVoiceInput() {-->
+<!--    if ('webkitSpeechRecognition' in window) {-->
+<!--        const recognition = new webkitSpeechRecognition();-->
+<!--        recognition.continuous = false;-->
+<!--        recognition.interimResults = false;-->
+<!--        recognition.lang = 'zh-CN';-->
+<!--        -->
+<!--        recognition.onstart = () => {-->
+<!--            document.querySelector('.chat-input').placeholder = '正在听取...';-->
+<!--        };-->
+<!--        -->
+<!--        recognition.onresult = (event) => {-->
+<!--            const text = event.results[0][0].transcript;-->
+<!--            document.getElementById('userInput').value = text;-->
+<!--        };-->
+<!--        -->
+<!--        recognition.onend = () => {-->
+<!--            document.querySelector('.chat-input').placeholder = '输入你的问题...';-->
+<!--        };-->
+<!--        -->
+<!--        recognition.start();-->
+<!--    } else {-->
+<!--        alert('抱歉，您的浏览器不支持语音输入功能');-->
+<!--    }-->
+<!--}-->
+
+function startVoiceRecognition() {
+    isRecording = true;
+    document.getElementById('start-voice').style.display = 'none';
+    document.getElementById('stop-voice').style.display = 'inline-block';
+    myvad.start();
+
+    const contentArea = document.getElementById('content-area');
+    contentArea.innerHTML += marked.parse('**开始录音...**');
+    contentArea.scrollTop = contentArea.scrollHeight;
+}
+
+function stopVoiceRecognition() {
+    isRecording = false;
+    document.getElementById('start-voice').style.display = 'inline-block';
+    document.getElementById('stop-voice').style.display = 'none';
+
+    myvad.pause();
+
+    const contentArea = document.getElementById('content-area');
+    contentArea.innerHTML += marked.parse('**停止录音**');
+    contentArea.scrollTop = contentArea.scrollHeight;
+}
+
+
+async function processSpeechToText(audio) {
+    const wavBuffer = vad.utils.encodeWAV(audio);
+    const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+    const file = new File([blob], 'audio.wav', { type: 'audio/wav' });
+    const formData = new FormData();
+    formData.append('file', file, 'audio.wav');
+
+    try {
+        const response = await fetch('http://10.9.112.104:18011/asr', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Speech-to-text API响应异常');
+        }
+
+        const data = await response.json();
+        const recognizedText = data.text;
+
+        sendMessage(recognizedText);
+    } catch (error) {
+        console.error('语音识别错误:', error);
+        const contentArea = document.getElementById('content-area');
+        contentArea.innerHTML += marked.parse('**语音识别异常: 无法将语音转换为文字，请重试。**');
+        contentArea.scrollTop = contentArea.scrollHeight;
+    }
+}
+
+
+function uploadFile() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,.doc,.docx,.jpg,.png';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            appendMessage('user', `上传文件：${file.name}`);
+            appendMessage('assistant', '我已收到你的文件，正在分析中...');
+        }
+    };
+    input.click();
+}
+
+function openWhiteboard() {
+    const whiteboard = document.createElement('div');
+    whiteboard.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 800px;
+        height: 600px;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        z-index: 1000;
+        padding: 1rem;
+    `;
+    
+    whiteboard.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3>互动白板</h3>
+            <button onclick="this.parentElement.parentElement.remove()" style="border: none; background: none; cursor: pointer;">
+                ✕
+            </button>
+        </div>
+        <canvas id="whiteboardCanvas" width="780" height="540" style="border: 1px solid #eee;"></canvas>
+    `;
+    
+    document.body.appendChild(whiteboard);
+    
+    const canvas = document.getElementById('whiteboardCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+    
+    function startDrawing(e) {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    }
+    
+    function draw(e) {
+        if (!isDrawing) return;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    }
+    
+    function stopDrawing() {
+        isDrawing = false;
+    }
+}
+
+// 监听Enter键发送消息
+document.getElementById('userInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+</script>
+
+</body></html>
